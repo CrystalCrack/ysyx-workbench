@@ -4,8 +4,8 @@ VERILATOR_FLAGS = --cc --exe --build -j 4 --trace
 
 # Source files
 RTL_NAME = switch
-TB_SRC = $(PREFIX ./CSRC/tb_, $(SUFFIX .cpp, $(RTL_NAME)))
-RTL_SRC = $(PREFIX ./CSRC/, $(SUFFIX .v, $(RTL_NAME)))
+TB_SRC = $(PREFIX ./csrc/tb_, $(SUFFIX .cpp, $(RTL_NAME)))
+RTL_SRC = $(PREFIX ./vsrc/, $(SUFFIX .v, $(RTL_NAME)))
 
 all:
 	@echo "Write this Makefile by your self."

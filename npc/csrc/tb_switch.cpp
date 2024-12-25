@@ -8,7 +8,7 @@
 #define MAX_SIM_TIME 20
 
 int sim_time = 0;
-int main(int argc,char **argv){
+int main__(int argc,char **argv){
 	Vswitch *dut = new Vswitch;
 
     Verilated::traceEverOn(true);

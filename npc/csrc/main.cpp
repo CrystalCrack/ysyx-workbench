@@ -1,6 +1,42 @@
-#include <stdio.h>
+#include <stdlib.h>
+#include <iostream>
+#include <verilated.h>
+#include <verilated_vcd_c.h>
+#include "Vlight.h"
+#include "Vlight___024unit.h"
+
+#define MAX_SIM_TIME 300000
+
+int sim_time = 0;
+VerilatedVcdC *m_trace = new VerilatedVcdC;
+
+void single_cycle(Vlight *top) {
+  top->clk = 0; top->eval();m_trace->dump(sim_time);sim_time++;
+  top->clk = 1; top->eval();m_trace->dump(sim_time);sim_time++;
+}
+
+void reset(Vlight *top, int n) {
+  top->rst = 1;
+  while (n > 0) {
+    single_cycle(top);
+    n--;
+  }
+  top->rst = 0;
+}
 
 int main() {
-  printf("Hello, ysyx!\n");
+  Vlight *dut = new Vlight;
+  Verilated::traceEverOn(true);
+  dut->trace(m_trace, 5);
+  m_trace->open("waveform.vcd");
+
+  while(sim_time < MAX_SIM_TIME) {
+    if(sim_time<10){
+      reset(dut,10);
+    }
+    else {
+      single_cycle(dut);
+    }
+  }
   return 0;
 }

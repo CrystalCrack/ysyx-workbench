@@ -10,7 +10,7 @@
 int sim_time = 0;
 int main(int argc,char **argv){
 	Vswitch *dut = new Vswitch;
-	Verilated::traceEverOn(true)
+	Verilated::traceEverOn(true);
 	VerilatedContext *contextp = new VerilatedContext;
 	contextp->commandArgs(argc, argv);
 	VerilatedVcdC *tfp = new VerilatedVcdC;//init vcd file pointer

@@ -26,6 +26,10 @@ int main(int argc,char **argv){
 		dut->eval();
 		printf("a = %d, b = %d, f = %d\n", a, b, dut->f);
 		assert(dut->f == (a ^ b));
+
+		tfp->dump(sim_time);
+		contextp->timeInc(1);
+		
 		sim_time++;
 	}
 	delete dut;

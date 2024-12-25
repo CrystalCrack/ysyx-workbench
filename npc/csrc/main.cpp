@@ -16,12 +16,12 @@ void single_cycle(Vlight *top) {
 }
 
 void reset(Vlight *top, int n) {
-  top->rst = 1;
+  top->rst_n = 0;
   while (n > 0) {
     single_cycle(top);
     n--;
   }
-  top->rst = 0;
+  top->rst_n = 1;
 }
 
 int main() {

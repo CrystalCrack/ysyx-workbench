@@ -6,9 +6,10 @@ module light(
     reg [31:0] counter;
     always @(posedge clk or negedge rst_n)
     begin
-        if (~rst_n)
+        if (~rst_n) begin
             counter <= 32'h0000;
             led <= 16'h0001;
+        end
         else begin
             if(counter==500) begin
                 counter <= 32'h0000;

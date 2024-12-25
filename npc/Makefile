@@ -2,7 +2,7 @@
 VERILATOR = verilator
 VERILATOR_FLAGS = --cc --exe --trace --build -j 4
 
-TOPNAME = switch
+TOPNAME = light
 NXDC_FILES = constr/top.nxdc
 BUILD_DIR = ./build
 SIM_DIR = ./sim

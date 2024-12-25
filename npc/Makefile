@@ -11,6 +11,7 @@ SIM_OBJ_DIR = $(SIM_DIR)/obj_dir
 BIN = $(BUILD_DIR)/$(TOPNAME)
 
 $(shell mkdir -p $(BUILD_DIR))
+$(shell mkdir -p $(SIM_DIR))
 
 #constraint file
 SRC_AUTO_BIND = $(abspath $(BUILD_DIR)/auto_bind.cpp)

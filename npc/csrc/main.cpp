@@ -3,7 +3,7 @@
 #include <verilated.h>
 #include <verilated_vcd_c.h>
 #include "Vlight.h"
-#include "Vlight___024unit.h"
+#include "Vlight___024root.h"
 
 #define MAX_SIM_TIME 300000
 

@@ -2,7 +2,7 @@ module light(
     input clk,
     input rst_n,
     output reg [15:0] led
-)
+);
     reg [31:0] counter;
     always @(posedge clk or negedge rst_n)
     begin

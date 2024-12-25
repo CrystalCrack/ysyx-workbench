@@ -1,6 +1,6 @@
 # Compiler and flags
 VERILATOR = verilator
-VERILATOR_FLAGS = --cc --exe --build -j 4 --trace
+VERILATOR_FLAGS = --cc --exe --trace --build -j 4 --trace
 
 # Source files
 RTL_NAME = switch

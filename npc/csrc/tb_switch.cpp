@@ -14,7 +14,6 @@ int main(int argc,char **argv){
 	VerilatedContext *contextp = new VerilatedContext;
 	contextp->commandArgs(argc, argv);
 	VerilatedVcdC *tfp = new VerilatedVcdC;//init vcd file pointer
-	contextp->traceEverOn(true);
 	dut->trace(tfp, 0);
 	tfp->open("wave.vcd");
 

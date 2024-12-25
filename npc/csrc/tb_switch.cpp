@@ -1,7 +1,7 @@
 #include<stdlib.h> 
 #include<iostream>
 #include<verilated.h> 
-#include<verilated_vcd_c.h>
+#include<verilated_vcd_c.h> //for export vcd file
 #include<Vswitch.h>
 #include<Vswitch___024root.h>
 
@@ -10,6 +10,14 @@
 int sim_time = 0;
 int main(int argc,char **argv){
 	Vswitch *dut = new Vswitch;
+
+	VerilatedContext *contextp = new VerilatedContext;
+	contextp->commandArgs(argc, argv);
+	VerilatedVcdC *tfp = new VerilatedVcdC;//init vcd file pointer
+	contextp->traceEverOn(true);
+	dut->trace(tfp, 0);
+	tfp->open("wave.vcd");
+
 	while (sim_time<MAX_SIM_TIME) {
 		int a = rand() & 1;
 		int b = rand() & 1;
@@ -21,5 +29,7 @@ int main(int argc,char **argv){
 		sim_time++;
 	}
 	delete dut;
+	tfp->close();
+	delete tfp;
 	return 0;
 }

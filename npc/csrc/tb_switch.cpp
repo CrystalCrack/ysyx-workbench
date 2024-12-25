@@ -10,13 +10,11 @@
 int sim_time = 0;
 int main(int argc,char **argv){
 	Vswitch *dut = new Vswitch;
-	Verilated::traceEverOn(true);
-	VerilatedContext *contextp = new VerilatedContext;
-	contextp->commandArgs(argc, argv);
-	VerilatedVcdC *tfp = new VerilatedVcdC;//init vcd file pointer
-	contextp->traceEverOn(true);
-	dut->trace(tfp, 0);
-	tfp->open("wave.vcd");
+
+    Verilated::traceEverOn(true);
+    VerilatedVcdC *m_trace = new VerilatedVcdC;
+    dut->trace(m_trace, 1);
+    m_trace->open("waveform.vcd");
 
 	while (sim_time<MAX_SIM_TIME) {
 		int a = rand() & 1;
@@ -27,13 +25,13 @@ int main(int argc,char **argv){
 		printf("a = %d, b = %d, f = %d\n", a, b, dut->f);
 		assert(dut->f == (a ^ b));
 
-		tfp->dump(sim_time);
-		contextp->timeInc(1);
+		m_trace->dump(sim_time);
 
 		sim_time++;
 	}
 	delete dut;
-	tfp->close();
-	delete tfp;
+	m_trace->close();
+	delete m_trace;
+	exit(EXIT_SUCCESS);
 	return 0;
 }

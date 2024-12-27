@@ -11,7 +11,7 @@ module light(
             led <= 16'h0001;
         end
         else begin
-            if(counter==500) begin
+            if(counter==5000000) begin
                 counter <= 32'h0000;
                 led <= {led[14:0], led[15]};
             end

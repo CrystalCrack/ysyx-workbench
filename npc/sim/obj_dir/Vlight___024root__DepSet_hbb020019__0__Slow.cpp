@@ -68,10 +68,10 @@ VL_ATTR_COLD void Vlight___024root___ctor_var_reset(Vlight___024root* vlSelf) {
     Vlight__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vlight___024root___ctor_var_reset\n"); );
     // Body
-    vlSelf->clk = VL_RAND_RESET_I(1);
-    vlSelf->rst_n = VL_RAND_RESET_I(1);
-    vlSelf->led = VL_RAND_RESET_I(16);
-    vlSelf->light__DOT__counter = VL_RAND_RESET_I(32);
-    vlSelf->__Vtrigrprev__TOP__clk = VL_RAND_RESET_I(1);
-    vlSelf->__Vtrigrprev__TOP__rst_n = VL_RAND_RESET_I(1);
+    vlSelf->clk = 0;
+    vlSelf->rst_n = 0;
+    vlSelf->led = 0;
+    vlSelf->light__DOT__counter = 0;
+    vlSelf->__Vtrigrprev__TOP__clk = 0;
+    vlSelf->__Vtrigrprev__TOP__rst_n = 0;
 }

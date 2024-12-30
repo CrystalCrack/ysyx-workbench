@@ -22,7 +22,7 @@ VL_INLINE_OPT void Vlight___024root___nba_sequent__TOP__0(Vlight___024root* vlSe
     // Body
     __Vdly__light__DOT__counter = vlSelf->light__DOT__counter;
     if (vlSelf->rst_n) {
-        if ((0x1f4U == vlSelf->light__DOT__counter)) {
+        if ((0x4c4b40U == vlSelf->light__DOT__counter)) {
             vlSelf->led = ((0xfffeU & ((IData)(vlSelf->led) 
                                        << 1U)) | (1U 
                                                   & ((IData)(vlSelf->led) 

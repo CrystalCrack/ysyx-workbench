@@ -41,6 +41,18 @@ static char* rl_gets() {
 
   return line_read;
 }
+//convert string to integer
+static int safe_atoi(char *str, uint64_t* result){
+  char *endptr;
+  long val = strtol(str,&endptr,10);
+
+  if(*endptr != '\0'){
+    return -1;
+  }
+
+  *result = val;
+  return 0;
+}
 
 static int cmd_c(char *args) {
   cpu_exec(-1);
@@ -51,7 +63,13 @@ static int cmd_si(char *args){
   if(args==NULL){
     cpu_exec(1);
   }else{
-    cpu_exec(atoi(args));
+    uint64_t n;
+    int ret = safe_atoi(args, &n);
+    if(ret<0){
+      printf("%s is not pure number!", args);
+    }else{
+      cpu_exec(n);
+    }
   }
   return 0;
 }
@@ -72,8 +90,6 @@ static struct {
   { "help", "Display information about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-
-  /* TODO: Add more commands */
   { "si", "Make the program pause after executing N instructions. When N is not specified, it defaults to 1", cmd_si}
 };
 

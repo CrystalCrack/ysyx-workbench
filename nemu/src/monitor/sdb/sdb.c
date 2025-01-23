@@ -17,6 +17,7 @@
 #include <cpu/cpu.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <memory/vaddr.h>
 #include "sdb.h"
 
 static int is_batch_mode = false;
@@ -84,6 +85,24 @@ static int cmd_help(char *args);
 static int cmd_info(char *args){
   if(strcmp(args, "r")==0||strcmp(args, "registers")==0||strcmp(args, "register")==0||strcmp(args, "reg")==0){
     isa_reg_display();
+  }else{
+    printf("Undefined info command:%s. Try \"help info\"",args);
+  }
+  return 0;
+}
+
+static int cmd_x(char *args){
+  uint32_t N;
+  uint64_t addr;
+  if(sscanf(args,"%d 0x%lx",&N,&addr)!=2){
+    printf("Invalid x args:%s. Try \"help x\"", args);
+  }else{
+    word_t data;
+    for(int i=0;i<N;i++){
+      data = vaddr_read(addr, 1);
+      printf("%X\t",data);
+    }
+    printf("\n");
   }
   return 0;
 }
@@ -97,7 +116,8 @@ static struct {
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
   { "si", "Make the program pause after executing N instructions. When N is not specified, it defaults to 1", cmd_si},
-  { "info", "Print the state of program", cmd_info}
+  { "info", "Print the state of program", cmd_info},
+  { "x", "Examine memory:x N EXPR\nEXPR is an expression for the memory address to examine.\nN is the number of bytes to output.", cmd_x}
 };
 
 #define NR_CMD ARRLEN(cmd_table)

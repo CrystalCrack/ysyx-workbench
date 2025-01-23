@@ -38,6 +38,7 @@ $(OBJ_DIR)/%.o: %.cc
 	@echo + CXX $<
 	@mkdir -p $(dir $@)
 	@$(CXX) $(CFLAGS) $(CXXFLAGS) -c -o $@ -g $<
+	@echo hahahahahaha
 	$(call call_fixdep, $(@:.o=.d), $@)
 
 # Depencies

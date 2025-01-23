@@ -66,7 +66,7 @@ static int cmd_si(char *args){
     uint64_t n;
     int ret = safe_atoi(args, &n);
     if(ret<0){
-      printf("%s is not pure number!", args);
+      printf("%s is not pure number!\n", args);
     }else{
       cpu_exec(n);
     }

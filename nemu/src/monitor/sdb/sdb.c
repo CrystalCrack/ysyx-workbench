@@ -79,8 +79,14 @@ static int cmd_q(char *args) {
   nemu_state.state = NEMU_QUIT;
   return -1;
 }
-
 static int cmd_help(char *args);
+
+static int cmd_info(char *args){
+  if(strcmp(args, "r")==0||strcmp(args, "registers")==0||strcmp(args, "register")==0||strcmp(args, "reg")==0){
+    isa_reg_display();
+  }
+  return 0;
+}
 
 static struct {
   const char *name;
@@ -90,11 +96,11 @@ static struct {
   { "help", "Display information about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-  { "si", "Make the program pause after executing N instructions. When N is not specified, it defaults to 1", cmd_si}
+  { "si", "Make the program pause after executing N instructions. When N is not specified, it defaults to 1", cmd_si},
+  { "info", "Print the state of program", cmd_info}
 };
 
 #define NR_CMD ARRLEN(cmd_table)
-
 static int cmd_help(char *args) {
   /* extract the first argument */
   char *arg = strtok(NULL, " ");

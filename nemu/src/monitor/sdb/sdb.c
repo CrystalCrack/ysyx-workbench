@@ -94,7 +94,10 @@ static int cmd_info(char *args){
 static int cmd_x(char *args){
   uint32_t N;
   uint64_t addr;
-  if(sscanf(args,"%d 0x%lx",&N,&addr)!=2){
+  if(args==NULL){
+    printf("Invalid x usage. Try \"help x\"");
+  }
+  else if(sscanf(args,"%d 0x%lx",&N,&addr)!=2){
     printf("Invalid x args:%s. Try \"help x\"", args);
   }else{
     word_t data;

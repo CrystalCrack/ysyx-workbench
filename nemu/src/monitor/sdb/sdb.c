@@ -86,7 +86,7 @@ static int cmd_info(char *args){
   if(strcmp(args, "r")==0||strcmp(args, "registers")==0||strcmp(args, "register")==0||strcmp(args, "reg")==0){
     isa_reg_display();
   }else{
-    printf("Undefined info command:%s. Try \"help info\"",args);
+    printf("Undefined info command:%s. Try \"help info\"\n",args);
   }
   return 0;
 }
@@ -95,10 +95,10 @@ static int cmd_x(char *args){
   uint32_t N;
   uint64_t addr;
   if(args==NULL){
-    printf("Invalid x usage. Try \"help x\"");
+    printf("Invalid x usage. Try \"help x\"\n");
   }
   else if(sscanf(args,"%d 0x%lx",&N,&addr)!=2){
-    printf("Invalid x args:%s. Try \"help x\"", args);
+    printf("Invalid x args:%s. Try \"help x\"\n", args);
   }else{
     word_t data;
     for(int i=0;i<N;i++){

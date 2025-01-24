@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
   while (fgets(line, sizeof(line), fp)) {
     line[strcspn(line, "\n")] = '\0';
     if (sscanf(line, "%u %s", &result, e) == 2) {
-      printf("%s",e);
+      printf("%s\n",e);
       expr_result = expr(e, &success);
       if(!success){
         return -1;
@@ -57,7 +57,6 @@ int main(int argc, char *argv[]) {
   for(int i=0;i<10000;i++){
     ret = fscanf(fp,"%u %s",&result, e);
     if(ret!=0) continue;
-
   }
   fclose(fp);
   return 0;

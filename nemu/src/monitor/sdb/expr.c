@@ -24,7 +24,7 @@ enum {
   TK_NOTYPE = 256, TK_EQ,
 
   /* TODO: Add more token types */
-
+  TK_DEC,
 };
 
 static struct rule {
@@ -35,10 +35,15 @@ static struct rule {
   /* TODO: Add more rules.
    * Pay attention to the precedence level of different rules.
    */
-
+  {"==", TK_EQ},        // equal
   {" +", TK_NOTYPE},    // spaces
   {"\\+", '+'},         // plus
-  {"==", TK_EQ},        // equal
+  {"-", '-'},           // minus
+  {"\\*", '*'},         // multiply
+  {"\\/", '/'},         // divide
+  {"[0-9]+", TK_DEC},   // decimal numbers
+  {"\\(", '('},         // left paran
+  {"\\)", ')'},         // right paran
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -89,13 +94,54 @@ static bool make_token(char *e) {
 
         position += substr_len;
 
+        if(nr_token>=32){
+          Log("Too many tokens~\n");
+          return false;
+        }
+
         /* TODO: Now a new token is recognized with rules[i]. Add codes
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
 
         switch (rules[i].token_type) {
-          default: TODO();
+          case '+':
+            tokens[nr_token].type = '+';
+            nr_token++;
+            break;
+          case '-':
+            tokens[nr_token].type = '-';
+            nr_token++;
+            break;
+          case '*':
+            tokens[nr_token].type = '*';
+            nr_token++;
+            break;
+          case '/':
+            tokens[nr_token].type = '/';
+            nr_token++;
+            break;
+          case TK_DEC:
+            tokens[nr_token].type = TK_DEC;
+            if(substr_len >= 32){
+              Log("Token too long: %.*s. Cut to %.*s\n", substr_len, substr_start, 31, substr_start);
+              //cut
+              substr_len = 31;
+            }
+            strncpy(tokens[nr_token].str, substr_start, substr_len);
+            tokens[nr_token].str[substr_len] = '\0';
+            nr_token++;
+            break;
+          case '(':
+            tokens[nr_token].type = '(';
+            nr_token++;
+            break;
+          case ')':
+            tokens[nr_token].type = ')';
+            nr_token++;
+            break;
+          case TK_NOTYPE:
+          default: 
         }
 
         break;
@@ -110,6 +156,106 @@ static bool make_token(char *e) {
 
   return true;
 }
+enum {PAREN_INVALID, PAREN_MATCH, PAREN_DISMATCH};
+int check_parenthesis(Token *p, Token *q){
+  int i = 0;
+  int dismatch_flag = 0;
+  for(int j=0;p+j<q;j++){
+    if((p+j)->type == '('){
+      i=i+1;
+    }
+    if((p+j)->type == ')'){
+      i=i-1;
+    }
+    if(i==0){
+      dismatch_flag = 1;
+    }
+  }
+  if(i!=0){
+    return PAREN_INVALID;
+  }else if(p->type!='('||(q-1)->type!=')'||dismatch_flag){
+    return PAREN_DISMATCH;
+  }else{
+    return PAREN_MATCH;
+  }
+}
+Token* FindMainOP(Token* p, Token* q){
+  int i;
+  int mainoptype = 0;
+  int mainoppos = -1;
+  for(i=0;p+i<q;i++){
+    if((p+i)->type=='*'||(p+i)->type=='/'){
+      if(mainoptype==0|| mainoptype=='*'|| mainoptype=='/'){
+        mainoptype = (p+i)->type;
+        mainoppos = i;
+      }
+    }else if((p+i)->type=='+'||(p+i)->type=='-'){
+      if(mainoptype==0 || mainoptype=='*' || mainoptype=='/' || mainoptype=='+' || mainoptype=='-'){
+        mainoptype = (p+i)->type;
+        mainoppos = i;
+      }
+    }else if((p+i)->type=='('){
+      int layer = 1;
+      while(layer>0){
+        i++;
+        switch((p+i)->type){
+          case '(':
+            layer++;
+            break;
+          case ')':
+            layer--;
+            break;
+        }
+      }
+    }
+  }
+  return p+mainoppos;
+}
+enum {PAREN_ERR=1, BADEXPR_ERR, MAINOP_ERR, UNDEF_OP};
+uint32_t eval(Token* p, Token* q, int *errflag){
+  if(p>q){
+    //bad expression
+    *errflag = BADEXPR_ERR;
+    return 0;
+  }
+  else if(p==q){
+    //refer to a number in this case
+    //return the number directly
+    return strtoul(p->str, NULL, 10);
+  }else {
+    int ret = check_parenthesis(p,q);
+    switch(ret){
+      case PAREN_INVALID:
+        *errflag = PAREN_ERR;
+        return 0;
+      case PAREN_MATCH:
+        return eval(p+1, q-1, errflag);
+    }
+    Token* pos = FindMainOP(p,q);
+    if(pos < p){
+      *errflag = MAINOP_ERR;
+      return 0;
+    }
+    uint32_t val1 = eval(p, pos, errflag);
+    if(errflag!=0) return 0;
+    uint32_t val2 = eval(pos+1, q, errflag);
+    if(errflag!=0) return 0;
+
+    switch(pos->type){
+      case '+':
+        return val1+val2;
+      case '-':
+        return val1-val2;
+      case '*':
+        return val1*val2;
+      case '/':
+        return val1/val2;
+      default:
+        *errflag = UNDEF_OP;
+        return 0;
+    }
+  }
+}
 
 
 word_t expr(char *e, bool *success) {
@@ -119,7 +265,28 @@ word_t expr(char *e, bool *success) {
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-  TODO();
-
-  return 0;
+  Token* p = tokens;
+  Token* q = p+nr_token;
+  int token_err;
+  uint32_t result = eval(p,q,&token_err);
+  if(token_err!=0){
+    *success = false;
+    switch(token_err){
+      case PAREN_ERR:
+        printf("parenthesis invalid\n");
+        break;
+      case UNDEF_OP:
+        printf("undefined operation\n");
+        break;
+      case BADEXPR_ERR:
+        printf("syntax error\n");
+        break;
+      case MAINOP_ERR:
+        printf("cannot find main operator\n");
+        break;
+    }
+    return 0;
+  }
+  *success = true;
+  return result;
 }

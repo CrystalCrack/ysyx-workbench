@@ -268,7 +268,7 @@ word_t expr(char *e, bool *success) {
   /* TODO: Insert codes to evaluate the expression. */
   Token* p = tokens;
   Token* q = p+nr_token;
-  int token_err;
+  int token_err = 0;
   uint32_t result = eval(p,q,&token_err);
   if(token_err!=0){
     *success = false;

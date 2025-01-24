@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
   uint32_t expr_result;
   char line[65535+32];
   char e[65535];
-  bool success;
+  bool success = true;
   int ret;
   while (fgets(line, sizeof(line), fp)) {
     line[strcspn(line, "\n")] = '\0';

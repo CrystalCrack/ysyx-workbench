@@ -51,4 +51,6 @@ int main(int argc, char *argv[]) {
     printf("expr_result=%u\tresult=%u\n",expr_result,result);
     Assert(result==expr_result,"assertion failed:%u!=%u\n",expr_result,result);
   }
+  fclose(fp);
+  return 0;
 }

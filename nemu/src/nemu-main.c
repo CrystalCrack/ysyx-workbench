@@ -38,18 +38,24 @@ int main(int argc, char *argv[]) {
   assert(fp != NULL);
   uint32_t result;
   uint32_t expr_result;
+  char line[65535+32];
   char e[65535];
   bool success;
   int ret;
+  while (fgets(line, sizeof(line), fp)) {
+      if (sscanf(line, "%u %[^\n]", &result, e) == 2) {
+        expr_result = expr(e, &success);
+        if(!success){
+          return -1;
+        }
+        printf("expr_result=%u\tresult=%u\n",expr_result,result);
+        Assert(result==expr_result,"assertion failed:%u!=%u\n",expr_result,result);
+      }
+  }
   for(int i=0;i<10000;i++){
     ret = fscanf(fp,"%u %s",&result, e);
     if(ret!=0) continue;
-    expr_result = expr(e, &success);
-    if(!success){
-      return -1;
-    }
-    printf("expr_result=%u\tresult=%u\n",expr_result,result);
-    Assert(result==expr_result,"assertion failed:%u!=%u\n",expr_result,result);
+
   }
   fclose(fp);
   return 0;

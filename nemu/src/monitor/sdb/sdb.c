@@ -104,7 +104,7 @@ static int cmd_x(char *args){
   }else{
     word_t data;
     for(int i=0;i<N;i++){
-      data = vaddr_read(addr, 1);
+      data = vaddr_read(addr+i, 1);
       printf("%X\t",data);
     }
     printf("\n");

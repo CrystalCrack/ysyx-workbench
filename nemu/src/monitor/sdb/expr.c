@@ -138,10 +138,12 @@ static bool make_token(char *e) {
             break;
           case '(':
             tokens[nr_token].type = '(';
+            memset(tokens[nr_token].str,'\0',sizeof(tokens[nr_token].str));
             nr_token++;
             break;
           case ')':
             tokens[nr_token].type = ')';
+            memset(tokens[nr_token].str,'\0',sizeof(tokens[nr_token].str));
             nr_token++;
             break;
           case TK_NOTYPE:
@@ -171,7 +173,7 @@ int check_parenthesis(Token *p, Token *q){
     if((p+j)->type == ')'){
       i=i-1;
     }
-    if(i==0){
+    if(i==0&&p+j!=q-1){
       dismatch_flag = 1;
     }
   }

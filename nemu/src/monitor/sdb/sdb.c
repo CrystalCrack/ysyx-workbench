@@ -83,7 +83,9 @@ static int cmd_q(char *args) {
 static int cmd_help(char *args);
 
 static int cmd_info(char *args){
-  if(strcmp(args, "r")==0||strcmp(args, "registers")==0||strcmp(args, "register")==0||strcmp(args, "reg")==0){
+  if(args==NULL){
+    printf("Blank arg for info is not valid. Try\"help info\"\n");
+  }else if(strcmp(args, "r")==0||strcmp(args, "registers")==0||strcmp(args, "register")==0||strcmp(args, "reg")==0){
     isa_reg_display();
   }else{
     printf("Undefined info command:%s. Try \"help info\"\n",args);

@@ -43,14 +43,16 @@ int main(int argc, char *argv[]) {
   bool success;
   int ret;
   while (fgets(line, sizeof(line), fp)) {
-      if (sscanf(line, "%u %[^\n]", &result, e) == 2) {
-        expr_result = expr(e, &success);
-        if(!success){
-          return -1;
-        }
-        printf("expr_result=%u\tresult=%u\n",expr_result,result);
-        Assert(result==expr_result,"assertion failed:%u!=%u\n",expr_result,result);
+    line[strcspn(line, "\n")] = '\0';
+    if (sscanf(line, "%u %s", &result, e) == 2) {
+      printf("%s",e);
+      expr_result = expr(e, &success);
+      if(!success){
+        return -1;
       }
+      printf("expr_result=%u\tresult=%u\n",expr_result,result);
+      Assert(result==expr_result,"assertion failed:%u!=%u\n",expr_result,result);
+    }
   }
   for(int i=0;i<10000;i++){
     ret = fscanf(fp,"%u %s",&result, e);

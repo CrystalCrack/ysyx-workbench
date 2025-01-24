@@ -213,12 +213,12 @@ Token* FindMainOP(Token* p, Token* q){
 }
 enum {PAREN_ERR=1, BADEXPR_ERR, MAINOP_ERR, UNDEF_OP};
 uint32_t eval(Token* p, Token* q, int *errflag){
-  if(p>q){
+  if(p+1>q){
     //bad expression
     *errflag = BADEXPR_ERR;
     return 0;
   }
-  else if(p==q){
+  else if(p+1==q){
     //refer to a number in this case
     //return the number directly
     return strtoul(p->str, NULL, 10);

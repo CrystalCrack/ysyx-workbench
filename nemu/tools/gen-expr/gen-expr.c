@@ -41,7 +41,7 @@ static int position = 0;
 static int position2 = 0;
 
 static void gen_space(){
-  for(int i=0; i<choose(3); i++){
+  for(int i=0; i<choose(2); i++){
     expr[position++] = ' ';
     buf[position2++] = ' ';
   }
@@ -52,12 +52,19 @@ static void gen_num(){
   char buffer[11];
   snprintf(buffer,sizeof(buffer),"%u",num);
   int len = strlen(buffer);
-
+  int neg_flag = 0;
+  if(choose(2)){
+    expr[position++] = '-';
+    buf[position2++] = '(';
+    buf[position2++] = '-';
+    neg_flag = 1;
+  }
   for(int i=0;i<len;i++){
     expr[position++] = buffer[i];
     buf[position2++] = buffer[i];
   }
   buf[position2++] = 'u';
+  if(neg_flag) buf[position2++] = ')';
 }
 
 static void gen_c(char c){

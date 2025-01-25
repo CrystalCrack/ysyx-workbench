@@ -51,17 +51,19 @@ __attribute__((unused)) static void test_expr(){
 }
 
 int main(int argc, char *argv[]) {
-  /* Initialize the monitor. */
-#ifdef CONFIG_TARGET_AM
-  am_init_monitor();
-#else
-  init_monitor(argc, argv);
-#endif
+//   /* Initialize the monitor. */
+// #ifdef CONFIG_TARGET_AM
+//   am_init_monitor();
+// #else
+//   init_monitor(argc, argv);
+// #endif
 
-  /* Start engine. */
-  engine_start();
+//   /* Start engine. */
+//   engine_start();
 
-  return is_exit_status_bad();
+//   return is_exit_status_bad();
+
+  test_expr();
 
   return 0;
 }

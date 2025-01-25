@@ -285,7 +285,7 @@ uint32_t eval(Token* p, Token* q, int *errflag){
         *errflag = UNDEF_OP;
         return 0;
     }
-    IFDEF(EXPR_DEBUG, printf("executing operation: %u %c %u = %u", val1, pos->type, val2, ret_val));
+    IFDEF(EXPR_DEBUG, printf("executing operation: %u %c %u = %u\n", val1, pos->type, val2, ret_val));
     return ret_val;
   }
 }

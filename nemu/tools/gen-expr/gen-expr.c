@@ -26,6 +26,7 @@ int choose(int n){
   return rand()%n;
 }
 // this should be enough
+static char expr[65536] = {};
 static char buf[65536] = {};
 static char code_buf[65536 + 128] = {}; // a little larger than `buf`
 static char *code_format =
@@ -37,27 +38,32 @@ static char *code_format =
 "  return 0; "
 "}";
 static int position = 0;
+static int position2 = 0;
 
 static void gen_num(){
   uint32_t num = rand()%2000;
   char buffer[11];
   snprintf(buffer,sizeof(buffer),"%u",num);
   int len = strlen(buffer);
+
   for(int i=0;i<len;i++){
-    buf[position++] = buffer[i];
+    expr[position++] = buffer[i];
+    buf[position2++] = buffer[i];
   }
+  buf[position2++] = 'u';
 }
 
 static void gen_c(char c){
-  buf[position++] = c;
+  expr[position++] = c;
+  buf[position2++] = c;
 }
 
 static void gen_op(){
   switch(choose(4)){
-    case 0: buf[position++] = '+'; break;
-    case 1: buf[position++] = '-'; break;
-    case 2: buf[position++] = '*'; break;
-    default: buf[position++] = '/'; break;
+    case 0: buf[position2++] = '+'; expr[position++] = '+'; break;
+    case 1: buf[position2++] = '-'; expr[position++] = '-'; break;
+    case 2: buf[position2++] = '*'; expr[position++] = '*'; break;
+    default: buf[position2++] = '/'; expr[position++] = '/'; break;
   }
 }
 static void gen_rand_expr(int depth) {
@@ -82,8 +88,10 @@ int main(int argc, char *argv[]) {
   int i;
   for (i = 0; i < loop; i ++) {
     position = 0;
+    position2 = 0;
     gen_rand_expr(0);
-    buf[position++] = '\0';
+    expr[position++] = '\0';
+    buf[position2++] = '\0';
 
     sprintf(code_buf, code_format, buf);
 
@@ -102,7 +110,7 @@ int main(int argc, char *argv[]) {
     ret = fscanf(fp, "%u", &result);
     pclose(fp);
 
-    printf("%u %s\n", result, buf);
+    printf("%u %s\n", result, expr);
 
   }
   return 0;

@@ -19,7 +19,7 @@
  * Type 'man regex' for more information about POSIX regex functions.
  */
 #include <regex.h>
-#define EXPR_DEBUG 1
+#define EXPR_DEBUG 0
 #define MAX_TOKEN 128
 enum {
   TK_NOTYPE = 256, TK_EQ,
@@ -219,7 +219,7 @@ Token* FindMainOP(Token* p, Token* q){
   return p+mainoppos;
 }
 
-static void print_expr(Token* p, Token* q){
+__attribute__((unused)) static void print_expr (Token* p, Token* q) {
   printf("Evaluating:");
   for(int i=0;p+i<q;i++){
     switch((p+i)->type){

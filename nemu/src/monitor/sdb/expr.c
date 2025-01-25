@@ -219,20 +219,20 @@ Token* FindMainOP(Token* p, Token* q){
 }
 
 static void print_expr(Token* p, Token* q){
-  Log("Evaluating:");
+  printf("Evaluating:");
   for(int i=0;p+i<q;i++){
     switch((p+i)->type){
       case '+': case '-': case '*': case '/': case '(': case ')':
-      Log("%c",(p+i)->type);
+      printf("%c",(p+i)->type);
       break;
       case TK_DEC:
-      Log("%s",(p+i)->str);
+      printf("%s",(p+i)->str);
       break;
       default:
         assert(0);
     }
   }
-  Log("\n");
+  printf("\n");
 }
 enum {PAREN_ERR=1, BADEXPR_ERR, MAINOP_ERR, UNDEF_OP};
 uint32_t eval(Token* p, Token* q, int *errflag){
@@ -246,7 +246,7 @@ uint32_t eval(Token* p, Token* q, int *errflag){
     //refer to a number in this case
     //return the number directly
     int num = strtoul(p->str, NULL, 10);
-    Log("this is a number:%u", num);
+    printf("this is a number:%u", num);
     return num;
   }else {
     int ret = check_parenthesis(p,q);
@@ -262,7 +262,7 @@ uint32_t eval(Token* p, Token* q, int *errflag){
       *errflag = MAINOP_ERR;
       return 0;
     }
-    Log("main operator %c found at %d", pos->type, (int)(pos-p));
+    printf("main operator %c found at %d", pos->type, (int)(pos-p));
     uint32_t val1 = eval(p, pos, errflag);
     if(errflag!=0) return 0;
     uint32_t val2 = eval(pos+1, q, errflag);

@@ -264,9 +264,9 @@ uint32_t eval(Token* p, Token* q, int *errflag){
     }
     printf("main operator %c found at %d\n", pos->type, (int)(pos-p));
     uint32_t val1 = eval(p, pos, errflag);
-    if(errflag!=0) return 0;
+    if(*errflag!=0) return 0;
     uint32_t val2 = eval(pos+1, q, errflag);
-    if(errflag!=0) return 0;
+    if(*errflag!=0) return 0;
 
     switch(pos->type){
       case '+':

@@ -186,30 +186,32 @@ int check_parenthesis(Token *p, Token *q){
     return PAREN_MATCH;
   }
 }
-Token* FindMainOP(Token* p, Token* q){
+Token* FindMainOP(Token* p, Token* q, bool* is_binary){
   int i;
   int mainoptype = 0;
   int mainoppos = -1;
   for(i=0;p+i<q;i++){
-    if((p+i)->type=='*'||(p+i)->type=='/'){
-      if(mainoptype==0|| mainoptype=='*'|| mainoptype=='/'){
+    if((p+i)->type=='-' && ((p+i)==tokens ||
+        (p+i-1)->type == '+' || (p+i-1)->type == '-' || (p+i-1)->type == '*' || (p+i-1)->type == '/' || (p+i-1)->type == '(')){
+      /* '-' represented as a unary operator*/
+      if(mainoptype == 0){
+        mainoptype = 1;
+        mainoppos = i;
+        *is_binary = false;
+      }
+    }else if((p+i)->type=='*'||(p+i)->type=='/'){
+      if(mainoptype==0|| mainoptype==1 || mainoptype=='*'|| mainoptype=='/'){
         mainoptype = (p+i)->type;
         mainoppos = i;
+        *is_binary = true;
       }
-    }else if((p+i)->type=='+'||(p+i)->type=='-'){
-      if((p+i)->type == '-' &&
-        ((p+i)==tokens || //- is the first sign
-        (p+i-1)->type == '+' || (p+i-1)->type == '-' || (p+i-1)->type == '*' || (p+i-1)->type == '/' || (p+i-1)->type == '(')
-        ){
-          /* - represented as a negative sign in this case, then it is not a main operator*/
-          continue;
-      }
-
-      if(mainoptype==0 || mainoptype=='*' || mainoptype=='/' || mainoptype=='+' || mainoptype=='-'){
+    }else if((p+i)->type=='+'|| (p+i)->type=='-' ){
+      /* '-' represented as a binary operator */
+      if(mainoptype==0 || mainoptype==1 || mainoptype=='*' || mainoptype=='/' || mainoptype=='+' || mainoptype=='-'){
         mainoptype = (p+i)->type;
         mainoppos = i;
+        *is_binary = false;
       }
-
     }else if((p+i)->type=='('){
       int layer = 1;
       while(layer>0){
@@ -271,40 +273,49 @@ uint32_t eval(Token* p, Token* q, int *errflag){
         ret_val = eval(p+1, q-1, errflag);
         return ret_val;
     }
-    /*Check that the expression start with '-'*/
-    if(p->type=='-'){
-      IFONE(EXPR_DEBUG, printf("negative sign detected\n"));
-      ret_val = (uint32_t)-eval(p+1,q,errflag);
-      return ret_val;
-    }
-    Token* pos = FindMainOP(p,q);
+    
+    /* find the main operator*/
+    bool is_binary;
+    Token* pos = FindMainOP(p,q, &is_binary);
     if(pos < p){
       *errflag = MAINOP_ERR;
       return 0;
     }
     IFONE(EXPR_DEBUG, printf("main operator %c found at %d\n", pos->type, (int)(pos-p)));
-    uint32_t val1 = eval(p, pos, errflag);
+    
+    /*evaluate expression recursively accroding to the main operator*/
+    uint32_t val_right = eval(pos+1, q, errflag);
     if(*errflag!=0) return 0;
-    uint32_t val2 = eval(pos+1, q, errflag);
+    if(!is_binary){
+      /*the operator is unary*/
+      if(pos->type=='-'){
+        ret_val = -eval(pos+1,q,errflag);
+        IFONE(EXPR_DEBUG, printf("excuting operation: -%u = %u\n", -ret_val, ret_val));
+        return ret_val;
+      }
+    }
+
+    uint32_t val_left = eval(p, pos, errflag);
     if(*errflag!=0) return 0;
+
     switch(pos->type){
       case '+':
-        ret_val = val1+val2;
+        ret_val = val_left+val_right;
         break;
       case '-':
-        ret_val = val1-val2;
+        ret_val = val_left-val_right;
         break;
       case '*':
-        ret_val = val1*val2;
+        ret_val = val_left*val_right;
         break;
       case '/':
-        ret_val = val1/val2;
+        ret_val = val_left/val_right;
         break;
       default:
         *errflag = UNDEF_OP;
         return 0;
     }
-    IFONE(EXPR_DEBUG, printf("executing operation: %u %c %u = %u\n", val1, pos->type, val2, ret_val));
+    IFONE(EXPR_DEBUG, printf("executing operation: %u %c %u = %u\n", val_left, pos->type, val_right, ret_val));
     return ret_val;
   }
 }

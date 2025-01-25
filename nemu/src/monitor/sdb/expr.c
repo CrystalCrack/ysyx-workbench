@@ -259,18 +259,23 @@ uint32_t eval(Token* p, Token* q, int *errflag){
     IFONE(EXPR_DEBUG, printf("this is a number:%u\n", num));
     return num;
   }else {
+    int ret_val;
     /*Check that the expression is enclosed in parentheses*/
     int ret = check_parenthesis(p,q);
     switch(ret){
       case PAREN_INVALID:
         *errflag = PAREN_ERR;
         return 0;
-      case PAREN_MATCH:
-        return eval(p+1, q-1, errflag);
+      case PAREN_MATCH: 
+        IFONE(EXPR_DEBUG, printf("remove parentheses"));
+        ret_val = eval(p+1, q-1, errflag);
+        return ret_val;
     }
     /*Check that the expression start with '-'*/
     if(p->type=='-'){
-      return (uint32_t)-eval(p+1,q,errflag);
+      IFONE(EXPR_DEBUG, printf("negative sign detected"));
+      ret_val = (uint32_t)-eval(p+1,q,errflag);
+      return ret_val;
     }
     Token* pos = FindMainOP(p,q);
     if(pos < p){
@@ -282,7 +287,6 @@ uint32_t eval(Token* p, Token* q, int *errflag){
     if(*errflag!=0) return 0;
     uint32_t val2 = eval(pos+1, q, errflag);
     if(*errflag!=0) return 0;
-    int ret_val;
     switch(pos->type){
       case '+':
         ret_val = val1+val2;

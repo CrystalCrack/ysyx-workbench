@@ -210,7 +210,7 @@ Token* FindMainOP(Token* p, Token* q, bool* is_binary){
       if(mainoptype==0 || mainoptype==1 || mainoptype=='*' || mainoptype=='/' || mainoptype=='+' || mainoptype=='-'){
         mainoptype = (p+i)->type;
         mainoppos = i;
-        *is_binary = false;
+        *is_binary = true;
       }
     }else if((p+i)->type=='('){
       int layer = 1;

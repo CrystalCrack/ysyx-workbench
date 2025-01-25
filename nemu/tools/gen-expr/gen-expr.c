@@ -84,7 +84,7 @@ static void gen_rand_expr(int depth) {
     default: gen_space(); gen_rand_expr(depth+1);gen_space();gen_op();gen_space();gen_rand_expr(depth+1);gen_space();break;
   }
 }
-
+char warnings[1024];
 int main(int argc, char *argv[]) {
   int seed = time(0);
   srand(seed);
@@ -93,7 +93,9 @@ int main(int argc, char *argv[]) {
     sscanf(argv[1], "%d", &loop);
   }
   int i;
+  int haswarning = 0;
   for (i = 0; i < loop; i ++) {
+    haswarning = 0;
     position = 0;
     position2 = 0;
     gen_rand_expr(0);
@@ -107,18 +109,27 @@ int main(int argc, char *argv[]) {
     fputs(code_buf, fp);
     fclose(fp);
 
-    int ret = system("gcc /tmp/.code.c -o /tmp/.expr");
-    if (ret != 0) continue;
+    FILE *gcc_fp = popen("gcc /tmp/.code.c -o /tmp/.expr 2>&1 | tee /dev/tty", "r");
+    assert(gcc_fp != NULL);
+    while(fgets(warnings,sizeof(warnings),gcc_fp)!=NULL){
+      //examine line by line whether it has warning:
+      if(strstr(warnings, "warning:")!=NULL){
+        haswarning = 1;
+      }
+    }
+    pclose(gcc_fp);
 
-    fp = popen("/tmp/.expr", "r");
-    assert(fp != NULL);
+    if(!haswarning){
+      fp = popen("/tmp/.expr", "r");
+      assert(fp != NULL);
 
-    uint32_t result;
-    ret = fscanf(fp, "%u", &result);
-    pclose(fp);
+      uint32_t result;
+      int ret = fscanf(fp, "%u", &result);
+      if(ret!=1) assert(0);
+      pclose(fp);
 
-    printf("%u %s\n", result, expr);
-
+      printf("%u %s\n", result, expr);
+    }
   }
   return 0;
 }

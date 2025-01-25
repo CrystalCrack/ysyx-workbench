@@ -112,6 +112,22 @@ static int cmd_x(char *args){
   return 0;
 }
 
+static int cmd_p(char *args){
+  if(args==NULL){
+    return 0;
+  }else{
+    bool success;
+    word_t result;
+    result = expr(args, &success);
+    if(!success){
+      printf("Invalid expression:%s",args);
+      return 0;
+    }
+    printf("%u\n",result);
+  }
+  return 0;
+}
+
 static struct {
   const char *name;
   const char *description;
@@ -122,7 +138,8 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
   { "si", "Make the program pause after executing N instructions. When N is not specified, it defaults to 1", cmd_si},
   { "info", "Print the state of program", cmd_info},
-  { "x", "Examine memory:x N EXPR\nEXPR is an expression for the memory address to examine.\nN is the number of bytes to output.", cmd_x}
+  { "x", "Examine memory:x N EXPR\nEXPR is an expression for the memory address to examine.\nN is the number of bytes to output.", cmd_x},
+  { "p", "usage:p EXPR\n figure out the result of EXPR", cmd_p}
 };
 
 #define NR_CMD ARRLEN(cmd_table)

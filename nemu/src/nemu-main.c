@@ -22,18 +22,7 @@ int is_exit_status_bad();
 
 word_t expr(char *e, bool *success);
 
-int main(int argc, char *argv[]) {
-//   /* Initialize the monitor. */
-// #ifdef CONFIG_TARGET_AM
-//   am_init_monitor();
-// #else
-//   init_monitor(argc, argv);
-// #endif
-
-//   /* Start engine. */
-//   engine_start();
-
-//   return is_exit_status_bad();
+__attribute__((unused)) static void test_expr(){
   FILE *fp = fopen("/home/crystc/ysyx-workbench/nemu/tools/gen-expr/input", "r");
   assert(fp != NULL);
   uint32_t result;
@@ -48,7 +37,7 @@ int main(int argc, char *argv[]) {
       printf("%s\n",e);
       expr_result = expr(e, &success);
       if(!success){
-        return -1;
+        exit(-1);
       }
       printf("expr_result=%u\tresult=%u\n",expr_result,result);
       Assert(result==expr_result,"assertion failed:%u!=%u\n",expr_result,result);
@@ -59,5 +48,20 @@ int main(int argc, char *argv[]) {
     if(ret!=0) continue;
   }
   fclose(fp);
+}
+
+int main(int argc, char *argv[]) {
+  /* Initialize the monitor. */
+#ifdef CONFIG_TARGET_AM
+  am_init_monitor();
+#else
+  init_monitor(argc, argv);
+#endif
+
+  /* Start engine. */
+  engine_start();
+
+  return is_exit_status_bad();
+
   return 0;
 }

@@ -236,7 +236,7 @@ static void print_expr(Token* p, Token* q){
 }
 enum {PAREN_ERR=1, BADEXPR_ERR, MAINOP_ERR, UNDEF_OP};
 uint32_t eval(Token* p, Token* q, int *errflag){
-  IFDEF(EXPR_DEBUG, print_expr(p,q));
+  IFONE(EXPR_DEBUG, print_expr(p,q));
   if(p+1>q){
     //bad expression
     *errflag = BADEXPR_ERR;
@@ -246,7 +246,7 @@ uint32_t eval(Token* p, Token* q, int *errflag){
     //refer to a number in this case
     //return the number directly
     int num = strtoul(p->str, NULL, 10);
-    IFDEF(EXPR_DEBUG, printf("this is a number:%u\n", num));
+    IFONE(EXPR_DEBUG, printf("this is a number:%u\n", num));
     return num;
   }else {
     int ret = check_parenthesis(p,q);
@@ -262,7 +262,7 @@ uint32_t eval(Token* p, Token* q, int *errflag){
       *errflag = MAINOP_ERR;
       return 0;
     }
-    IFDEF(EXPR_DEBUG, printf("main operator %c found at %d\n", pos->type, (int)(pos-p)));
+    IFONE(EXPR_DEBUG, printf("main operator %c found at %d\n", pos->type, (int)(pos-p)));
     uint32_t val1 = eval(p, pos, errflag);
     if(*errflag!=0) return 0;
     uint32_t val2 = eval(pos+1, q, errflag);
@@ -285,7 +285,7 @@ uint32_t eval(Token* p, Token* q, int *errflag){
         *errflag = UNDEF_OP;
         return 0;
     }
-    IFDEF(EXPR_DEBUG, printf("executing operation: %u %c %u = %u\n", val1, pos->type, val2, ret_val));
+    IFONE(EXPR_DEBUG, printf("executing operation: %u %c %u = %u\n", val1, pos->type, val2, ret_val));
     return ret_val;
   }
 }

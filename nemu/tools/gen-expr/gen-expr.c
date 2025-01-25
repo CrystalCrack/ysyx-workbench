@@ -40,6 +40,13 @@ static char *code_format =
 static int position = 0;
 static int position2 = 0;
 
+static void gen_space(){
+  for(int i=0; i<choose(3); i++){
+    expr[position++] = ' ';
+    buf[position2++] = ' ';
+  }
+}
+
 static void gen_num(){
   uint32_t num = rand()%2000;
   char buffer[11];
@@ -72,9 +79,9 @@ static void gen_rand_expr(int depth) {
     return;
   }
   switch(choose(3)){
-    case 0: gen_num();break;
-    case 1: gen_c('(');gen_rand_expr(depth+1);gen_c(')');break;
-    default: gen_rand_expr(depth+1);gen_op();gen_rand_expr(depth+1);break;
+    case 0: gen_space(); gen_num(); gen_space(); break;
+    case 1: gen_space(); gen_c('('); gen_space(); gen_rand_expr(depth+1); gen_space(); gen_c(')'); gen_space();break;
+    default: gen_space(); gen_rand_expr(depth+1);gen_space();gen_op();gen_space();gen_rand_expr(depth+1);gen_space();break;
   }
 }
 

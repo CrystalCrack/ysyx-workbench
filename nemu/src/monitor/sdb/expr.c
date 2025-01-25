@@ -197,10 +197,19 @@ Token* FindMainOP(Token* p, Token* q){
         mainoppos = i;
       }
     }else if((p+i)->type=='+'||(p+i)->type=='-'){
+      if((p+i)->type == '-' &&
+        ((p+i)==tokens || //- is the first sign
+        (p+i-1)->type == '+' || (p+i-1)->type == '-' || (p+i-1)->type == '*' || (p+i-1)->type == '/' || (p+i-1)->type == '(')
+        ){
+          /* - represented as a negative sign in this case, then it is not a main operator*/
+          continue;
+      }
+
       if(mainoptype==0 || mainoptype=='*' || mainoptype=='/' || mainoptype=='+' || mainoptype=='-'){
         mainoptype = (p+i)->type;
         mainoppos = i;
       }
+
     }else if((p+i)->type=='('){
       int layer = 1;
       while(layer>0){
@@ -250,6 +259,7 @@ uint32_t eval(Token* p, Token* q, int *errflag){
     IFONE(EXPR_DEBUG, printf("this is a number:%u\n", num));
     return num;
   }else {
+    /*Check that the expression is enclosed in parentheses*/
     int ret = check_parenthesis(p,q);
     switch(ret){
       case PAREN_INVALID:
@@ -257,6 +267,10 @@ uint32_t eval(Token* p, Token* q, int *errflag){
         return 0;
       case PAREN_MATCH:
         return eval(p+1, q-1, errflag);
+    }
+    /*Check that the expression start with '-'*/
+    if(p->type=='-'){
+      return (uint32_t)-eval(p+1,q,errflag);
     }
     Token* pos = FindMainOP(p,q);
     if(pos < p){

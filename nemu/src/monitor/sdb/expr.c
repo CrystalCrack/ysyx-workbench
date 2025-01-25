@@ -246,7 +246,7 @@ uint32_t eval(Token* p, Token* q, int *errflag){
     //refer to a number in this case
     //return the number directly
     int num = strtoul(p->str, NULL, 10);
-    printf("this is a number:%u", num);
+    printf("this is a number:%u\n", num);
     return num;
   }else {
     int ret = check_parenthesis(p,q);
@@ -262,7 +262,7 @@ uint32_t eval(Token* p, Token* q, int *errflag){
       *errflag = MAINOP_ERR;
       return 0;
     }
-    printf("main operator %c found at %d", pos->type, (int)(pos-p));
+    printf("main operator %c found at %d\n", pos->type, (int)(pos-p));
     uint32_t val1 = eval(p, pos, errflag);
     if(errflag!=0) return 0;
     uint32_t val2 = eval(pos+1, q, errflag);

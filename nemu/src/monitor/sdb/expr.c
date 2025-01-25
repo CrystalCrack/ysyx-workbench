@@ -267,13 +267,13 @@ uint32_t eval(Token* p, Token* q, int *errflag){
         *errflag = PAREN_ERR;
         return 0;
       case PAREN_MATCH: 
-        IFONE(EXPR_DEBUG, printf("remove parentheses"));
+        IFONE(EXPR_DEBUG, printf("remove parentheses\n"));
         ret_val = eval(p+1, q-1, errflag);
         return ret_val;
     }
     /*Check that the expression start with '-'*/
     if(p->type=='-'){
-      IFONE(EXPR_DEBUG, printf("negative sign detected"));
+      IFONE(EXPR_DEBUG, printf("negative sign detected\n"));
       ret_val = (uint32_t)-eval(p+1,q,errflag);
       return ret_val;
     }

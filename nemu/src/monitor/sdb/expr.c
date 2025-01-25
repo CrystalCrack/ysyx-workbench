@@ -289,8 +289,8 @@ uint32_t eval(Token* p, Token* q, int *errflag){
     if(!is_binary){
       /*the operator is unary*/
       if(pos->type=='-'){
-        ret_val = -eval(pos+1,q,errflag);
-        IFONE(EXPR_DEBUG, printf("excuting operation: -%u = %u\n", -ret_val, ret_val));
+        ret_val = -val_right;
+        IFONE(EXPR_DEBUG, printf("excuting operation: -%u = %u\n", val_right, ret_val));
         return ret_val;
       }
     }

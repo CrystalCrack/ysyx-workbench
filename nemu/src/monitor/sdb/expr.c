@@ -20,6 +20,7 @@
  */
 #include <regex.h>
 #define EXPR_DEBUG 1
+#define MAX_TOKEN 128
 enum {
   TK_NOTYPE = 256, TK_EQ,
 
@@ -72,7 +73,7 @@ typedef struct token {
   char str[32];
 } Token;
 
-static Token tokens[32] __attribute__((used)) = {};
+static Token tokens[MAX_TOKEN] __attribute__((used)) = {};
 static int nr_token __attribute__((used))  = 0;
 
 static bool make_token(char *e) {
@@ -94,7 +95,7 @@ static bool make_token(char *e) {
 
         position += substr_len;
 
-        if(nr_token>=32){
+        if(nr_token>=MAX_TOKEN){
           Log("Too many tokens~\n");
           return false;
         }
@@ -127,10 +128,10 @@ static bool make_token(char *e) {
             break;
           case TK_DEC:
             tokens[nr_token].type = TK_DEC;
-            if(substr_len >= 32){
-              Log("Token too long: %.*s. Cut to %.*s\n", substr_len, substr_start, 31, substr_start);
+            if(substr_len >= MAX_TOKEN){
+              Log("Token too long: %.*s. Cut to %.*s\n", substr_len, substr_start, MAX_TOKEN-1, substr_start);
               //cut
-              substr_len = 31;
+              substr_len = MAX_TOKEN-1;
             }
             strncpy(tokens[nr_token].str, substr_start, substr_len);
             tokens[nr_token].str[substr_len] = '\0';

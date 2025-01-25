@@ -20,9 +20,9 @@ void am_init_monitor();
 void engine_start();
 int is_exit_status_bad();
 
-word_t expr(char *e, bool *success);
-
 __attribute__((unused)) static void test_expr(){
+  word_t expr(char *e, bool *success);
+
   FILE *fp = fopen("/home/crystc/ysyx-workbench/nemu/tools/gen-expr/input", "r");
   assert(fp != NULL);
   uint32_t result;

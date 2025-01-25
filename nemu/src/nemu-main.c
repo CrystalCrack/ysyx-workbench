@@ -43,8 +43,8 @@ int main(int argc, char *argv[]) {
   bool success = true;
   int ret;
   while (fgets(line, sizeof(line), fp)) {
-    line[strcspn(line, "\n")] = '\0';
-    if (sscanf(line, "%u %s", &result, e) == 2) {
+    memset(e,'\0',sizeof(e));
+    if (sscanf(line, "%u %[^\n]", &result, e) == 2) {
       printf("%s\n",e);
       expr_result = expr(e, &success);
       if(!success){

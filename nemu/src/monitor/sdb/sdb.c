@@ -17,6 +17,7 @@
 #include <cpu/cpu.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <memory/vaddr.h>
 #include "sdb.h"
 
 static int is_batch_mode = false;
@@ -41,18 +42,91 @@ static char* rl_gets() {
 
   return line_read;
 }
+//convert string to integer
+static int safe_atoi(char *str, uint64_t* result){
+  char *endptr;
+  long val = strtol(str,&endptr,10);
+
+  if(*endptr != '\0'){
+    return -1;
+  }
+
+  *result = val;
+  return 0;
+}
 
 static int cmd_c(char *args) {
   cpu_exec(-1);
   return 0;
 }
 
-
-static int cmd_q(char *args) {
-  return -1;
+static int cmd_si(char *args){
+  if(args==NULL){
+    cpu_exec(1);
+  }else{
+    uint64_t n;
+    int ret = safe_atoi(args, &n);
+    if(ret<0){
+      printf("%s is not pure number!\n", args);
+    }else{
+      cpu_exec(n);
+    }
+  }
+  return 0;
 }
 
+
+static int cmd_q(char *args) {
+  nemu_state.state = NEMU_QUIT;
+  return -1;
+}
 static int cmd_help(char *args);
+
+static int cmd_info(char *args){
+  if(args==NULL){
+    printf("Blank arg for info is not valid. Try\"help info\"\n");
+  }else if(strcmp(args, "r")==0||strcmp(args, "registers")==0||strcmp(args, "register")==0||strcmp(args, "reg")==0){
+    isa_reg_display();
+  }else{
+    printf("Undefined info command:%s. Try \"help info\"\n",args);
+  }
+  return 0;
+}
+
+static int cmd_x(char *args){
+  uint32_t N;
+  uint64_t addr;
+  if(args==NULL){
+    printf("Invalid x usage. Try \"help x\"\n");
+  }
+  else if(sscanf(args,"%d 0x%lx",&N,&addr)!=2){
+    printf("Invalid x args:%s. Try \"help x\"\n", args);
+  }else{
+    word_t data;
+    for(int i=0;i<N;i++){
+      data = vaddr_read(addr+i, 1);
+      printf("%X\t",data);
+    }
+    printf("\n");
+  }
+  return 0;
+}
+
+static int cmd_p(char *args){
+  if(args==NULL){
+    return 0;
+  }else{
+    bool success;
+    word_t result;
+    result = expr(args, &success);
+    if(!success){
+      printf("Invalid expression:%s\n",args);
+      return 0;
+    }
+    printf("%u\n",result);
+  }
+  return 0;
+}
 
 static struct {
   const char *name;
@@ -62,13 +136,13 @@ static struct {
   { "help", "Display information about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-
-  /* TODO: Add more commands */
-
+  { "si", "Make the program pause after executing N instructions. When N is not specified, it defaults to 1", cmd_si},
+  { "info", "Print the state of program", cmd_info},
+  { "x", "Examine memory:x N EXPR\nEXPR is an expression for the memory address to examine.\nN is the number of bytes to output.", cmd_x},
+  { "p", "usage:p EXPR\n figure out the result of EXPR", cmd_p}
 };
 
 #define NR_CMD ARRLEN(cmd_table)
-
 static int cmd_help(char *args) {
   /* extract the first argument */
   char *arg = strtok(NULL, " ");

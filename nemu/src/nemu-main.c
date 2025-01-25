@@ -20,16 +20,50 @@ void am_init_monitor();
 void engine_start();
 int is_exit_status_bad();
 
+__attribute__((unused)) static void test_expr(){
+  word_t expr(char *e, bool *success);
+
+  FILE *fp = fopen("/home/crystc/ysyx-workbench/nemu/tools/gen-expr/input", "r");
+  assert(fp != NULL);
+  uint32_t result;
+  uint32_t expr_result;
+  char line[65535+32];
+  char e[65535];
+  bool success = true;
+  int ret;
+  while (fgets(line, sizeof(line), fp)) {
+    memset(e,'\0',sizeof(e));
+    if (sscanf(line, "%u %[^\n]", &result, e) == 2) {
+      printf("%s\n",e);
+      expr_result = expr(e, &success);
+      if(!success){
+        exit(-1);
+      }
+      printf("expr_result=%u\tresult=%u\n",expr_result,result);
+      Assert(result==expr_result,"assertion failed:%u!=%u\n",expr_result,result);
+    }
+  }
+  for(int i=0;i<10000;i++){
+    ret = fscanf(fp,"%u %s",&result, e);
+    if(ret!=0) continue;
+  }
+  fclose(fp);
+}
+
 int main(int argc, char *argv[]) {
-  /* Initialize the monitor. */
-#ifdef CONFIG_TARGET_AM
-  am_init_monitor();
-#else
-  init_monitor(argc, argv);
-#endif
+//   /* Initialize the monitor. */
+// #ifdef CONFIG_TARGET_AM
+//   am_init_monitor();
+// #else
+//   init_monitor(argc, argv);
+// #endif
 
-  /* Start engine. */
-  engine_start();
+//   /* Start engine. */
+//   engine_start();
 
-  return is_exit_status_bad();
+//   return is_exit_status_bad();
+
+  test_expr();
+
+  return 0;
 }

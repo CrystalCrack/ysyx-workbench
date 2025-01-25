@@ -19,22 +19,79 @@
 #include <time.h>
 #include <assert.h>
 #include <string.h>
-
+int choose(int n){
+  if(n<0){
+    return -1;
+  }
+  return rand()%n;
+}
 // this should be enough
+static char expr[65536] = {};
 static char buf[65536] = {};
 static char code_buf[65536 + 128] = {}; // a little larger than `buf`
 static char *code_format =
 "#include <stdio.h>\n"
+"#include <stdint.h>\n"
 "int main() { "
-"  unsigned result = %s; "
+"  uint32_t result = %s; "
 "  printf(\"%%u\", result); "
 "  return 0; "
 "}";
+static int position = 0;
+static int position2 = 0;
 
-static void gen_rand_expr() {
-  buf[0] = '\0';
+static void gen_space(){
+  for(int i=0; i<choose(2); i++){
+    expr[position++] = ' ';
+    buf[position2++] = ' ';
+  }
 }
 
+static void gen_num(){
+  uint32_t num = rand()%2000;
+  char buffer[11];
+  snprintf(buffer,sizeof(buffer),"%u",num);
+  int len = strlen(buffer);
+  int neg_flag = 0;
+  if(choose(2)){
+    expr[position++] = '-';
+    buf[position2++] = '(';
+    buf[position2++] = '-';
+    neg_flag = 1;
+  }
+  for(int i=0;i<len;i++){
+    expr[position++] = buffer[i];
+    buf[position2++] = buffer[i];
+  }
+  buf[position2++] = 'u';
+  if(neg_flag) buf[position2++] = ')';
+}
+
+static void gen_c(char c){
+  expr[position++] = c;
+  buf[position2++] = c;
+}
+
+static void gen_op(){
+  switch(choose(4)){
+    case 0: buf[position2++] = '+'; expr[position++] = '+'; break;
+    case 1: buf[position2++] = '-'; expr[position++] = '-'; break;
+    case 2: buf[position2++] = '*'; expr[position++] = '*'; break;
+    default: buf[position2++] = '/'; expr[position++] = '/'; break;
+  }
+}
+static void gen_rand_expr(int depth) {
+  if(depth > 6){
+    gen_num();
+    return;
+  }
+  switch(choose(3)){
+    case 0: gen_space(); gen_num(); gen_space(); break;
+    case 1: gen_space(); gen_c('('); gen_space(); gen_rand_expr(depth+1); gen_space(); gen_c(')'); gen_space();break;
+    default: gen_space(); gen_rand_expr(depth+1);gen_space();gen_op();gen_space();gen_rand_expr(depth+1);gen_space();break;
+  }
+}
+char warnings[1024];
 int main(int argc, char *argv[]) {
   int seed = time(0);
   srand(seed);
@@ -43,8 +100,14 @@ int main(int argc, char *argv[]) {
     sscanf(argv[1], "%d", &loop);
   }
   int i;
+  int haswarning = 0;
   for (i = 0; i < loop; i ++) {
-    gen_rand_expr();
+    haswarning = 0;
+    position = 0;
+    position2 = 0;
+    gen_rand_expr(0);
+    expr[position++] = '\0';
+    buf[position2++] = '\0';
 
     sprintf(code_buf, code_format, buf);
 
@@ -53,17 +116,27 @@ int main(int argc, char *argv[]) {
     fputs(code_buf, fp);
     fclose(fp);
 
-    int ret = system("gcc /tmp/.code.c -o /tmp/.expr");
-    if (ret != 0) continue;
+    FILE *gcc_fp = popen("gcc /tmp/.code.c -o /tmp/.expr 2>&1 | tee /dev/tty", "r");
+    assert(gcc_fp != NULL);
+    while(fgets(warnings,sizeof(warnings),gcc_fp)!=NULL){
+      //examine line by line whether it has warning:
+      if(strstr(warnings, "warning:")!=NULL){
+        haswarning = 1;
+      }
+    }
+    pclose(gcc_fp);
 
-    fp = popen("/tmp/.expr", "r");
-    assert(fp != NULL);
+    if(!haswarning){
+      fp = popen("/tmp/.expr", "r");
+      assert(fp != NULL);
 
-    int result;
-    ret = fscanf(fp, "%d", &result);
-    pclose(fp);
+      uint32_t result;
+      int ret = fscanf(fp, "%u", &result);
+      if(ret!=1) assert(0);
+      pclose(fp);
 
-    printf("%u %s\n", result, buf);
+      printf("%u %s\n", result, expr);
+    }
   }
   return 0;
 }

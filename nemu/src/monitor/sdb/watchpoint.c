@@ -85,6 +85,7 @@ bool check_wp(){
       temp->val = val;
       is_changed = true;
     }
+    temp = temp->next;
   }
   return is_changed;
 }

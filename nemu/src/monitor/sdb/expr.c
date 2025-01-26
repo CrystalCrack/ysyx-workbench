@@ -37,18 +37,18 @@ static struct rule {
   /* TODO: Add more rules.
    * Pay attention to the precedence level of different rules.
    */
+  {" +", TK_NOTYPE},    // spaces
   {"==", TK_EQ},        // equal
   {"!=", TK_NEQ},       // not equal
   {">=", TK_GE},        // greater or equal
   {"<=", TK_LE},        // less or equal
   {">", TK_GT},         // greater
   {"<", TK_LT},         // less
-  {"\\&\\&", TK_AND},   // and
+  {"&&", TK_AND},   // and
   {"\\|\\|", TK_OR},    // or
   {"0x[0-9a-fA-F]+", TK_HEX}, // hex numbers
   {"[0-9]+", TK_DEC},   // decimal numbers
   {"\\$[0-9a-zA-Z]+", TK_REG}, // register
-  {" +", TK_NOTYPE},    // spaces
   {"\\+", '+'},         // plus
   {"-", '-'},           // minus
   {"\\*", '*'},         // multiply

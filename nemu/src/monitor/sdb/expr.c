@@ -129,7 +129,7 @@ static bool make_token(char *e) {
             nr_token++;
             break;
           case TK_DEC: case TK_HEX: case TK_REG:
-            tokens[nr_token].type = TK_DEC;
+            tokens[nr_token].type = rules[i].token_type;
             if(substr_len >= MAX_TOKEN){
               Log("Token too long: %.*s. Cut to %.*s\n", substr_len, substr_start, MAX_TOKEN-1, substr_start);
               //cut
@@ -276,7 +276,7 @@ uint32_t eval(Token* p, Token* q, int *errflag){
     return 0;
   }
   else if(p+1==q){
-    /* in this case, p refers to a hex or decimal number or a register*/
+    /* in this case, p refers to a heximal number, a decimal number, or a register */
     int num;
     if(p->type == TK_DEC){
       int num = strtoul(p->str, NULL, 10);

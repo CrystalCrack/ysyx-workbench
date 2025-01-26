@@ -121,28 +121,20 @@ static bool make_token(char *e) {
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
-
-        switch (rules[i].token_type) {
-          case '+': case '-': case '*': case '/': case '(': case ')':
-            tokens[nr_token].type = rules[i].token_type;
-            memset(tokens[nr_token].str,'\0',sizeof(tokens[nr_token].str));
-            nr_token++;
-            break;
-          case TK_DEC: case TK_HEX: case TK_REG: case TK_EQ: case TK_NEQ: case TK_GE: case TK_LE: case TK_GT: case TK_LT: case TK_OR: case TK_AND: 
-            tokens[nr_token].type = rules[i].token_type;
-            if(substr_len >= MAX_TOKEN){
-              Log("Token too long: %.*s. Cut to %.*s\n", substr_len, substr_start, MAX_TOKEN-1, substr_start);
-              //cut
-              substr_len = MAX_TOKEN-1;
-            }
-            strncpy(tokens[nr_token].str, substr_start, substr_len);
-            tokens[nr_token].str[substr_len] = '\0';
-            nr_token++;
-            break;
-          case TK_NOTYPE:
-          default: 
+        if(rules[i].token_type == TK_NOTYPE){
+          continue;
         }
-
+        
+        /* record the token */
+        tokens[nr_token].type = rules[i].token_type;
+        if(substr_len >= MAX_TOKEN){
+          Log("Token too long: %.*s. Cut to %.*s\n", substr_len, substr_start, MAX_TOKEN-1, substr_start);
+          //cut
+          substr_len = MAX_TOKEN-1;
+        }
+        strncpy(tokens[nr_token].str, substr_start, substr_len);
+        tokens[nr_token].str[substr_len] = '\0';
+        nr_token++;
         break;
       }
     }

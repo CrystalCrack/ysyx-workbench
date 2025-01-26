@@ -68,6 +68,13 @@ void init_regex() {
   }
 }
 
+void free_regex(){
+  int i;
+  for (i = 0; i < NR_REGEX; i ++) {
+    regfree(&re[i]);
+  }
+}
+
 typedef struct token {
   int type;
   char str[32];

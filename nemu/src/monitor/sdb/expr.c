@@ -113,7 +113,7 @@ static bool make_token(char *e) {
         position += substr_len;
 
         if(nr_token>=MAX_TOKEN){
-          Log("Too many tokens~\n");
+          printf("Too many tokens~\n");
           return false;
         }
 
@@ -344,7 +344,7 @@ uint32_t eval(Token* p, Token* q, int *errflag){
         IFONE(EXPR_DEBUG, printf("excuting operation: -%u = %u\n", val_right, ret_val));
         return ret_val;
       }else if(pos->type == TK_DEREF){
-        ret_val = vaddr_read(val_right, 1);
+        ret_val = vaddr_read(val_right, 4);
         IFONE(EXPR_DEBUG, printf("excuting operation: *%u = %u\n", val_right, ret_val));
         return ret_val;
       }

@@ -309,14 +309,14 @@ uint32_t eval(Token* p, Token* q, int *errflag){
     /* in this case, p refers to a heximal number, a decimal number, or a register */
     int num;
     if(p->type == TK_DEC){
-      int num = strtoul(p->str, NULL, 10);
+      num = strtoul(p->str, NULL, 10);
       IFONE(EXPR_DEBUG, printf("this is a decimal number:%u\n", num));
     }else if(p->type == TK_HEX){
-      int num = strtoul(p->str, NULL, 16);
+      num = strtoul(p->str, NULL, 16);
       IFONE(EXPR_DEBUG, printf("this is a heximal number:%u\n", num));
     }else if(p->type == TK_REG){
       bool success = true;
-      int num = isa_reg_str2val(p->str+1, &success);
+      num = isa_reg_str2val(p->str+1, &success);
       if(!success){
         *errflag = REG_ERR;
         return 0;

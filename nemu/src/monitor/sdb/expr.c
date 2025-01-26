@@ -19,7 +19,7 @@
  * Type 'man regex' for more information about POSIX regex functions.
  */
 #include <regex.h>
-#define EXPR_DEBUG 1
+#define EXPR_DEBUG 0
 #define MAX_TOKEN 128
 enum {
   TK_NOTYPE = 256, TK_EQ,

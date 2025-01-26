@@ -43,7 +43,7 @@ static struct rule {
   {"<=", TK_LE},        // less or equal
   {">", TK_GT},         // greater
   {"<", TK_LT},         // less
-  {"&&", TK_AND},       // and
+  {"\\&\\&", TK_AND},   // and
   {"\\|\\|", TK_OR},    // or
   {"0x[0-9a-fA-F]+", TK_HEX}, // hex numbers
   {"[0-9]+", TK_DEC},   // decimal numbers

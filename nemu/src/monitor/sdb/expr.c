@@ -348,7 +348,9 @@ uint32_t eval(Token* p, Token* q, int *errflag){
       *errflag = MAINOP_ERR;
       return 0;
     }
-    IFONE(EXPR_DEBUG, printf("main operator %c found at %d\n", pos->type, (int)(pos-p)));
+    IFONE(EXPR_DEBUG, 
+      if(strlen(pos->str)==0) printf("main operator %c found at %d\n", pos->type, (int)(pos-p));
+      else printf("main operator %s found at %d\n", pos->str, (int)(pos-p)));
     
     /*evaluate expression recursively accroding to the main operator*/
     uint32_t val_right = eval(pos+1, q, errflag);

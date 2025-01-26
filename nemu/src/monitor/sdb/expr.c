@@ -20,7 +20,7 @@
  */
 #include <regex.h>
 #include <memory/vaddr.h>
-#define EXPR_DEBUG 1
+#define EXPR_DEBUG 0
 #define MAX_TOKEN 128
 enum {
   TK_NOTYPE = 256, TK_EQ,

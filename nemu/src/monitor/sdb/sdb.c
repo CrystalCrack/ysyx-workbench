@@ -26,8 +26,6 @@ void init_regex();
 void free_regex();
 void init_wp_pool();
 
-WP* wp_head = NULL;
-
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 static char* rl_gets() {
   static char *line_read = NULL;
@@ -90,6 +88,8 @@ static int cmd_info(char *args){
     printf("Blank arg for info is not valid. Try\"help info\"\n");
   }else if(strcmp(args, "r")==0||strcmp(args, "registers")==0||strcmp(args, "register")==0||strcmp(args, "reg")==0){
     isa_reg_display();
+  }else if(strcmp(args, "w")==0||strcmp(args, "watchpoint")==0){
+    print_wp();
   }else{
     printf("Undefined info command:%s. Try \"help info\"\n",args);
   }
@@ -154,7 +154,6 @@ static int cmd_w(char *args){
     }
     strcpy(wp->expr, args);
     printf("Watchpoint %d: %s\n",wp->NO,wp->expr);
-    wp_head = wp;
   }
   return 0;
 }

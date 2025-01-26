@@ -102,9 +102,11 @@ void delete_wp(uint32_t NO){
 }
 
 void print_wp(){
+  //print the watchpoint list as gdb format
   WP* temp = head;
+  printf("Num\tWhat\n");
   while(temp!=NULL){
-    printf("Watchpoint %d: %s\n",temp->NO,temp->expr);
+    printf("%d\t%s\n",temp->NO,temp->expr);
     temp = temp->next;
   }
 }

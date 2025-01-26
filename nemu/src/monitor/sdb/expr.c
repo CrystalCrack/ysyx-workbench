@@ -122,7 +122,7 @@ static bool make_token(char *e) {
          * of tokens, some extra actions should be performed.
          */
         if(rules[i].token_type == TK_NOTYPE){
-          continue;
+          break;
         }
         
         /* record the token */

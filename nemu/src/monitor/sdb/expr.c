@@ -258,8 +258,38 @@ __attribute__((unused)) static void print_expr (Token* p, Token* q) {
       case '+': case '-': case '*': case '/': case '(': case ')':
       printf("%c",(p+i)->type);
       break;
-      case TK_DEC:
+      case TK_DEC: case TK_HEX: case TK_REG:
       printf("%s",(p+i)->str);
+      break;
+      case TK_EQ:
+      printf("==");
+      break;
+      case TK_NEQ:
+      printf("!=");
+      break;
+      case TK_GE:
+      printf(">=");
+      break;
+      case TK_LE:
+      printf("<=");
+      break;
+      case TK_GT:
+      printf(">");
+      break;
+      case TK_LT:
+      printf("<");
+      break;
+      case TK_AND:
+      printf("&&");
+      break;
+      case TK_OR:
+      printf("||");
+      break;
+      case TK_DEREF:
+      printf("*");
+      break;
+      case TK_NEG:
+      printf("-");
       break;
       default:
         assert(0);

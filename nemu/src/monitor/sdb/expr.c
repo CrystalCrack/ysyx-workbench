@@ -47,7 +47,7 @@ static struct rule {
   {"\\|\\|", TK_OR},    // or
   {"0x[0-9a-fA-F]+", TK_HEX}, // hex numbers
   {"[0-9]+", TK_DEC},   // decimal numbers
-  {"\\$[a-zA-Z]+", TK_REG}, // register
+  {"\\$[0-9a-zA-Z]+", TK_REG}, // register
   {" +", TK_NOTYPE},    // spaces
   {"\\+", '+'},         // plus
   {"-", '-'},           // minus

@@ -19,13 +19,14 @@
  * Type 'man regex' for more information about POSIX regex functions.
  */
 #include <regex.h>
-#define EXPR_DEBUG 0
+#include <memory/vaddr.h>
+#define EXPR_DEBUG 1
 #define MAX_TOKEN 128
 enum {
   TK_NOTYPE = 256, TK_EQ,
 
   /* TODO: Add more token types */
-  TK_DEC,
+  TK_DEC, TK_HEX, TK_REG, TK_NEQ, TK_GE, TK_LE, TK_GT, TK_LT, TK_AND, TK_OR, TK_DEREF, TK_NEG
 };
 
 static struct rule {
@@ -37,12 +38,21 @@ static struct rule {
    * Pay attention to the precedence level of different rules.
    */
   {"==", TK_EQ},        // equal
+  {"!=", TK_NEQ},       // not equal
+  {">=", TK_GE},        // greater or equal
+  {"<=", TK_LE},        // less or equal
+  {">", TK_GT},         // greater
+  {"<", TK_LT},         // less
+  {"&&", TK_AND},       // and
+  {"\\|\\|", TK_OR},    // or
+  {"0x[0-9a-fA-F]+", TK_HEX}, // hex numbers
+  {"[0-9]+", TK_DEC},   // decimal numbers
+  {"\\$[a-zA-Z]+", TK_REG}, // register
   {" +", TK_NOTYPE},    // spaces
   {"\\+", '+'},         // plus
   {"-", '-'},           // minus
   {"\\*", '*'},         // multiply
   {"\\/", '/'},         // divide
-  {"[0-9]+", TK_DEC},   // decimal numbers
   {"\\(", '('},         // left paran
   {"\\)", ')'},         // right paran
 };
@@ -113,27 +123,12 @@ static bool make_token(char *e) {
          */
 
         switch (rules[i].token_type) {
-          case '+':
-            tokens[nr_token].type = '+';
+          case '+': case '-': case '*': case '/': case TK_EQ: case TK_NEQ: case TK_GE: case TK_LE: case TK_GT: case TK_LT: case TK_OR: case TK_AND: 
+            tokens[nr_token].type = rules[i].token_type;
             memset(tokens[nr_token].str,'\0',sizeof(tokens[nr_token].str));
             nr_token++;
             break;
-          case '-':
-            tokens[nr_token].type = '-';
-            memset(tokens[nr_token].str,'\0',sizeof(tokens[nr_token].str));
-            nr_token++;
-            break;
-          case '*':
-            tokens[nr_token].type = '*';
-            memset(tokens[nr_token].str,'\0',sizeof(tokens[nr_token].str));
-            nr_token++;
-            break;
-          case '/':
-            tokens[nr_token].type = '/';
-            memset(tokens[nr_token].str,'\0',sizeof(tokens[nr_token].str));
-            nr_token++;
-            break;
-          case TK_DEC:
+          case TK_DEC: case TK_HEX: case TK_REG:
             tokens[nr_token].type = TK_DEC;
             if(substr_len >= MAX_TOKEN){
               Log("Token too long: %.*s. Cut to %.*s\n", substr_len, substr_start, MAX_TOKEN-1, substr_start);
@@ -198,40 +193,59 @@ Token* FindMainOP(Token* p, Token* q, bool* is_binary){
   int mainoptype = 0;
   int mainoppos = -1;
   for(i=0;p+i<q;i++){
-    if((p+i)->type=='-' && ((p+i)==tokens ||
-        (p+i-1)->type == '+' || (p+i-1)->type == '-' || (p+i-1)->type == '*' || (p+i-1)->type == '/' || (p+i-1)->type == '(')){
-      /* '-' represented as a unary operator*/
-      if(mainoptype == 0){
-        mainoptype = 1;
-        mainoppos = i;
-        *is_binary = false;
-      }
-    }else if((p+i)->type=='*'||(p+i)->type=='/'){
-      if(mainoptype==0|| mainoptype==1 || mainoptype=='*'|| mainoptype=='/'){
-        mainoptype = (p+i)->type;
-        mainoppos = i;
-        *is_binary = true;
-      }
-    }else if((p+i)->type=='+'|| (p+i)->type=='-' ){
-      /* '-' represented as a binary operator */
-      if(mainoptype==0 || mainoptype==1 || mainoptype=='*' || mainoptype=='/' || mainoptype=='+' || mainoptype=='-'){
-        mainoptype = (p+i)->type;
-        mainoppos = i;
-        *is_binary = true;
-      }
-    }else if((p+i)->type=='('){
-      int layer = 1;
-      while(layer>0){
-        i++;
-        switch((p+i)->type){
-          case '(':
-            layer++;
-            break;
-          case ')':
-            layer--;
-            break;
+    switch((p+i)->type){
+      case '(':
+        int layer = 1;
+        while(layer>0){
+          i++;
+          switch((p+i)->type){
+            case '(':
+              layer++;
+              break;
+            case ')':
+              layer--;
+              break;
+          }
         }
-      }
+        break;
+      case ')':
+        Assert(0,"parenthesis dismatch\n");
+        break;
+      case TK_DEREF: case TK_NEG:
+        if(mainoptype == 0){
+          mainoptype = (p+i)->type;
+          mainoppos = i;
+          *is_binary = false;
+        }
+        break;
+      case '*': case '/':
+        if(mainoptype==0|| mainoptype==TK_DEREF || mainoptype==TK_NEG || mainoptype=='*'|| mainoptype=='/'){
+          mainoptype = (p+i)->type;
+          mainoppos = i;
+          *is_binary = true;
+        }
+        break;
+      case '+': case '-':
+        if(mainoptype==0 || mainoptype==TK_DEREF || mainoptype==TK_NEG || mainoptype=='*' || mainoptype=='/' || mainoptype=='+' || mainoptype=='-'){
+          mainoptype = (p+i)->type;
+          mainoppos = i;
+          *is_binary = true;
+        }
+        break;
+      case TK_EQ: case TK_NEQ: case TK_GE: case TK_LE: case TK_GT: case TK_LT:
+        if(mainoptype==0 || mainoptype==TK_DEREF || mainoptype==TK_NEG || mainoptype=='*' || mainoptype=='/' || mainoptype=='+' || mainoptype=='-' || mainoptype==TK_EQ || mainoptype==TK_NEQ || mainoptype==TK_GE || mainoptype==TK_LE || mainoptype==TK_GT || mainoptype==TK_LT){
+          mainoptype = (p+i)->type;
+          mainoppos = i;
+          *is_binary = true;
+        }
+        break;
+      case TK_AND: case TK_OR:
+        if(mainoptype==0 || mainoptype==TK_DEREF || mainoptype==TK_NEG || mainoptype=='*' || mainoptype=='/' || mainoptype=='+' || mainoptype=='-' || mainoptype==TK_EQ || mainoptype==TK_NEQ || mainoptype==TK_GE || mainoptype==TK_LE || mainoptype==TK_GT || mainoptype==TK_LT || mainoptype==TK_AND || mainoptype==TK_OR){
+          mainoptype = (p+i)->type;
+          mainoppos = i;
+          *is_binary = true;
+        }
+        break;
     }
   }
   return p+mainoppos;
@@ -253,7 +267,7 @@ __attribute__((unused)) static void print_expr (Token* p, Token* q) {
   }
   printf("\n");
 }
-enum {PAREN_ERR=1, BADEXPR_ERR, MAINOP_ERR, UNDEF_OP};
+enum {PAREN_ERR=1, BADEXPR_ERR, MAINOP_ERR, UNDEF_OP, REG_ERR, UNKNOWN_ELEMENT_ERR};
 uint32_t eval(Token* p, Token* q, int *errflag){
   IFONE(EXPR_DEBUG, print_expr(p,q));
   if(p+1>q){
@@ -262,10 +276,26 @@ uint32_t eval(Token* p, Token* q, int *errflag){
     return 0;
   }
   else if(p+1==q){
-    //refer to a number in this case
-    //return the number directly
-    int num = strtoul(p->str, NULL, 10);
-    IFONE(EXPR_DEBUG, printf("this is a number:%u\n", num));
+    /* in this case, p refers to a hex or decimal number or a register*/
+    int num;
+    if(p->type == TK_DEC){
+      int num = strtoul(p->str, NULL, 10);
+      IFONE(EXPR_DEBUG, printf("this is a decimal number:%u\n", num));
+    }else if(p->type == TK_HEX){
+      int num = strtoul(p->str, NULL, 16);
+      IFONE(EXPR_DEBUG, printf("this is a heximal number:%u\n", num));
+    }else if(p->type == TK_REG){
+      bool success = true;
+      int num = isa_reg_str2val(p->str+1, &success);
+      if(!success){
+        *errflag = REG_ERR;
+        return 0;
+      }
+      IFONE(EXPR_DEBUG, printf("this is a register:%u\n", num));
+    }else{
+      num = 0;
+      *errflag = UNKNOWN_ELEMENT_ERR;
+    }
     return num;
   }else {
     int ret_val;
@@ -295,16 +325,19 @@ uint32_t eval(Token* p, Token* q, int *errflag){
     if(*errflag!=0) return 0;
     if(!is_binary){
       /*the operator is unary*/
-      if(pos->type=='-'){
+      if(pos->type==TK_NEG){
         ret_val = -val_right;
         IFONE(EXPR_DEBUG, printf("excuting operation: -%u = %u\n", val_right, ret_val));
+        return ret_val;
+      }else if(pos->type == TK_DEREF){
+        ret_val = vaddr_read(val_right, 1);
+        IFONE(EXPR_DEBUG, printf("excuting operation: *%u = %u\n", val_right, ret_val));
         return ret_val;
       }
     }
 
     uint32_t val_left = eval(p, pos, errflag);
     if(*errflag!=0) return 0;
-
     switch(pos->type){
       case '+':
         ret_val = val_left+val_right;
@@ -318,11 +351,37 @@ uint32_t eval(Token* p, Token* q, int *errflag){
       case '/':
         ret_val = val_left/val_right;
         break;
+      case TK_EQ:
+        ret_val = val_left==val_right;
+        break;
+      case TK_NEQ:
+        ret_val = val_left!=val_right;
+        break;
+      case TK_GE:
+        ret_val = val_left>=val_right;
+        break;
+      case TK_LE:
+        ret_val = val_left<=val_right;
+        break;
+      case TK_GT:
+        ret_val = val_left>val_right;
+        break;
+      case TK_LT:
+        ret_val = val_left<val_right;
+        break;
+      case TK_AND:
+        ret_val = val_left&&val_right;
+        break;
+      case TK_OR:
+        ret_val = val_left||val_right;
+        break;
       default:
         *errflag = UNDEF_OP;
         return 0;
     }
-    IFONE(EXPR_DEBUG, printf("executing operation: %u %c %u = %u\n", val_left, pos->type, val_right, ret_val));
+    IFONE(EXPR_DEBUG, 
+      if(strlen(pos->str)==0) printf("executing operation: %u %c %u = %u\n", val_left, pos->type, val_right, ret_val);
+      else printf("executing operation: %u %s %u = %u\n", val_left, pos->str, val_right, ret_val));
     return ret_val;
   }
 }
@@ -335,7 +394,16 @@ word_t expr(char *e, bool *success) {
     return 0;
   }
 
-  /* TODO: Insert codes to evaluate the expression. */
+  /* Check the token '*' and '-' */
+  for(int i=0;i<nr_token;i++){
+    if(tokens[i].type=='*' && (i==0 || (tokens+i-1)->type == TK_DEC || (tokens+i-1)->type == TK_HEX || (tokens+i-1)->type == ')')){
+      tokens[i].type = TK_DEREF;
+    }
+    if(tokens[i].type=='-' && (i==0 || (tokens+i-1)->type == TK_DEC || (tokens+i-1)->type == TK_HEX || (tokens+i-1)->type == ')')){
+      tokens[i].type = TK_NEG;
+    }
+  }
+
   Token* p = tokens;
   Token* q = p+nr_token;
   int token_err = 0;
@@ -354,6 +422,12 @@ word_t expr(char *e, bool *success) {
         break;
       case MAINOP_ERR:
         printf("cannot find main operator\n");
+        break;
+      case REG_ERR:
+        printf("register not found\n");
+        break;
+      case UNKNOWN_ELEMENT_ERR:
+        printf("unknown element\n");
         break;
     }
     return 0;

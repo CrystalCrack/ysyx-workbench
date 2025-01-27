@@ -110,4 +110,5 @@ void print_wp(){
     printf("%d\t%s\n",temp->NO,temp->expr);
     temp = temp->next;
   }
+  
 }

@@ -2712,7 +2712,7 @@ finish:
 #define Mr vaddr_read
 #define Mw vaddr_write
 enum {
-  TYPE_I, TYPE_U, TYPE_S,
+  TYPE_I, TYPE_U, TYPE_S, TYPE_J,
   TYPE_N,
 };
 #define src1R() do { *src1 = R(rs1); } while (0)
@@ -2720,6 +2720,7 @@ enum {
 #define immI() do { *imm = SEXT(BITS(i, 31, 20), 12); } while(0)
 #define immU() do { *imm = SEXT(BITS(i, 31, 12), 20) << 12; } while(0)
 #define immS() do { *imm = (SEXT(BITS(i, 31, 25), 7) << 5) | BITS(i, 11, 7); } while(0)
+#define immJ() do { *imm = (SEXT(BITS(i, 31, 31), 21) << 20) | (BITS(i, 30, 21) << 1) | (BITS(i, 20, 20) << 11) | (BITS(i, 19, 12) << 12); Log("J type immediate got %#x", *imm); } while(0)
 static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_t *imm, int type) {
   uint32_t i = s->isa.inst;
   int rs1 = (((i) >> (15)) & ((1ull << ((19) - (15) + 1)) - 1));
@@ -2729,8 +2730,9 @@ static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_
     case TYPE_I: do { *src1 = (cpu.gpr[check_reg_idx(rs1)]); } while (0); do { *imm = ({ struct { int64_t n : 12; } __x = { .n = (((i) >> (20)) & ((1ull << ((31) - (20) + 1)) - 1)) }; (uint64_t)__x.n; }); } while(0); break;
     case TYPE_U: do { *imm = ({ struct { int64_t n : 20; } __x = { .n = (((i) >> (12)) & ((1ull << ((31) - (12) + 1)) - 1)) }; (uint64_t)__x.n; }) << 12; } while(0); break;
     case TYPE_S: do { *src1 = (cpu.gpr[check_reg_idx(rs1)]); } while (0); do { *src2 = (cpu.gpr[check_reg_idx(rs2)]); } while (0); do { *imm = (({ struct { int64_t n : 7; } __x = { .n = (((i) >> (25)) & ((1ull << ((31) - (25) + 1)) - 1)) }; (uint64_t)__x.n; }) << 5) | (((i) >> (7)) & ((1ull << ((11) - (7) + 1)) - 1)); } while(0); break;
+    case TYPE_J: do { *imm = (({ struct { int64_t n : 21; } __x = { .n = (((i) >> (31)) & ((1ull << ((31) - (31) + 1)) - 1)) }; (uint64_t)__x.n; }) << 20) | ((((i) >> (21)) & ((1ull << ((30) - (21) + 1)) - 1)) << 1) | ((((i) >> (20)) & ((1ull << ((20) - (20) + 1)) - 1)) << 11) | ((((i) >> (12)) & ((1ull << ((19) - (12) + 1)) - 1)) << 12); do { printf("\33[1;34m" "[%s:%d %s] " "J type immediate got %#x" "\33[0m" "\n", "src/isa/riscv32/inst.c", 46, __func__, *imm); do { extern FILE* log_fp; extern _Bool log_enable(); if (log_enable() && log_fp != ((void *)0)) { fprintf(log_fp, "\33[1;34m" "[%s:%d %s] " "J type immediate got %#x" "\33[0m" "\n", "src/isa/riscv32/inst.c", 46, __func__, *imm); fflush(log_fp); } } while (0); } while (0); } while(0); break;
     case TYPE_N: break;
-    default: do { if (!(0)) { (fflush(stdout), fprintf(stderr, "\33[1;31m" "unsupported type = %d" "\33[0m" "\n", type)); extern FILE* log_fp; fflush(log_fp); extern void assert_fail_msg(); assert_fail_msg(); ((void) sizeof ((0) ? 1 : 0), __extension__ ({ if (0) ; else __assert_fail ("0", "src/isa/riscv32/inst.c", 46, __extension__ __PRETTY_FUNCTION__); })); } } while (0);
+    default: do { if (!(0)) { (fflush(stdout), fprintf(stderr, "\33[1;31m" "unsupported type = %d" "\33[0m" "\n", type)); extern FILE* log_fp; fflush(log_fp); extern void assert_fail_msg(); assert_fail_msg(); ((void) sizeof ((0) ? 1 : 0), __extension__ ({ if (0) ; else __assert_fail ("0", "src/isa/riscv32/inst.c", 48, __extension__ __PRETTY_FUNCTION__); })); } } while (0);
   }
 }
 static int decode_exec(Decode *s) {
@@ -2741,6 +2743,10 @@ static int decode_exec(Decode *s) {
   do { uint64_t key, mask, shift; pattern_decode("??????? ????? ????? ??? ????? 00101 11", (sizeof("??????? ????? ????? ??? ????? 00101 11") - 1), &key, &mask, &shift); if ((((uint64_t)((s)->isa.inst) >> shift) & mask) == key) { { int rd = 0; word_t src1 = 0, src2 = 0, imm = 0; decode_operand(s, &rd, &src1, &src2, &imm, TYPE_U); (cpu.gpr[check_reg_idx(rd)]) = s->pc + imm ; }; goto *(__instpat_end); } } while (0);
   do { uint64_t key, mask, shift; pattern_decode("??????? ????? ????? 100 ????? 00000 11", (sizeof("??????? ????? ????? 100 ????? 00000 11") - 1), &key, &mask, &shift); if ((((uint64_t)((s)->isa.inst) >> shift) & mask) == key) { { int rd = 0; word_t src1 = 0, src2 = 0, imm = 0; decode_operand(s, &rd, &src1, &src2, &imm, TYPE_I); (cpu.gpr[check_reg_idx(rd)]) = vaddr_read(src1 + imm, 1) ; }; goto *(__instpat_end); } } while (0);
   do { uint64_t key, mask, shift; pattern_decode("??????? ????? ????? 000 ????? 01000 11", (sizeof("??????? ????? ????? 000 ????? 01000 11") - 1), &key, &mask, &shift); if ((((uint64_t)((s)->isa.inst) >> shift) & mask) == key) { { int rd = 0; word_t src1 = 0, src2 = 0, imm = 0; decode_operand(s, &rd, &src1, &src2, &imm, TYPE_S); vaddr_write(src1 + imm, 1, src2) ; }; goto *(__instpat_end); } } while (0);
+  do { uint64_t key, mask, shift; pattern_decode("???????????? ????? 000 ????? 0010011", (sizeof("???????????? ????? 000 ????? 0010011") - 1), &key, &mask, &shift); if ((((uint64_t)((s)->isa.inst) >> shift) & mask) == key) { { int rd = 0; word_t src1 = 0, src2 = 0, imm = 0; decode_operand(s, &rd, &src1, &src2, &imm, TYPE_I); (cpu.gpr[check_reg_idx(rd)]) = src1 + imm ; }; goto *(__instpat_end); } } while (0);
+  do { uint64_t key, mask, shift; pattern_decode("???????????????????? ????? 1101111", (sizeof("???????????????????? ????? 1101111") - 1), &key, &mask, &shift); if ((((uint64_t)((s)->isa.inst) >> shift) & mask) == key) { { int rd = 0; word_t src1 = 0, src2 = 0, imm = 0; decode_operand(s, &rd, &src1, &src2, &imm, TYPE_J); (cpu.gpr[check_reg_idx(rd)]) = s->pc + 4; s->dnpc = s->pc + imm ; }; goto *(__instpat_end); } } while (0);
+  do { uint64_t key, mask, shift; pattern_decode("??????? ????? ????? 000 ????? 11001 11", (sizeof("??????? ????? ????? 000 ????? 11001 11") - 1), &key, &mask, &shift); if ((((uint64_t)((s)->isa.inst) >> shift) & mask) == key) { { int rd = 0; word_t src1 = 0, src2 = 0, imm = 0; decode_operand(s, &rd, &src1, &src2, &imm, TYPE_I); (cpu.gpr[check_reg_idx(rd)]) = s->pc + 4; s->dnpc = (src1 + imm) & ~1 ; }; goto *(__instpat_end); } } while (0);
+  do { uint64_t key, mask, shift; pattern_decode("??????? ????? ????? 010 ????? 01000 11", (sizeof("??????? ????? ????? 010 ????? 01000 11") - 1), &key, &mask, &shift); if ((((uint64_t)((s)->isa.inst) >> shift) & mask) == key) { { int rd = 0; word_t src1 = 0, src2 = 0, imm = 0; decode_operand(s, &rd, &src1, &src2, &imm, TYPE_S); vaddr_write(src1 + imm, 4, src2) ; }; goto *(__instpat_end); } } while (0);
   do { uint64_t key, mask, shift; pattern_decode("0000000 00001 00000 000 00000 11100 11", (sizeof("0000000 00001 00000 000 00000 11100 11") - 1), &key, &mask, &shift); if ((((uint64_t)((s)->isa.inst) >> shift) & mask) == key) { { int rd = 0; word_t src1 = 0, src2 = 0, imm = 0; decode_operand(s, &rd, &src1, &src2, &imm, TYPE_N); set_nemu_state(NEMU_END, s->pc, (cpu.gpr[check_reg_idx(10)])) ; }; goto *(__instpat_end); } } while (0);
   do { uint64_t key, mask, shift; pattern_decode("??????? ????? ????? ??? ????? ????? ??", (sizeof("??????? ????? ????? ??? ????? ????? ??") - 1), &key, &mask, &shift); if ((((uint64_t)((s)->isa.inst) >> shift) & mask) == key) { { int rd = 0; word_t src1 = 0, src2 = 0, imm = 0; decode_operand(s, &rd, &src1, &src2, &imm, TYPE_N); invalid_inst(s->pc) ; }; goto *(__instpat_end); } } while (0);
   __instpat_end_: ; };

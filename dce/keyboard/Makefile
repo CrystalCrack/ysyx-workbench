@@ -51,13 +51,14 @@ run: $(BIN)
 	@echo "Running project"
 	$^
 
-SDC_FILE = $(abspath ./constr/top.sdc)
-sta:
-	cd ~/yosys-sta && \
-	make sta DESIGN=$(TOP_NAME) SDC_FILE=$(SDC_FILE) RTL_FILES="$(VSRC)" CLK_FREQ_MHZ=100
+DESIGN := top
+SDC_FILE := $(abspath ./constr/top.sdc)
+RTL_FILES := $(VSRC)
+include ~/yosys-sta/Makefile
+my-sta: sta
 	
-clean:
+clean-keyboard:
 	@echo "Cleaning project"
 	@rm -rf $(BUILD_DIR) $(SIM_DIR) $(SRC_AUTO_BIND)
 
-.PHONY: all frame sim wave run clean
+.PHONY: all frame sim wave run clean-keyboard

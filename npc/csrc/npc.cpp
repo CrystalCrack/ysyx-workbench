@@ -5,7 +5,7 @@
 #include "Vnpc.h"
 #include "Vnpc___024root.h"
 
-#define MAX_SIM_TIME 10
+#define MAX_SIM_TIME 100
 #define MSIZE 0xFFFF
 #define MBIAS 0x80000000
 

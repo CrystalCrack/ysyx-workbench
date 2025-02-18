@@ -23,12 +23,12 @@ void single_cycle(Vnpc *top) {
 }
 
 void reset(Vnpc *top, int n) {
-  top->rst_n = 0;
+  top->rst = 1;
   while (n > 0) {
     single_cycle(top);
     n--;
   }
-  top->rst_n = 1;
+  top->rst = 0;
 }
 
 int main() {

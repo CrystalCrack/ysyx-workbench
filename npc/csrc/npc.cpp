@@ -6,7 +6,7 @@
 #include "Vnpc___024root.h"
 
 #define MAX_SIM_TIME 300000
-#define MSIZE 0x80000000
+#define MSIZE 0xFFFF
 #define MBIAS 0x80000000
 
 uint8_t pmem[MSIZE] = {};

@@ -2,7 +2,7 @@
 VERILATOR = verilator
 VERILATOR_FLAGS = --cc --exe --trace --build -j 4 -O3 --x-assign fast --x-initial fast --noassert
 
-TOPNAME = light
+TOPNAME = npc
 NXDC_FILES = constr/top.nxdc
 BUILD_DIR = ./build
 SIM_DIR = ./sim

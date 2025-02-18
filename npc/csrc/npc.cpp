@@ -7,7 +7,7 @@
 
 #define MAX_SIM_TIME 300000
 #define MSIZE 0x80000000
-#define MBIAS = 0x80000000
+#define MBIAS 0x80000000
 
 uint8_t pmem[MSIZE] = {};
 uint32_t pmem_read(uint32_t addr){

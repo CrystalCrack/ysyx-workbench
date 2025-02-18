@@ -21,7 +21,8 @@ $(SRC_AUTO_BIND): $(NXDC_FILES)
 # Project source
 VSRCS=$(shell find $(abspath ./vsrc) -name "*.v")
 SIM_ALL ?= $(notdir $(shell find $(abspath ./csrc) -name "*.c" -or -name "*.cc" -or -name "*.cpp"))
-CSRCS= $(SIM_ALL) $(SRC_AUTO_BIND)
+SIM_CSRCS = $(shell find $(abspath ./csrc) -name "*.c" -or -name "*.cc" -or -name "*.cpp")
+CSRCS= $(SIM_CSRCS) $(SRC_AUTO_BIND)
 
 # Rules for NVBoard
 include $(NVBOARD_HOME)/scripts/nvboard.mk

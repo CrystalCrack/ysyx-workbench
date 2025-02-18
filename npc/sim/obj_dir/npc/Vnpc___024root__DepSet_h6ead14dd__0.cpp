@@ -260,18 +260,17 @@ VL_INLINE_OPT void Vnpc___024root___nba_sequent__TOP__0(Vnpc___024root* vlSelf) 
     IData/*31:0*/ __Vdlyvval__npc__DOT__u_RegisterFile__DOT__rf__v0;
     __Vdlyvval__npc__DOT__u_RegisterFile__DOT__rf__v0 = 0;
     // Body
+    vlSelf->pc = ((IData)(vlSelf->rst) ? 0x80000000U
+                   : ((IData)(4U) + vlSelf->pc));
     __Vdlyvval__npc__DOT__u_RegisterFile__DOT__rf__v0 
         = ((IData)(vlSelf->npc__DOT__memtoreg) ? 0U
             : (IData)(vlSelf->npc__DOT__u_ALU__DOT__out));
     __Vdlyvdim0__npc__DOT__u_RegisterFile__DOT__rf__v0 
         = (0x1fU & (vlSelf->inst >> 7U));
-    vlSelf->pc = ((IData)(vlSelf->rst) ? 0U : vlSelf->npc__DOT____Vcellinp__pc_reg____pinNumber3);
     vlSelf->npc__DOT__u_RegisterFile__DOT__rf[__Vdlyvdim0__npc__DOT__u_RegisterFile__DOT__rf__v0] 
         = __Vdlyvval__npc__DOT__u_RegisterFile__DOT__rf__v0;
     __VdfgTmp_hfa87cd20__0 = vlSelf->npc__DOT__u_RegisterFile__DOT__rf
         [(0x1fU & (vlSelf->inst >> 0xfU))];
-    vlSelf->npc__DOT____Vcellinp__pc_reg____pinNumber3 
-        = ((IData)(4U) + vlSelf->pc);
     if ((0U != (0x1fU & (vlSelf->inst >> 0xfU)))) {
         vlSelf->__VdfgTmp_hf55457f8__0 = (~ __VdfgTmp_hfa87cd20__0);
         vlSelf->npc__DOT__rf_rdata1 = __VdfgTmp_hfa87cd20__0;

@@ -40,7 +40,7 @@ sim-all:$(addprefix Makefile., $(SIM_ALL))
 Makefile.%: ./csrc/%
 	$(call git_commit, "sim RTL: $*")
 	@mkdir -p $(SIM_OBJ_DIR)/$(basename $*)
-	$(VERILATOR) $(VERILATOR_FLAGS) --top-module $(basename $*) $(VSRCS) $^ --Mdir $(abspath $(SIM_OBJ_DIR)/$(basename $*))
+	$(VERILATOR) $(VERILATOR_FLAGS) --top-module $(basename $*) $(VSRCS) $(abspath $^) --Mdir $(abspath $(SIM_OBJ_DIR)/$(basename $*))
 	$(SIM_OBJ_DIR)/$(basename $*)/V$(TOPNAME)
 
 sim: $(VSRCS) $(SIM_CSRCS)

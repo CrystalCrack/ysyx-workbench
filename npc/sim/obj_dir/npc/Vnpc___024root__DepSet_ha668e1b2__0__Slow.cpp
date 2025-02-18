@@ -3,6 +3,7 @@
 // See Vnpc.h for the primary calling header
 
 #include "verilated.h"
+#include "verilated_dpi.h"
 
 #include "Vnpc__Syms.h"
 #include "Vnpc___024root.h"

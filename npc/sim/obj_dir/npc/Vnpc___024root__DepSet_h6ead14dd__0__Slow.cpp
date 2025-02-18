@@ -3,6 +3,7 @@
 // See Vnpc.h for the primary calling header
 
 #include "verilated.h"
+#include "verilated_dpi.h"
 
 #include "Vnpc___024root.h"
 
@@ -193,6 +194,7 @@ VL_ATTR_COLD void Vnpc___024root___ctor_var_reset(Vnpc___024root* vlSelf) {
     }
     vlSelf->npc__DOT__u_ALU__DOT__u_MuxKeyWithDefault__DOT__i0__DOT__lut_out = 0;
     vlSelf->npc__DOT__u_ALU__DOT__u_MuxKeyWithDefault__DOT__i0__DOT__hit = 0;
+    vlSelf->__VdfgTmp_hfa87cd20__0 = 0;
     vlSelf->__VdfgTmp_hf55457f8__0 = 0;
     vlSelf->__VdfgTmp_ha8752fbf__0 = 0;
     vlSelf->__VdfgTmp_haf74767f__0 = 0;

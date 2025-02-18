@@ -185,12 +185,13 @@ void Vnpc___024root__trace_chg_sub_0(Vnpc___024root* vlSelf, VerilatedVcd::Buffe
                                ? 0U : vlSelf->npc__DOT__u_RegisterFile__DOT__rf
                               [(0x1fU & (vlSelf->inst 
                                          >> 0x14U))])),32);
-    bufp->chgIData(oldp+117,((((- (IData)((vlSelf->inst 
+    bufp->chgBit(oldp+117,((0x100073U == vlSelf->inst)));
+    bufp->chgIData(oldp+118,((((- (IData)((vlSelf->inst 
                                            >> 0x1fU))) 
                                << 0xcU) | (vlSelf->inst 
                                            >> 0x14U))),32);
-    bufp->chgIData(oldp+118,((0xfffff000U & vlSelf->inst)),32);
-    bufp->chgIData(oldp+119,((((- (IData)((vlSelf->inst 
+    bufp->chgIData(oldp+119,((0xfffff000U & vlSelf->inst)),32);
+    bufp->chgIData(oldp+120,((((- (IData)((vlSelf->inst 
                                            >> 0x1fU))) 
                                << 0xcU) | ((0xfe0U 
                                             & (vlSelf->inst 
@@ -198,7 +199,7 @@ void Vnpc___024root__trace_chg_sub_0(Vnpc___024root* vlSelf, VerilatedVcd::Buffe
                                            | (0x1fU 
                                               & (vlSelf->inst 
                                                  >> 7U))))),32);
-    bufp->chgIData(oldp+120,((((- (IData)((vlSelf->inst 
+    bufp->chgIData(oldp+121,((((- (IData)((vlSelf->inst 
                                            >> 0x1fU))) 
                                << 0xcU) | ((0x800U 
                                             & (vlSelf->inst 
@@ -209,7 +210,7 @@ void Vnpc___024root__trace_chg_sub_0(Vnpc___024root* vlSelf, VerilatedVcd::Buffe
                                               | (0x1eU 
                                                  & (vlSelf->inst 
                                                     >> 7U)))))),32);
-    bufp->chgIData(oldp+121,((((- (IData)((vlSelf->inst 
+    bufp->chgIData(oldp+122,((((- (IData)((vlSelf->inst 
                                            >> 0x1fU))) 
                                << 0x14U) | ((0xff000U 
                                              & vlSelf->inst) 

@@ -16,6 +16,8 @@
 // INCLUDE MODULE CLASSES
 #include "Vnpc___024root.h"
 
+// DPI TYPES for DPI Export callbacks (Internal use)
+
 // SYMS CLASS (contains all model state)
 class Vnpc__Syms final : public VerilatedSyms {
   public:

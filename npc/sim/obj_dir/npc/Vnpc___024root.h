@@ -35,6 +35,7 @@ class Vnpc___024root final : public VerilatedModule {
     IData/*31:0*/ npc__DOT__ALU_B;
     IData/*31:0*/ npc__DOT__u_ALU__DOT__add_result;
     IData/*31:0*/ npc__DOT__u_ALU__DOT__sub_result;
+    IData/*31:0*/ __VdfgTmp_hfa87cd20__0;
     IData/*31:0*/ __VdfgTmp_hf55457f8__0;
     IData/*31:0*/ __VdfgTmp_ha8752fbf__0;
     IData/*31:0*/ __VdfgTmp_haf74767f__0;

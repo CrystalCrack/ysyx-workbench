@@ -3,6 +3,7 @@
 // See Vnpc.h for the primary calling header
 
 #include "verilated.h"
+#include "verilated_dpi.h"
 
 #include "Vnpc___024root.h"
 
@@ -11,8 +12,6 @@ VL_INLINE_OPT void Vnpc___024root___ico_sequent__TOP__0(Vnpc___024root* vlSelf) 
     Vnpc__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vnpc___024root___ico_sequent__TOP__0\n"); );
     // Init
-    IData/*31:0*/ __VdfgTmp_hfa87cd20__0;
-    __VdfgTmp_hfa87cd20__0 = 0;
     QData/*32:0*/ __VdfgTmp_h191a42ad__0;
     __VdfgTmp_h191a42ad__0 = 0;
     // Body
@@ -32,7 +31,7 @@ VL_INLINE_OPT void Vnpc___024root___ico_sequent__TOP__0(Vnpc___024root* vlSelf) 
                                   << 0xcU) | (vlSelf->inst 
                                               >> 0x14U));
     }
-    __VdfgTmp_hfa87cd20__0 = vlSelf->npc__DOT__u_RegisterFile__DOT__rf
+    vlSelf->__VdfgTmp_hfa87cd20__0 = vlSelf->npc__DOT__u_RegisterFile__DOT__rf
         [(0x1fU & (vlSelf->inst >> 0xfU))];
     vlSelf->npc__DOT__ALU_B = ((IData)(vlSelf->npc__DOT__ALUsrc2)
                                 ? vlSelf->npc__DOT__imm
@@ -43,10 +42,10 @@ VL_INLINE_OPT void Vnpc___024root___ico_sequent__TOP__0(Vnpc___024root* vlSelf) 
                                    [(0x1fU & (vlSelf->inst 
                                               >> 0x14U))]));
     if ((0U != (0x1fU & (vlSelf->inst >> 0xfU)))) {
-        vlSelf->__VdfgTmp_hf55457f8__0 = (~ __VdfgTmp_hfa87cd20__0);
-        vlSelf->npc__DOT__rf_rdata1 = __VdfgTmp_hfa87cd20__0;
+        vlSelf->__VdfgTmp_hf55457f8__0 = (~ vlSelf->__VdfgTmp_hfa87cd20__0);
+        vlSelf->npc__DOT__rf_rdata1 = vlSelf->__VdfgTmp_hfa87cd20__0;
         vlSelf->npc__DOT__u_ALU__DOT__sub_inst__DOT____VdfgTmp_hc75629da__0 
-            = (__VdfgTmp_hfa87cd20__0 >> 0x1fU);
+            = (vlSelf->__VdfgTmp_hfa87cd20__0 >> 0x1fU);
     } else {
         vlSelf->__VdfgTmp_hf55457f8__0 = 0xffffffffU;
         vlSelf->npc__DOT__rf_rdata1 = 0U;
@@ -248,18 +247,21 @@ void Vnpc___024root___eval_act(Vnpc___024root* vlSelf) {
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vnpc___024root___eval_act\n"); );
 }
 
+void Vnpc___024root____Vdpiimwrap_npc__DOT__ebreak_TOP();
+
 VL_INLINE_OPT void Vnpc___024root___nba_sequent__TOP__0(Vnpc___024root* vlSelf) {
     if (false && vlSelf) {}  // Prevent unused
     Vnpc__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vnpc___024root___nba_sequent__TOP__0\n"); );
     // Init
-    IData/*31:0*/ __VdfgTmp_hfa87cd20__0;
-    __VdfgTmp_hfa87cd20__0 = 0;
     CData/*4:0*/ __Vdlyvdim0__npc__DOT__u_RegisterFile__DOT__rf__v0;
     __Vdlyvdim0__npc__DOT__u_RegisterFile__DOT__rf__v0 = 0;
     IData/*31:0*/ __Vdlyvval__npc__DOT__u_RegisterFile__DOT__rf__v0;
     __Vdlyvval__npc__DOT__u_RegisterFile__DOT__rf__v0 = 0;
     // Body
+    if ((0x100073U == vlSelf->inst)) {
+        Vnpc___024root____Vdpiimwrap_npc__DOT__ebreak_TOP();
+    }
     vlSelf->pc = ((IData)(vlSelf->rst) ? 0x80000000U
                    : ((IData)(4U) + vlSelf->pc));
     __Vdlyvval__npc__DOT__u_RegisterFile__DOT__rf__v0 
@@ -269,13 +271,13 @@ VL_INLINE_OPT void Vnpc___024root___nba_sequent__TOP__0(Vnpc___024root* vlSelf) 
         = (0x1fU & (vlSelf->inst >> 7U));
     vlSelf->npc__DOT__u_RegisterFile__DOT__rf[__Vdlyvdim0__npc__DOT__u_RegisterFile__DOT__rf__v0] 
         = __Vdlyvval__npc__DOT__u_RegisterFile__DOT__rf__v0;
-    __VdfgTmp_hfa87cd20__0 = vlSelf->npc__DOT__u_RegisterFile__DOT__rf
+    vlSelf->__VdfgTmp_hfa87cd20__0 = vlSelf->npc__DOT__u_RegisterFile__DOT__rf
         [(0x1fU & (vlSelf->inst >> 0xfU))];
     if ((0U != (0x1fU & (vlSelf->inst >> 0xfU)))) {
-        vlSelf->__VdfgTmp_hf55457f8__0 = (~ __VdfgTmp_hfa87cd20__0);
-        vlSelf->npc__DOT__rf_rdata1 = __VdfgTmp_hfa87cd20__0;
+        vlSelf->__VdfgTmp_hf55457f8__0 = (~ vlSelf->__VdfgTmp_hfa87cd20__0);
+        vlSelf->npc__DOT__rf_rdata1 = vlSelf->__VdfgTmp_hfa87cd20__0;
         vlSelf->npc__DOT__u_ALU__DOT__sub_inst__DOT____VdfgTmp_hc75629da__0 
-            = (__VdfgTmp_hfa87cd20__0 >> 0x1fU);
+            = (vlSelf->__VdfgTmp_hfa87cd20__0 >> 0x1fU);
     } else {
         vlSelf->__VdfgTmp_hf55457f8__0 = 0xffffffffU;
         vlSelf->npc__DOT__rf_rdata1 = 0U;

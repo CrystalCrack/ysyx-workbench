@@ -30,7 +30,6 @@ class Vnpc___024root final : public VerilatedModule {
     CData/*0:0*/ __VactContinue;
     VL_OUT(pc,31,0);
     VL_IN(inst,31,0);
-    IData/*31:0*/ npc__DOT____Vcellinp__pc_reg____pinNumber3;
     IData/*31:0*/ npc__DOT__imm;
     IData/*31:0*/ npc__DOT__rf_rdata1;
     IData/*31:0*/ npc__DOT__ALU_B;

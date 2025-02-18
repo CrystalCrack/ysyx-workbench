@@ -1,34 +1,36 @@
 // Verilated -*- C++ -*-
 // DESCRIPTION: Verilator output: Model implementation (design independent parts)
 
-#include "Vlight.h"
-#include "Vlight__Syms.h"
+#include "Vnpc.h"
+#include "Vnpc__Syms.h"
 #include "verilated_vcd_c.h"
+#include "verilated_dpi.h"
 
 //============================================================
 // Constructors
 
-Vlight::Vlight(VerilatedContext* _vcontextp__, const char* _vcname__)
+Vnpc::Vnpc(VerilatedContext* _vcontextp__, const char* _vcname__)
     : VerilatedModel{*_vcontextp__}
-    , vlSymsp{new Vlight__Syms(contextp(), _vcname__, this)}
+    , vlSymsp{new Vnpc__Syms(contextp(), _vcname__, this)}
     , clk{vlSymsp->TOP.clk}
-    , rst_n{vlSymsp->TOP.rst_n}
-    , led{vlSymsp->TOP.led}
+    , rst{vlSymsp->TOP.rst}
+    , pc{vlSymsp->TOP.pc}
+    , inst{vlSymsp->TOP.inst}
     , rootp{&(vlSymsp->TOP)}
 {
     // Register model with the context
     contextp()->addModel(this);
 }
 
-Vlight::Vlight(const char* _vcname__)
-    : Vlight(Verilated::threadContextp(), _vcname__)
+Vnpc::Vnpc(const char* _vcname__)
+    : Vnpc(Verilated::threadContextp(), _vcname__)
 {
 }
 
 //============================================================
 // Destructor
 
-Vlight::~Vlight() {
+Vnpc::~Vnpc() {
     delete vlSymsp;
 }
 
@@ -36,33 +38,33 @@ Vlight::~Vlight() {
 // Evaluation function
 
 #ifdef VL_DEBUG
-void Vlight___024root___eval_debug_assertions(Vlight___024root* vlSelf);
+void Vnpc___024root___eval_debug_assertions(Vnpc___024root* vlSelf);
 #endif  // VL_DEBUG
-void Vlight___024root___eval_static(Vlight___024root* vlSelf);
-void Vlight___024root___eval_initial(Vlight___024root* vlSelf);
-void Vlight___024root___eval_settle(Vlight___024root* vlSelf);
-void Vlight___024root___eval(Vlight___024root* vlSelf);
+void Vnpc___024root___eval_static(Vnpc___024root* vlSelf);
+void Vnpc___024root___eval_initial(Vnpc___024root* vlSelf);
+void Vnpc___024root___eval_settle(Vnpc___024root* vlSelf);
+void Vnpc___024root___eval(Vnpc___024root* vlSelf);
 
-void Vlight::eval_step() {
-    VL_DEBUG_IF(VL_DBG_MSGF("+++++TOP Evaluate Vlight::eval_step\n"); );
+void Vnpc::eval_step() {
+    VL_DEBUG_IF(VL_DBG_MSGF("+++++TOP Evaluate Vnpc::eval_step\n"); );
 #ifdef VL_DEBUG
     // Debug assertions
-    Vlight___024root___eval_debug_assertions(&(vlSymsp->TOP));
+    Vnpc___024root___eval_debug_assertions(&(vlSymsp->TOP));
 #endif  // VL_DEBUG
     vlSymsp->__Vm_activity = true;
     vlSymsp->__Vm_deleter.deleteAll();
     if (VL_UNLIKELY(!vlSymsp->__Vm_didInit)) {
         vlSymsp->__Vm_didInit = true;
         VL_DEBUG_IF(VL_DBG_MSGF("+ Initial\n"););
-        Vlight___024root___eval_static(&(vlSymsp->TOP));
-        Vlight___024root___eval_initial(&(vlSymsp->TOP));
-        Vlight___024root___eval_settle(&(vlSymsp->TOP));
+        Vnpc___024root___eval_static(&(vlSymsp->TOP));
+        Vnpc___024root___eval_initial(&(vlSymsp->TOP));
+        Vnpc___024root___eval_settle(&(vlSymsp->TOP));
     }
     // MTask 0 start
     VL_DEBUG_IF(VL_DBG_MSGF("MTask0 starting\n"););
     Verilated::mtaskId(0);
     VL_DEBUG_IF(VL_DBG_MSGF("+ Eval\n"););
-    Vlight___024root___eval(&(vlSymsp->TOP));
+    Vnpc___024root___eval(&(vlSymsp->TOP));
     // Evaluate cleanup
     Verilated::endOfThreadMTask(vlSymsp->__Vm_evalMsgQp);
     Verilated::endOfEval(vlSymsp->__Vm_evalMsgQp);
@@ -70,9 +72,9 @@ void Vlight::eval_step() {
 
 //============================================================
 // Events and timing
-bool Vlight::eventsPending() { return false; }
+bool Vnpc::eventsPending() { return false; }
 
-uint64_t Vlight::nextTimeSlot() {
+uint64_t Vnpc::nextTimeSlot() {
     VL_FATAL_MT(__FILE__, __LINE__, "", "%Error: No delays in the design");
     return 0;
 }
@@ -80,38 +82,38 @@ uint64_t Vlight::nextTimeSlot() {
 //============================================================
 // Utilities
 
-const char* Vlight::name() const {
+const char* Vnpc::name() const {
     return vlSymsp->name();
 }
 
 //============================================================
 // Invoke final blocks
 
-void Vlight___024root___eval_final(Vlight___024root* vlSelf);
+void Vnpc___024root___eval_final(Vnpc___024root* vlSelf);
 
-VL_ATTR_COLD void Vlight::final() {
-    Vlight___024root___eval_final(&(vlSymsp->TOP));
+VL_ATTR_COLD void Vnpc::final() {
+    Vnpc___024root___eval_final(&(vlSymsp->TOP));
 }
 
 //============================================================
 // Implementations of abstract methods from VerilatedModel
 
-const char* Vlight::hierName() const { return vlSymsp->name(); }
-const char* Vlight::modelName() const { return "Vlight"; }
-unsigned Vlight::threads() const { return 1; }
-std::unique_ptr<VerilatedTraceConfig> Vlight::traceConfig() const {
+const char* Vnpc::hierName() const { return vlSymsp->name(); }
+const char* Vnpc::modelName() const { return "Vnpc"; }
+unsigned Vnpc::threads() const { return 1; }
+std::unique_ptr<VerilatedTraceConfig> Vnpc::traceConfig() const {
     return std::unique_ptr<VerilatedTraceConfig>{new VerilatedTraceConfig{false, false, false}};
 };
 
 //============================================================
 // Trace configuration
 
-void Vlight___024root__trace_init_top(Vlight___024root* vlSelf, VerilatedVcd* tracep);
+void Vnpc___024root__trace_init_top(Vnpc___024root* vlSelf, VerilatedVcd* tracep);
 
 VL_ATTR_COLD static void trace_init(void* voidSelf, VerilatedVcd* tracep, uint32_t code) {
     // Callback from tracep->open()
-    Vlight___024root* const __restrict vlSelf VL_ATTR_UNUSED = static_cast<Vlight___024root*>(voidSelf);
-    Vlight__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
+    Vnpc___024root* const __restrict vlSelf VL_ATTR_UNUSED = static_cast<Vnpc___024root*>(voidSelf);
+    Vnpc__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     if (!vlSymsp->_vm_contextp__->calcUnusedSigs()) {
         VL_FATAL_MT(__FILE__, __LINE__, __FILE__,
             "Turning on wave traces requires Verilated::traceEverOn(true) call before time 0.");
@@ -119,19 +121,19 @@ VL_ATTR_COLD static void trace_init(void* voidSelf, VerilatedVcd* tracep, uint32
     vlSymsp->__Vm_baseCode = code;
     tracep->scopeEscape(' ');
     tracep->pushNamePrefix(std::string{vlSymsp->name()} + ' ');
-    Vlight___024root__trace_init_top(vlSelf, tracep);
+    Vnpc___024root__trace_init_top(vlSelf, tracep);
     tracep->popNamePrefix();
     tracep->scopeEscape('.');
 }
 
-VL_ATTR_COLD void Vlight___024root__trace_register(Vlight___024root* vlSelf, VerilatedVcd* tracep);
+VL_ATTR_COLD void Vnpc___024root__trace_register(Vnpc___024root* vlSelf, VerilatedVcd* tracep);
 
-VL_ATTR_COLD void Vlight::trace(VerilatedVcdC* tfp, int levels, int options) {
+VL_ATTR_COLD void Vnpc::trace(VerilatedVcdC* tfp, int levels, int options) {
     if (tfp->isOpen()) {
-        vl_fatal(__FILE__, __LINE__, __FILE__,"'Vlight::trace()' shall not be called after 'VerilatedVcdC::open()'.");
+        vl_fatal(__FILE__, __LINE__, __FILE__,"'Vnpc::trace()' shall not be called after 'VerilatedVcdC::open()'.");
     }
     if (false && levels && options) {}  // Prevent unused
     tfp->spTrace()->addModel(this);
     tfp->spTrace()->addInitCb(&trace_init, &(vlSymsp->TOP));
-    Vlight___024root__trace_register(&(vlSymsp->TOP), tfp->spTrace());
+    Vnpc___024root__trace_register(&(vlSymsp->TOP), tfp->spTrace());
 }

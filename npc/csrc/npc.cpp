@@ -9,7 +9,7 @@
 #define MSIZE 0xFFFF
 #define MBIAS 0x80000000
 
-uint8_t pmem[MSIZE] = {};
+uint8_t pmem[MSIZE] = {0x00500093, 0xffd08113, 0xff600193, 0x00f18213, 0x00000293, 0x06428313, 0x7ff00393, 0x80000413, 0x00148493};
 uint32_t pmem_read(uint32_t addr){
   std::cout<<addr<<std::endl;
   return *(uint32_t*)(pmem + addr - MBIAS);

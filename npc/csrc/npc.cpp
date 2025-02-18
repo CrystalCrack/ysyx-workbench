@@ -11,6 +11,7 @@
 
 uint8_t pmem[MSIZE] = {};
 uint32_t pmem_read(uint32_t addr){
+  std::cout<<addr<<std::endl;
   return *(uint32_t*)(pmem + addr - MBIAS);
 }
 

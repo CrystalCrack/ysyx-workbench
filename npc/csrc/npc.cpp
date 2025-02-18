@@ -38,8 +38,13 @@ uint8_t pmem[MSIZE] = {
   0x93, 0x84, 0x14, 0x00
 };
 
+int halt = 0;
+
+void ebreak(){
+  halt = 1;
+}
+
 uint32_t pmem_read(uint32_t addr){
-  std::cout<<addr<<std::endl;
   return *(uint32_t*)(pmem + addr - MBIAS);
 }
 
@@ -66,10 +71,11 @@ int main() {
   dut->trace(m_trace, 10);
   m_trace->open("npc.vcd");
   reset(dut,10);
-  while(sim_time < MAX_SIM_TIME) {
+  while(!halt) {
     dut->inst = pmem_read(dut->pc);
     single_cycle(dut);
   }
+  std::cout << "simulation ended" << std::endl;
   m_trace->close();
   delete m_trace;
   delete dut;

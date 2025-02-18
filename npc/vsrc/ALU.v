@@ -26,6 +26,7 @@ module ALU(
         .B(~B),
         .Cin(1),
         .sum(sub_result),
+        .Cout(),
         .overflow(sub_overflow)
     );
 

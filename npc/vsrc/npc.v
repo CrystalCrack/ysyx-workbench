@@ -2,11 +2,18 @@ module npc(
     input clk,
     input rst,
     
-    output [31:0] pc,
+    output reg [31:0] pc,
     input [31:0] inst
 );
-    Reg#(32, 32'h80000000) pc_reg (clk, rst, pc+4, pc, 1);
-    
+    always @(posedge clk) begin
+        if(rst) begin
+            pc <= 32'h80000000;
+        end
+        else begin
+            pc <= pc+4;
+        end
+    end
+
     wire [4:0] rs1, rs2, rd;
     wire [31:0] imm;
     wire [2:0] funct3;

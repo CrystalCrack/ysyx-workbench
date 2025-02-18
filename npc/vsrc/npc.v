@@ -49,8 +49,8 @@ module npc(
     );
 
     assign rf_wdata = memtoreg?32'b0:ALU_result; //TODO
-    assign raddr1 = rs1;
-    assign raddr2 = rs2;
+    assign rf_raddr1 = rs1;
+    assign rf_raddr2 = rs2;
     RegisterFile#(.ADDR_WIDTH(5),.DATA_WIDTH(32)) u_RegisterFile(
         .clk    	(clk     ),
         .wdata  	(rf_wdata   ),

@@ -5,7 +5,7 @@ module npc(
     output [31:0] pc,
     input [31:0] inst
 );
-    Reg#(32, 0) pc_reg (clk, rst, pc+4, pc, 1);
+    Reg#(32, 32'h80000000) pc_reg (clk, rst, pc+4, pc, 1);
     
     wire [4:0] rs1, rs2, rd;
     wire [31:0] imm;

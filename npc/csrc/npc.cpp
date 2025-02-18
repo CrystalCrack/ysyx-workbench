@@ -17,8 +17,6 @@ uint32_t pmem_read(uint32_t addr){
 int sim_time = 0;
 VerilatedVcdC *m_trace = new VerilatedVcdC;
 
-uint32_t mem[]
-
 void single_cycle(Vlight *top) {
   top->clk = 0; top->eval();m_trace->dump(sim_time);sim_time++;
   top->clk = 1; top->inst = pmem_read(top->pc);top->eval();m_trace->dump(sim_time);sim_time++;

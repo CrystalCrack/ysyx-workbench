@@ -35,7 +35,7 @@ int main() {
   Vnpc *dut = new Vnpc;
 
   reset(dut,10);
-  while(1) {
+  while(sim_time < 20) {
     single_cycle(dut);
   }
 

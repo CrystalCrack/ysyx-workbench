@@ -379,7 +379,7 @@ VL_ATTR_COLD void Vnpc___024root__trace_full_sub_0(Vnpc___024root* vlSelf, Veril
     bufp->fullIData(oldp+123,(((IData)(4U) + vlSelf->pc)),32);
     bufp->fullBit(oldp+124,(vlSelf->npc__DOT__ALU_Cin));
     bufp->fullIData(oldp+125,(0x20U),32);
-    bufp->fullIData(oldp+126,(0U),32);
+    bufp->fullIData(oldp+126,(0x80000000U),32);
     bufp->fullBit(oldp+127,(1U));
     bufp->fullIData(oldp+128,(8U),32);
     bufp->fullIData(oldp+129,(3U),32);

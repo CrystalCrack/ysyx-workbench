@@ -6,7 +6,7 @@ module ALU(
     output zero,
     output wire overflow,
     output wire Cout,
-    output wire [31:0] result,
+    output wire [31:0] result
 );
     wire add_overflow, sub_overflow;
     wire int_Cout;

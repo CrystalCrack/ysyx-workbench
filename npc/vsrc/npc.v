@@ -71,7 +71,7 @@ module npc(
     );
     
     assign ALU_A = rf_rdata1;
-    assign ALU_B = ALUsrc2 ? rf_rdata2 : imm;
+    assign ALU_B = ALUsrc2 ? imm : rf_rdata2;
     ALU u_ALU(
         .mode(ALU_op),
         .A(ALU_A),

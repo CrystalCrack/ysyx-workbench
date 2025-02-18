@@ -5,7 +5,7 @@
 #include "Vnpc.h"
 #include "Vnpc___024root.h"
 
-#define MAX_SIM_TIME 300000
+#define MAX_SIM_TIME 10
 #define MSIZE 0xFFFF
 #define MBIAS 0x80000000
 
@@ -33,9 +33,11 @@ void reset(Vnpc *top, int n) {
 
 int main() {
   Vnpc *dut = new Vnpc;
-
+  Verilated::traceEverOn(true);
+  dut->trace(m_trace, 10);
+  m_trace->open("npc.vcd");
   reset(dut,10);
-  while(sim_time < 20) {
+  while(sim_time < MAX_SIM_TIME) {
     single_cycle(dut);
   }
 

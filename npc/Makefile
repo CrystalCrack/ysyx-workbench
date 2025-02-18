@@ -1,6 +1,6 @@
 # Compiler and flags
 VERILATOR = verilator
-VERILATOR_FLAGS = --cc --exe --trace --build -j 4 -O3 --x-assign fast --x-initial fast --noassert
+VERILATOR_FLAGS = --cc -g --exe --trace --build -j 4 -O3 --x-assign fast --x-initial fast --noassert
 
 TOPNAME = npc
 NXDC_FILES = constr/top.nxdc

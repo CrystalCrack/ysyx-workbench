@@ -41,8 +41,10 @@ module IDU(
                 ALUsrc2 = 1;
                 case (funct3)
                     3'd000: ALU_op = 3'b0;
+                    default:
                 endcase
             end
+            default:
         endcase
     end
 

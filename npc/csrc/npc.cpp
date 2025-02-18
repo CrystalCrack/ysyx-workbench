@@ -19,8 +19,8 @@ int sim_time = 0;
 VerilatedVcdC *m_trace = new VerilatedVcdC;
 
 void single_cycle(Vnpc *top) {
-  top->clk = 0; top->eval();m_trace->dump(sim_time);sim_time++;
   top->clk = 1; top->eval();m_trace->dump(sim_time);sim_time++;
+  top->clk = 0; top->eval();m_trace->dump(sim_time);sim_time++;
 }
 
 void reset(Vnpc *top, int n) {
@@ -39,10 +39,11 @@ int main() {
   m_trace->open("npc.vcd");
   reset(dut,10);
   while(sim_time < MAX_SIM_TIME) {
-    single_cycle(dut);
     dut->inst = pmem_read(dut->pc);
+    single_cycle(dut);
   }
-
+  m_trace->close();
+  delete m_trace;
   delete dut;
   return 0;
 }

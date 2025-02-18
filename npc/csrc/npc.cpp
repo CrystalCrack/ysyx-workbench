@@ -40,7 +40,7 @@ int main() {
   reset(dut,10);
   while(sim_time < MAX_SIM_TIME) {
     single_cycle(dut);
-    top->inst = pmem_read(top->pc);
+    dut->inst = pmem_read(top->pc);
   }
 
   delete dut;

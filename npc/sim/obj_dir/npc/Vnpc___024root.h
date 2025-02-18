@@ -25,7 +25,7 @@ class Vnpc___024root final : public VerilatedModule {
     CData/*0:0*/ npc__DOT__u_ALU__DOT__int_Cout;
     CData/*0:0*/ npc__DOT__u_ALU__DOT__sub_inst__DOT____VdfgTmp_hc75629da__0;
     CData/*0:0*/ npc__DOT__u_ALU__DOT__u_MuxKeyWithDefault__DOT__i0__DOT__hit;
-    CData/*0:0*/ __VdfgTmp_h6e125d43__0;
+    CData/*0:0*/ __VdfgTmp_hae490a24__0;
     CData/*0:0*/ __Vtrigrprev__TOP__clk;
     CData/*0:0*/ __VactContinue;
     VL_OUT(pc,31,0);
@@ -36,9 +36,9 @@ class Vnpc___024root final : public VerilatedModule {
     IData/*31:0*/ npc__DOT__u_ALU__DOT__add_result;
     IData/*31:0*/ npc__DOT__u_ALU__DOT__sub_result;
     IData/*31:0*/ __VdfgTmp_hf55457f8__0;
-    IData/*31:0*/ __VdfgTmp_h5078321f__0;
-    IData/*31:0*/ __VdfgTmp_h576f4bdf__0;
-    IData/*31:0*/ __VdfgTmp_h5658ebd9__0;
+    IData/*31:0*/ __VdfgTmp_ha8752fbf__0;
+    IData/*31:0*/ __VdfgTmp_haf74767f__0;
+    IData/*31:0*/ __VdfgTmp_hae65ec79__0;
     IData/*31:0*/ __VstlIterCount;
     IData/*31:0*/ __VicoIterCount;
     IData/*31:0*/ __VactIterCount;

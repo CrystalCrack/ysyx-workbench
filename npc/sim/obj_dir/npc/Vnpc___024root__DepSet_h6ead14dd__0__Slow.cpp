@@ -194,10 +194,10 @@ VL_ATTR_COLD void Vnpc___024root___ctor_var_reset(Vnpc___024root* vlSelf) {
     vlSelf->npc__DOT__u_ALU__DOT__u_MuxKeyWithDefault__DOT__i0__DOT__lut_out = 0;
     vlSelf->npc__DOT__u_ALU__DOT__u_MuxKeyWithDefault__DOT__i0__DOT__hit = 0;
     vlSelf->__VdfgTmp_hf55457f8__0 = 0;
-    vlSelf->__VdfgTmp_h5078321f__0 = 0;
-    vlSelf->__VdfgTmp_h576f4bdf__0 = 0;
-    vlSelf->__VdfgTmp_h5658ebd9__0 = 0;
-    vlSelf->__VdfgTmp_h6e125d43__0 = 0;
+    vlSelf->__VdfgTmp_ha8752fbf__0 = 0;
+    vlSelf->__VdfgTmp_haf74767f__0 = 0;
+    vlSelf->__VdfgTmp_hae65ec79__0 = 0;
+    vlSelf->__VdfgTmp_hae490a24__0 = 0;
     vlSelf->__Vtrigrprev__TOP__clk = 0;
     for (int __Vi0 = 0; __Vi0 < 3; ++__Vi0) {
         vlSelf->__Vm_traceActivity[__Vi0] = 0;

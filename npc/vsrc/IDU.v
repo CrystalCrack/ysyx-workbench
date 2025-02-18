@@ -49,7 +49,7 @@ module IDU(
         endcase
     end
 
-    assign stop_sim = (inst==32'h0010_0073) 1 : 0;
+    assign stop_sim = (inst==32'h0010_0073) ? 1 : 0;
 
 
 

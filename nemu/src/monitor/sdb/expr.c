@@ -177,16 +177,18 @@ Token* FindMainOP(Token* p, Token* q, bool* is_binary){
   for(i=0;p+i<q;i++){
     switch((p+i)->type){
       case '(':
-        int layer = 1;
-        while(layer>0){
-          i++;
-          switch((p+i)->type){
-            case '(':
-              layer++;
-              break;
-            case ')':
-              layer--;
-              break;
+        {
+          int layer = 1;
+          while(layer>0){
+            i++;
+            switch((p+i)->type){
+              case '(':
+                layer++;
+                break;
+              case ')':
+                layer--;
+                break;
+            }
           }
         }
         break;

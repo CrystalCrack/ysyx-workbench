@@ -23,6 +23,7 @@
 static int is_batch_mode = false;
 
 void init_regex();
+void free_regex();
 void init_wp_pool();
 
 /* We use the `readline' library to provide more flexibility to read from stdin. */
@@ -43,7 +44,7 @@ static char* rl_gets() {
   return line_read;
 }
 //convert string to integer
-static int safe_atoi(char *str, uint64_t* result){
+static int safe_atoi(char *str, uint32_t* result){
   char *endptr;
   long val = strtol(str,&endptr,10);
 
@@ -64,7 +65,7 @@ static int cmd_si(char *args){
   if(args==NULL){
     cpu_exec(1);
   }else{
-    uint64_t n;
+    uint32_t n;
     int ret = safe_atoi(args, &n);
     if(ret<0){
       printf("%s is not pure number!\n", args);
@@ -87,6 +88,8 @@ static int cmd_info(char *args){
     printf("Blank arg for info is not valid. Try\"help info\"\n");
   }else if(strcmp(args, "r")==0||strcmp(args, "registers")==0||strcmp(args, "register")==0||strcmp(args, "reg")==0){
     isa_reg_display();
+  }else if(strcmp(args, "w")==0||strcmp(args, "watchpoint")==0){
+    print_wp();
   }else{
     printf("Undefined info command:%s. Try \"help info\"\n",args);
   }
@@ -95,20 +98,29 @@ static int cmd_info(char *args){
 
 static int cmd_x(char *args){
   uint32_t N;
-  uint64_t addr;
+  uint32_t addr;
+  args = strtok(NULL, " ");
   if(args==NULL){
-    printf("Invalid x usage. Try \"help x\"\n");
+    printf("missing N args. Try \"help x\"\n");
+  }else if(sscanf(args,"%d",&N)!=1){
+    printf("Invalid N args. Try \"help x\"\n");
   }
-  else if(sscanf(args,"%d 0x%lx",&N,&addr)!=2){
-    printf("Invalid x args:%s. Try \"help x\"\n", args);
-  }else{
-    word_t data;
-    for(int i=0;i<N;i++){
-      data = vaddr_read(addr+i, 1);
-      printf("%X\t",data);
-    }
-    printf("\n");
+
+  args = strtok(NULL, " ");
+  if(args==NULL){
+    printf("missing EXPR args. Try \"help x\"\n");
   }
+  bool success = true;
+  addr = expr(args, &success);
+  if(!success){
+    printf("Invalid EXPR args.");
+  }
+  word_t data;
+  for(int i=0;i<N;i++){
+    data = vaddr_read(addr+i, 1);
+    printf("%X\t",data);
+  }
+  printf("\n");
   return 0;
 }
 
@@ -128,6 +140,39 @@ static int cmd_p(char *args){
   return 0;
 }
 
+static int cmd_w(char *args){
+  WP* wp = new_wp();
+  if(args==NULL){
+    printf("Invalid w usage. Try \"help w\"\n");
+  }else{
+    bool success;
+    wp->val = expr(args, &success);
+    if(!success){
+      printf("Invalid expression:%s\n",args);
+      free_wp(wp);
+      return 0;
+    }
+    strcpy(wp->expr, args);
+    printf("Watchpoint %d: %s\n",wp->NO,wp->expr);
+  }
+  return 0;
+}
+
+static int cmd_d(char *args){
+  if(args==NULL){
+    printf("Invalid d usage. Try \"help d\"\n");
+  }else{
+    uint32_t NO;
+    int ret = safe_atoi(args, &NO);
+    if(ret<0){
+      printf("Invalid NO args. Try \"help d\"\n");
+      return 0;
+    }
+    delete_wp(NO);
+    printf("Watchpoint %d deleted\n",NO);
+  }
+  return 0;
+}
 static struct {
   const char *name;
   const char *description;
@@ -139,7 +184,9 @@ static struct {
   { "si", "Make the program pause after executing N instructions. When N is not specified, it defaults to 1", cmd_si},
   { "info", "Print the state of program", cmd_info},
   { "x", "Examine memory:x N EXPR\nEXPR is an expression for the memory address to examine.\nN is the number of bytes to output.", cmd_x},
-  { "p", "usage:p EXPR\n figure out the result of EXPR", cmd_p}
+  { "p", "usage:p EXPR\n figure out the result of EXPR", cmd_p},
+  { "w", "Set a watchpoint for an expression. When the value of expression change, the program pause. ", cmd_w },
+  { "d", "Delete a watchpoint", cmd_d },
 };
 
 #define NR_CMD ARRLEN(cmd_table)
@@ -214,4 +261,8 @@ void init_sdb() {
 
   /* Initialize the watchpoint pool. */
   init_wp_pool();
+}
+
+void free_sdb() {
+  free_regex();
 }

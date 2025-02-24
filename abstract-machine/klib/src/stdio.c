@@ -11,36 +11,40 @@ int printf(const char *fmt, ...) {
 
 int vsprintf(char *out, const char *fmt, va_list ap) {
   int i = 0;
-  while(*fmt != '\0'){
-    if(*fmt == '%'){
+  while (*fmt != '\0') {
+    if (*fmt == '%') {
       fmt++;
-      switch(*fmt){
-        case 'd':{
+      switch (*fmt) {
+        case 'd': {
           int num = va_arg(ap, int);
           char buf[32];
-          if(num < 0){
+          int buf_index = 0;
+          if (num < 0) {
             out[i++] = '-';
             num = -num;
           }
-          do{
-            buf[i++] = num % 10 + '0';
+          do {
+            buf[buf_index++] = num % 10 + '0';
             num /= 10;
-          }while(num);
-          for(int j = i - 1; j >= 0; j--){
-            out[i - j - 1] = buf[j];
+          } while (num);
+          for (int j = buf_index - 1; j >= 0; j--) {
+            out[i++] = buf[j];
           }
           break;
         }
-        case 's':{
+        case 's': {
           const char *str = va_arg(ap, const char *);
-          while(*str != '\0'){
+          while (*str != '\0') {
             out[i++] = *str++;
           }
           break;
         }
+        default:
+          out[i++] = '%';
+          out[i++] = *fmt;
+          break;
       }
-    }
-    else{
+    } else {
       out[i++] = *fmt;
     }
     fmt++;

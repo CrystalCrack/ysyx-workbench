@@ -16,6 +16,7 @@
 #include <cpu/cpu.h>
 #include <cpu/decode.h>
 #include <cpu/difftest.h>
+#include <cpu/ifetch.h>
 #include <locale.h>
 
 /* The assembly code of instructions executed is only output to the screen
@@ -24,6 +25,16 @@
  * You can modify this value as you want.
  */
 #define MAX_INST_TO_PRINT 10
+#define IRNGBUF_LEN 32
+
+typedef struct iringbuf_unit {
+  vaddr_t pc;
+  uint32_t inst;
+  uint8_t valid;
+} iringbuf_unit;
+
+iringbuf_unit iringbuf[IRNGBUF_LEN];
+uint32_t iringbuf_ptr = 0;
 
 CPU_state cpu = {};
 uint64_t g_nr_guest_inst = 0;
@@ -32,6 +43,23 @@ static bool g_print_step = false;
 
 void device_update();
 bool check_wp();
+
+static void display_iringbuf() {
+  void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
+  char msg[128];
+  char *p = msg;
+  for (int i = 0; i < IRNGBUF_LEN; i ++) {
+    if (iringbuf[i].valid) {
+      if(i==iringbuf_ptr) {
+        p += snprintf(p, sizeof(msg) - (p - msg), "=> ");
+      } else {
+        p += snprintf(p, sizeof(msg) - (p - msg), "   ");
+      }
+      p += snprintf(p, sizeof(msg) - (p - msg), FMT_WORD ":", iringbuf[i].pc);
+      disassemble(p, sizeof(msg) - (p - msg), iringbuf[i].pc, (uint8_t *)&iringbuf[i].inst, 4);
+    }
+  }
+}
 
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #ifdef CONFIG_ITRACE_COND
@@ -43,10 +71,19 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 }
 
 static void exec_once(Decode *s, vaddr_t pc) {
+
+  // write iringbuf
+  iringbuf[iringbuf_ptr].pc = pc;
+  iringbuf[iringbuf_ptr].inst = inst_fetch(&s->snpc, 4);
+  iringbuf[iringbuf_ptr].valid = 1;
+  iringbuf_ptr = (iringbuf_ptr + 1) % IRNGBUF_LEN;
+
   s->pc = pc;
   s->snpc = pc;
   isa_exec_once(s);
   cpu.pc = s->dnpc;
+
+
 #ifdef CONFIG_ITRACE
   char *p = s->logbuf;
   p += snprintf(p, sizeof(s->logbuf), FMT_WORD ":", s->pc);
@@ -96,6 +133,7 @@ static void statistic() {
 }
 
 void assert_fail_msg() {
+  display_iringbuf();
   isa_reg_display();
   statistic();
 }

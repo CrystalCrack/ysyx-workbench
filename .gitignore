@@ -10,6 +10,8 @@
 !README.md
 !.gitignore
 !init.sh
+!/dce/*
+!/LearnCtheHardWay/*
 /fceux-am
 /nvboard
 /am-kernels

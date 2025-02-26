@@ -177,16 +177,18 @@ Token* FindMainOP(Token* p, Token* q, bool* is_binary){
   for(i=0;p+i<q;i++){
     switch((p+i)->type){
       case '(':
-        int layer = 1;
-        while(layer>0){
-          i++;
-          switch((p+i)->type){
-            case '(':
-              layer++;
-              break;
-            case ')':
-              layer--;
-              break;
+        {
+          int layer = 1;
+          while(layer>0){
+            i++;
+            switch((p+i)->type){
+              case '(':
+                layer++;
+                break;
+              case ')':
+                layer--;
+                break;
+            }
           }
         }
         break;
@@ -410,10 +412,16 @@ word_t expr(char *e, bool *success) {
 
   /* Check the token '*' and '-' */
   for(int i=0;i<nr_token;i++){
-    if(tokens[i].type=='*' && (i==0 || (tokens+i-1)->type == TK_DEC || (tokens+i-1)->type == TK_HEX || (tokens+i-1)->type == ')')){
+    if(tokens[i].type=='*' && (i==0 || !((tokens+i-1)->type == TK_DEC || 
+                                         (tokens+i-1)->type == TK_HEX || 
+                                         (tokens+i-1)->type == TK_REG ||
+                                         (tokens+i-1)->type == ')'))){
       tokens[i].type = TK_DEREF;
     }
-    if(tokens[i].type=='-' && (i==0 || (tokens+i-1)->type == TK_DEC || (tokens+i-1)->type == TK_HEX || (tokens+i-1)->type == ')')){
+    if(tokens[i].type=='-' && (i==0 || !((tokens+i-1)->type == TK_DEC ||
+                                         (tokens+i-1)->type == TK_HEX ||
+                                         (tokens+i-1)->type == TK_REG ||
+                                         (tokens+i-1)->type == ')'))){
       tokens[i].type = TK_NEG;
     }
   }

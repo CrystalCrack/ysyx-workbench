@@ -51,7 +51,7 @@ static void display_iringbuf() {
   for (int i = 0; i < IRNGBUF_LEN; i ++) {
     p = msg;
     if (iringbuf[i].valid) {
-      if(i==iringbuf_ptr) {
+      if(i==iringbuf_ptr - 1) {
         p += snprintf(p, sizeof(msg) - 2 - (p - msg), "=> ");
       } else {
         p += snprintf(p, sizeof(msg) - 2 - (p - msg), "   ");

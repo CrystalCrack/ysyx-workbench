@@ -51,11 +51,14 @@ static void display_iringbuf() {
   for (int i = 0; i < IRNGBUF_LEN; i ++) {
     p = msg;
     uint8_t *inst = (uint8_t *)&iringbuf[i].inst;
-    
+
     if (iringbuf[i].valid) {
       p += snprintf(p, sizeof(msg) - (p - msg), FMT_WORD ":", iringbuf[i].pc);
       for(int j = 0; j < 4; j ++){
         p += snprintf(p, 4, " %02x", inst[j]);
+      }
+      for(int j = 0;j < 4; j++){
+        *(p++) = '\t';
       }
       disassemble(p, sizeof(msg) - (p - msg), iringbuf[i].pc, inst, 4);
       if(i == iringbuf_ptr-1){

@@ -54,9 +54,7 @@ static void display_iringbuf() {
       p += snprintf(p, sizeof(msg) - (p - msg), FMT_WORD ":", iringbuf[i].pc);
       p += snprintf(p, 4, " %02x", iringbuf[i].inst);
       disassemble(p, sizeof(msg) - (p - msg), iringbuf[i].pc, (uint8_t *)&iringbuf[i].inst, 4);
-      msg[126] = '\n';
-      msg[127] = '\0';
-      printf("%s", msg);
+      printf("%s\n", msg);
     }
   }
 }

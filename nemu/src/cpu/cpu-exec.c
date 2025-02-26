@@ -54,7 +54,11 @@ static void display_iringbuf() {
       p += snprintf(p, sizeof(msg) - (p - msg), FMT_WORD ":", iringbuf[i].pc);
       p += snprintf(p, 4, " %02x", iringbuf[i].inst);
       disassemble(p, sizeof(msg) - (p - msg), iringbuf[i].pc, (uint8_t *)&iringbuf[i].inst, 4);
-      printf("%s\n", msg);
+      if(i == iringbuf_ptr-1){
+        printf("==>"ANSI_FG_RED "%s\n" ANSI_NONE, msg);
+      }else{
+        printf("   ""%s\n", msg);
+      }
     }
   }
 }

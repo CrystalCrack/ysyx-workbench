@@ -51,13 +51,9 @@ static void display_iringbuf() {
   for (int i = 0; i < IRNGBUF_LEN; i ++) {
     p = msg;
     if (iringbuf[i].valid) {
-      if(i==iringbuf_ptr - 1) {
-        p += snprintf(p, sizeof(msg) - 2 - (p - msg), "=> ");
-      } else {
-        p += snprintf(p, sizeof(msg) - 2 - (p - msg), "   ");
-      }
-      p += snprintf(p, sizeof(msg) - 2 - (p - msg), FMT_WORD ":", iringbuf[i].pc);
-      disassemble(p, sizeof(msg) - 2 - (p - msg), iringbuf[i].pc, (uint8_t *)&iringbuf[i].inst, 4);
+      p += snprintf(p, sizeof(msg) - (p - msg), FMT_WORD ":", iringbuf[i].pc);
+      p += snprintf(p, 4, " %02x", iringbuf[i].inst);
+      disassemble(p, sizeof(msg) - (p - msg), iringbuf[i].pc, (uint8_t *)&iringbuf[i].inst, 4);
       *(p++) = '\n';
       *(p++) = '\0';
       printf("%s", msg);

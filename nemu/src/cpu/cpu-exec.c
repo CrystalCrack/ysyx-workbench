@@ -50,10 +50,14 @@ static void display_iringbuf() {
   char *p;
   for (int i = 0; i < IRNGBUF_LEN; i ++) {
     p = msg;
+    uint8_t *inst = (uint8_t *)&iringbuf[i].inst;
+    
     if (iringbuf[i].valid) {
       p += snprintf(p, sizeof(msg) - (p - msg), FMT_WORD ":", iringbuf[i].pc);
-      p += snprintf(p, 4, " %02x", iringbuf[i].inst);
-      disassemble(p, sizeof(msg) - (p - msg), iringbuf[i].pc, (uint8_t *)&iringbuf[i].inst, 4);
+      for(int j = 0; j < 4; j ++){
+        p += snprintf(p, 4, " %02x", inst[j]);
+      }
+      disassemble(p, sizeof(msg) - (p - msg), iringbuf[i].pc, inst, 4);
       if(i == iringbuf_ptr-1){
         printf("==>"ANSI_FG_RED "%s\n" ANSI_NONE, msg);
       }else{

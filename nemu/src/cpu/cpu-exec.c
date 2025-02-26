@@ -57,7 +57,7 @@ static void display_iringbuf() {
       for(int j = 0; j < 4; j ++){
         p += snprintf(p, 4, " %02x", inst[j]);
       }
-      for(int j = 0;j < 4; j++){
+      for(int j = 0;j < 2; j++){
         *(p++) = '\t';
       }
       disassemble(p, sizeof(msg) - (p - msg), iringbuf[i].pc, inst, 4);

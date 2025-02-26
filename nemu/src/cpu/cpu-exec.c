@@ -77,7 +77,7 @@ static void exec_once(Decode *s, vaddr_t pc) {
 
   // write iringbuf
   iringbuf[iringbuf_ptr].pc = pc;
-  iringbuf[iringbuf_ptr].inst = inst_fetch(&pc, 4);
+  iringbuf[iringbuf_ptr].inst = vaddr_ifetch(pc, 4);
   iringbuf[iringbuf_ptr].valid = 1;
   iringbuf_ptr = (iringbuf_ptr + 1) % IRNGBUF_LEN;
 

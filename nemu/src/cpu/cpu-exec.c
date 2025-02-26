@@ -47,8 +47,9 @@ bool check_wp();
 static void display_iringbuf() {
   void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
   char msg[128];
-  char *p = msg;
+  char *p;
   for (int i = 0; i < IRNGBUF_LEN; i ++) {
+    p = msg;
     if (iringbuf[i].valid) {
       if(i==iringbuf_ptr) {
         p += snprintf(p, sizeof(msg) - 2 - (p - msg), "=> ");

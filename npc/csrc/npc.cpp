@@ -69,7 +69,7 @@ void reset(Vnpc *top, int n) {
   top->rst = 0;
 }
 
-int main() {
+int main(int argc, char **argv) {
   Vnpc *dut = new Vnpc;
   Verilated::traceEverOn(true);
   dut->trace(m_trace, 10);

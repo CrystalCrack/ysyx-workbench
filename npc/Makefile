@@ -26,7 +26,7 @@ SIM_CSRCS = $(shell find $(abspath ./csrc) -name "*.c" -or -name "*.cc" -or -nam
 CSRCS= $(SIM_CSRCS) $(SRC_AUTO_BIND)
 
 # Rules for NVBoard
-include $(NVBOARD_HOME)/scripts/nvboard.mk
+# include $(NVBOARD_HOME)/scripts/nvboard.mk
 
 # Rules for verilator
 INCFLAGS = $(addprefix -I, $(INC_PATH))

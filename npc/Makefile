@@ -46,10 +46,10 @@ Makefile.%: ./csrc/%
 
 sim: $(VSRCS) $(SIM_CSRCS)
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
-	
+
 	$(VERILATOR) $(VERILATOR_FLAGS) --top-module $(TOPNAME) $^ \
 	$(addprefix -CFLAGS , $(CXXFLAGS)) $(addprefix -LDFLAGS , $(LDFLAGS))\
-	--Mdir $(SIM_OBJ_DIR)
+	--Mdir $(abspath SIM_OBJ_DIR)
 
 	$(SIM_OBJ_DIR)/V$(TOPNAME)
 

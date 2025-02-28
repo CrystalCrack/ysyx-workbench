@@ -9,7 +9,7 @@ SIM_DIR = ./sim
 OBJ_DIR = $(BUILD_DIR)/obj_dir
 SIM_OBJ_DIR = $(SIM_DIR)/obj_dir
 BIN = $(BUILD_DIR)/$(TOPNAME)
-INC_PATH += $(abspath ./csrc/include)
+INC_PATH += $(abspath ./csrc/include) $(abspath ./sim/obj_dir)
 
 $(shell mkdir -p $(BUILD_DIR))
 $(shell mkdir -p $(SIM_DIR))

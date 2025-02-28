@@ -48,8 +48,8 @@ sim: $(VSRCS) $(SIM_CSRCS)
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 
 	$(VERILATOR) $(VERILATOR_FLAGS) --top-module $(TOPNAME) $^ \
-	$(addprefix -CFLAGS , $(CXXFLAGS))\
-	--Mdir $(abspath SIM_OBJ_DIR)
+	$(addprefix -CFLAGS , $(CXXFLAGS)) \
+	--Mdir $(SIM_OBJ_DIR)
 
 	$(SIM_OBJ_DIR)/V$(TOPNAME)
 

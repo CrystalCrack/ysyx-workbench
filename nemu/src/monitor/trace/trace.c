@@ -98,7 +98,8 @@ void ftrace(int rd, int rs, vaddr_t pc, vaddr_t dnpc){
     char *p_msg = msg;
     p_msg += snprintf(p_msg, sizeof(msg), FMT_WORD ":", pc);
     for(int i=0;i<num_of_func_calls;i++){
-      *(p_msg++) = '\t';
+      *(p_msg++) = ' ';
+      *(p_msg++) = ' ';
     }
     p_msg += snprintf(p_msg, sizeof(msg) - (p_msg - msg), "call\t[%s@" FMT_WORD "]", func_name, dnpc);
     *(p_msg++) = '\0';
@@ -110,7 +111,8 @@ void ftrace(int rd, int rs, vaddr_t pc, vaddr_t dnpc){
     where_am_I(pc, func_name, 128);
     p_msg += snprintf(p_msg, sizeof(msg), FMT_WORD ":", pc);
     for(int i=0;i<num_of_func_calls;i++){
-      *(p_msg++) = '\t';
+      *(p_msg++) = ' ';
+      *(p_msg++) = ' ';
     }
     p_msg += snprintf(p_msg, sizeof(msg) - (p_msg - msg), "ret\t[%s]", func_name);
     *(p_msg++) = '\0';

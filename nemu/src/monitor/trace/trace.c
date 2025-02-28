@@ -24,7 +24,7 @@ int num_of_func_calls = 0;
 
 void init_trace(const char* elf_file){
     if (elf_file == NULL) {
-        Log("No elf file is given. Disable ftrace");
+        Log("FTrace: %s",ANSI_FMT("OFF", ANSI_FG_RED));
         ftrace_set(false);
         return;
     }
@@ -71,6 +71,9 @@ void init_trace(const char* elf_file){
             j++;
         }
     }
+
+    ftrace_set(true);
+    Log("Ftrace: %s",ANSI_FMT("ON", ANSI_FG_GREEN));
 }
 
 void where_am_I(vaddr_t addr, char *func_name, int len){

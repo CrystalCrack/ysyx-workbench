@@ -25,16 +25,9 @@
  * You can modify this value as you want.
  */
 #define MAX_INST_TO_PRINT 10
-#define IRNGBUF_LEN 32
 
-typedef struct iringbuf_unit {
-  vaddr_t pc;
-  uint32_t inst;
-  uint8_t valid;
-} iringbuf_unit;
-
-iringbuf_unit iringbuf[IRNGBUF_LEN];
-uint32_t iringbuf_ptr = 0;
+void display_iringbuf();
+void write_iringbuf(vaddr_t pc, uint32_t inst);
 
 CPU_state cpu = {};
 uint64_t g_nr_guest_inst = 0;
@@ -44,31 +37,6 @@ static bool g_print_step = false;
 void device_update();
 bool check_wp();
 
-static void display_iringbuf() {
-  void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
-  char msg[128];
-  char *p;
-  for (int i = 0; i < IRNGBUF_LEN; i ++) {
-    p = msg;
-    uint8_t *inst = (uint8_t *)&iringbuf[i].inst;
-
-    if (iringbuf[i].valid) {
-      p += snprintf(p, sizeof(msg) - (p - msg), FMT_WORD ":", iringbuf[i].pc);
-      for(int j = 0; j < 4; j ++){
-        p += snprintf(p, 4, " %02x", inst[j]);
-      }
-      for(int j = 0;j < 2; j++){
-        *(p++) = '\t';
-      }
-      disassemble(p, sizeof(msg) - (p - msg), iringbuf[i].pc, inst, 4);
-      if(i == iringbuf_ptr-1){
-        printf("==>"ANSI_FG_RED "%s\n" ANSI_NONE, msg);
-      }else{
-        printf("   ""%s\n", msg);
-      }
-    }
-  }
-}
 
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #ifdef CONFIG_ITRACE_COND
@@ -82,14 +50,12 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 static void exec_once(Decode *s, vaddr_t pc) {
 
   // write iringbuf
-  iringbuf[iringbuf_ptr].pc = pc;
-  iringbuf[iringbuf_ptr].inst = vaddr_ifetch(pc, 4);
-  iringbuf[iringbuf_ptr].valid = 1;
-  iringbuf_ptr = (iringbuf_ptr + 1) % IRNGBUF_LEN;
+  write_iringbuf(pc, vaddr_ifetch(pc, 4));
 
   s->pc = pc;
   s->snpc = pc;
   isa_exec_once(s);
+
   cpu.pc = s->dnpc;
 
 

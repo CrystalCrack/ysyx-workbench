@@ -38,7 +38,7 @@ module IDU(
     assign immJ = {{12{inst[31]}}, inst[19:12], inst[20], inst[30:21], 1'b0};
     assign rs1 = inst_is_ebreak ? 5'd0 : inst[19:15];
     assign rs2 = inst[24:20];
-    assign rd = inst_is_ebreak ? 5'd10 : inst[11:7];
+    assign rd = inst_is_ebreak ? 10 : inst[11:7];
     assign funct3 = inst[14:12];
     assign funct7 = inst[31:25];
     assign opcode = inst[6:0];

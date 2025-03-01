@@ -12,6 +12,7 @@ extern char *img_file;
 extern void get_reg(int addr, int* reg_data);
 
 long load_img();
+uint32_t pmem_read(uint32_t addr);
 
 void ebreak(){
     stop();
@@ -44,10 +45,12 @@ int main(int argc, char** argv){
 
     reset(5);
 
+    state = RUN;
+
     while(sim_time < MAX_SIM_TIME){
         svSetScope(svGetScopeFromName("TOP.npc.u_RegisterFile"));
         single_cycle();
-        state = RUN;
+        dut->inst = pmem_read(dut->pc);
         if(state == HALT){
             int reg_data;
             get_reg(10, &reg_data);

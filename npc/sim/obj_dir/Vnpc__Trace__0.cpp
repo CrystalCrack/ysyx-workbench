@@ -247,6 +247,9 @@ void Vnpc___024root__trace_chg_sub_0(Vnpc___024root* vlSelf, VerilatedVcd::Buffe
                                                                  << 0xcU) 
                                                                 | (vlSelf->inst 
                                                                    >> 0x14U)))))),33);
+    bufp->chgCData(oldp+146,(((0x100073U == vlSelf->inst)
+                               ? 0xaU : (0x1fU & (vlSelf->inst 
+                                                  >> 7U)))),5);
 }
 
 void Vnpc___024root__trace_cleanup(void* voidSelf, VerilatedVcd* /*unused*/) {

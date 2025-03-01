@@ -76,7 +76,7 @@ VL_INLINE_OPT void Vnpc___024root___ico_sequent__TOP__0(Vnpc___024root* vlSelf) 
            [0U]);
     vlSelf->npc__DOT__imm = ((IData)(vlSelf->npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__hit)
                               ? vlSelf->npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__lut_out
-                              : 0U);
+                              : 1U);
     vlSelf->npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__lut_out 
         = (((IData)(vlSelf->npc__DOT__idu_inst__DOT__inst_name) 
             == vlSelf->npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__key_list
@@ -307,13 +307,15 @@ VL_INLINE_OPT void Vnpc___024root___nba_sequent__TOP__0(Vnpc___024root* vlSelf) 
     if ((0x100073U == vlSelf->inst)) {
         Vnpc___024root____Vdpiimwrap_npc__DOT__ebreak_TOP();
     }
+    __Vdlyvdim0__npc__DOT__u_RegisterFile__DOT__rf__v0 
+        = ((0x100073U == vlSelf->inst) ? 0xaU : (0x1fU 
+                                                 & (vlSelf->inst 
+                                                    >> 7U)));
     vlSelf->pc = ((IData)(vlSelf->rst) ? 0x80000000U
                    : ((IData)(4U) + vlSelf->pc));
     __Vdlyvval__npc__DOT__u_RegisterFile__DOT__rf__v0 
         = ((IData)(vlSelf->npc__DOT__memtoreg) ? 0U
             : (IData)(vlSelf->npc__DOT__u_ALU__DOT__out));
-    __Vdlyvdim0__npc__DOT__u_RegisterFile__DOT__rf__v0 
-        = (0x1fU & (vlSelf->inst >> 7U));
     vlSelf->npc__DOT__u_RegisterFile__DOT__rf[__Vdlyvdim0__npc__DOT__u_RegisterFile__DOT__rf__v0] 
         = __Vdlyvval__npc__DOT__u_RegisterFile__DOT__rf__v0;
     vlSelf->__VdfgTmp_hfa87cd20__0 = vlSelf->npc__DOT__u_RegisterFile__DOT__rf

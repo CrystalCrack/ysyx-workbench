@@ -48,7 +48,7 @@ module IDU(
     ) getimm(
         .out         	(imm          ),
         .key         	(inst_name          ),
-        .default_out 	(32'b0  ),
+        .default_out 	(32'b1  ),
         .lut         	({1'b1, immI}          )
     );
 

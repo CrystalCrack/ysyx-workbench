@@ -6,65 +6,56 @@
 extern int sim_time;
 extern Vnpc *dut;
 extern CPU_state state;
+extern VerilatedVcdC *m_trace;
 extern char *img_file;
-
-uint32_t pmem_read(uint32_t addr);
-long load_img();
 
 extern void get_reg(int addr, int* reg_data);
 
-void ebreak(){
-  stop();
+long load_img();
+
+void parse_args(int argc, char** argv){
+    static struct option long_options[] = {
+        {"image", required_argument, 0, 'i'},
+        {0, 0, 0, 0}
+    };
+    int o;
+    while((o = getopt_long(argc, argv, "i:", long_options, NULL)) != -1){
+        switch(o){
+            case 'i':
+                img_file = optarg;
+                break;
+            default:
+                break;
+        }
+    }
 }
 
-void parse_args(int argc, char **argv) {
-  const struct option table[] = {
-    {"image", required_argument, NULL, 'i'},
-    {NULL, 0, NULL, 0}
-  };
-  int o;
-  while((o = getopt_long(argc, argv, "-i:", table, NULL)) != -1) {
-    switch(o) {
-      case 'i':
-        img_file = optarg;
-        break;
-      default:
-        break;
+int main(int argc, char** argv){
+
+    parse_args(argc, argv);
+
+    cpu_init("npc.vcd");
+
+    load_img();
+
+    reset(5);
+
+    while(sim_time < MAX_SIM_TIME){
+        svSetScope(svGetScopeFromName("TOP.npc.u_RegisterFile"));
+        single_cycle();
+        if(state == HALT){
+            int reg_data;
+            get_reg(10, &reg_data);
+            if(reg_data == 0){
+                printf(ANSI_BOLD ANSI_COLOR_GREEN "HIT GOOD TRAP" ANSI_COLOR_RESET " at pc = 0x%08x\n", dut->pc);
+            }else{
+                printf(ANSI_BOLD ANSI_COLOR_RED "HIT BAD TRAP" ANSI_COLOR_RESET " at pc = 0x%08x\n", dut->pc);
+            }
+            break;
+        }
     }
-  }
-}
 
-int main(int argc, char **argv) {
-  
-  cpu_init("npc.vcd");
-
-  parse_args(argc, argv);
-
-  load_img();
-
-  std::cout<<"NPC simulation starts"<<std::endl;
-
-  while(sim_time < MAX_SIM_TIME){ 
-    dut->inst = pmem_read(dut->pc);
-    state = RUN;
-    single_cycle();
-
-    if(state == HALT){
-      int data;
-      svSetScope(svGetScopeFromName("TOP.npc.u_RegisterFile"));
-      get_reg(10, &data);
-      if(data == 0){
-        printf(ANSI_BOLD ANSI_COLOR_GREEN "HIT GOOD TRAP" ANSI_COLOR_RESET " at pc = 0x%08x\n", dut->pc);
-      }else{
-        printf(ANSI_BOLD ANSI_COLOR_RED "HIT BAD TRAP" ANSI_COLOR_RESET " at pc = 0x%08x\n", dut->pc);
-      }
-      break;
-    }
-  }
-
-  std::cout << "simulation ended" << std::endl;
+    return 0;
 
 
-  cpu_deinit();
-  return 0;
 }

@@ -91,7 +91,7 @@ module IDU(
                           2'b10, 1'b1}          )
     );
 
-    assign stop_sim = inst_is_ebreak;
+    assign stop_sim = inst_is_ebreak | ~(|inst_name);
 
 
 

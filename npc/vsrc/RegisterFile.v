@@ -9,7 +9,10 @@ module RegisterFile #(ADDR_WIDTH = 1, DATA_WIDTH = 1) (
     output [DATA_WIDTH-1:0] rdata2,
     input ren
 );
+    
+    /* verilator public */
     reg [DATA_WIDTH-1:0] rf [2**ADDR_WIDTH-1:0];
+
     always @(posedge clk) begin
         if (wen) rf[waddr] <= wdata;
     end
@@ -18,7 +21,8 @@ module RegisterFile #(ADDR_WIDTH = 1, DATA_WIDTH = 1) (
     assign rdata2 = (ren&(raddr2!=0)) ? rf[raddr2] : 0;
 
     export "DPI-C" function get_reg;
-    function int get_reg(input int addr);
+    function automatic bit [DATA_WIDTH-1:0] get_reg(input int addr);
         return rf[addr];
     endfunction
+
 endmodule

@@ -10,7 +10,9 @@ extern char *img_file;
 
 uint32_t pmem_read(uint32_t addr);
 
-int get_reg(int addr);
+extern "C" {
+    uint32_t get_reg(int addr);  // 假设DATA_WIDTH=32
+}
 void ebreak(){
   stop();
 }

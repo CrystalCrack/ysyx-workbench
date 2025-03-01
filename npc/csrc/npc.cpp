@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
 
   std::cout<<"NPC simulation starts"<<std::endl;
 
-  while(1) {  
+  while(sim_time < MAX_SIM_TIME){ {  
     dut->inst = pmem_read(dut->pc);
     state = RUN;
     single_cycle();
@@ -54,9 +54,9 @@ int main(int argc, char **argv) {
       svSetScope(svGetScopeFromName("TOP.npc.u_RegisterFile"));
       get_reg(10, &data);
       if(data == 0){
-        printf(ANSI_COLOR_GREEN "HIT GOOD TRAP\n" ANSI_COLOR_RESET);
+        printf(ANSI_COLOR_GREEN "HIT GOOD TRAP\n" ANSI_COLOR_RESET "at pc = 0x%08x\n", dut->pc);
       }else{
-        printf(ANSI_COLOR_RED "HIT BAD TRAP\n" ANSI_COLOR_RESET);
+        printf(ANSI_COLOR_RED "HIT BAD TRAP\n" ANSI_COLOR_RESET "at pc = 0x%08x\n", dut->pc);
       }
       break;
     }

@@ -48,7 +48,7 @@ int main(int argc, char **argv) {
 
     if(state == HALT){
       int data;
-      get_reg(&data, 10);
+      get_reg(10, &data);
       if(data == 1){
         printf(ANSI_COLOR_GREEN "HIT GOOD TRAP\n" ANSI_COLOR_RESET);
       }else{

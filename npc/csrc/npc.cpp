@@ -54,9 +54,9 @@ int main(int argc, char **argv) {
       svSetScope(svGetScopeFromName("TOP.npc.u_RegisterFile"));
       get_reg(10, &data);
       if(data == 0){
-        printf(ANSI_BOLD ANSI_COLOR_GREEN "HIT GOOD TRAP" ANSI_COLOR_RESET "at pc = 0x%08x\n", dut->pc);
+        printf(ANSI_BOLD ANSI_COLOR_GREEN "HIT GOOD TRAP" ANSI_COLOR_RESET " at pc = 0x%08x\n", dut->pc);
       }else{
-        printf(ANSI_BOLD ANSI_COLOR_RED "HIT BAD TRAP" ANSI_COLOR_RESET "at pc = 0x%08x\n", dut->pc);
+        printf(ANSI_BOLD ANSI_COLOR_RED "HIT BAD TRAP" ANSI_COLOR_RESET " at pc = 0x%08x\n", dut->pc);
       }
       break;
     }

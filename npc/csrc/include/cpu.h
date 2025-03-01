@@ -1,3 +1,6 @@
+#ifndef CPU_H
+#define CPU_H
+
 #include <common.h>
 
 enum CPU_state {
@@ -5,20 +8,10 @@ enum CPU_state {
     HALT
 };
 
-class Cpu {
-public:
-  int sim_time;
-  Vnpc *dut;
+void cpu_init(const char* Vcd_file);
+void cpu_deinit();
+void single_cycle();
+void stop();
+void reset(int n);
 
-  Cpu(const char* Vcd_file);
-  ~Cpu();
-  void single_cycle();
-  void stop();
-  void reset(int n);
-  CPU_state state();
-
-private:
-  int halt;
-  VerilatedVcdC *m_trace;
-  
-};
+#endif

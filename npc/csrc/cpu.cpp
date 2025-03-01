@@ -1,8 +1,15 @@
 #include <cpu.h>
 
-Cpu::Cpu(const char* Vcd_file) : sim_time(0), halt(0) {
+int sim_time;
+Vnpc *dut;
+CPU_state state;
+VerilatedVcdC *m_trace;
+
+void cpu_init(const char* Vcd_file){
   dut = new Vnpc;
   m_trace = new VerilatedVcdC;
+  sim_time = 0;
+  state = RUN;
 
   Verilated::traceEverOn(true);
   dut->trace(m_trace, 10);
@@ -10,27 +17,22 @@ Cpu::Cpu(const char* Vcd_file) : sim_time(0), halt(0) {
   reset(10);
 }
 
-Cpu::~Cpu() {
+void cpu_deinit() {
   m_trace->close();
   delete m_trace;
   delete dut;
 }
 
-void Cpu::single_cycle() {
+void single_cycle() {
   dut->clk = 1; dut->eval(); m_trace->dump(sim_time); sim_time++;
   dut->clk = 0; dut->eval(); m_trace->dump(sim_time); sim_time++;
 }
 
-void Cpu::stop() {
-  halt = 1;
+void stop() {
+  state = HALT;
 }
 
-CPU_state Cpu::state(){
-  if (halt) return HALT;
-  else return RUN;
-}
-
-void Cpu::reset(int n) {
+void reset(int n) {
   dut->rst = 1;
   while (n > 0) {
     single_cycle();

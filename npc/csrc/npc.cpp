@@ -43,6 +43,7 @@ int main(int argc, char **argv) {
 
   while(1) {  
     dut->inst = pmem_read(dut->pc);
+    state = RUN;
     single_cycle();
 
     if(state == HALT){

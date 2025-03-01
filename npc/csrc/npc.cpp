@@ -26,6 +26,7 @@ void parse_args(int argc, char **argv) {
   while((o = getopt_long(argc, argv, "-i", table, NULL)) != -1) {
     switch(o) {
       case 'i':
+        std::cout << "image file: " << optarg << std::endl;
         img_file = optarg;
         break;
       default:

@@ -54,7 +54,6 @@ sim: $(VSRCS) $(SIM_CSRCS)
 	$(addprefix -CFLAGS , $(CXXFLAGS)) \
 	--Mdir $(SIM_OBJ_DIR)
 
-	@echo ARGS: $(ARGS)
 	$(SIM_OBJ_DIR)/V$(TOPNAME) $(ARGS)
 
 $(BIN): $(VSRCS) $(CSRCS) $(NVBOARD_ARCHIVE)

@@ -23,7 +23,7 @@ void parse_args(int argc, char **argv) {
     {NULL, 0, NULL, 0}
   };
   int o;
-  while((o = getopt_long(argc, argv, "-i", table, NULL)) != -1) {
+  while((o = getopt_long(argc, argv, "-i:", table, NULL)) != -1) {
     switch(o) {
       case 'i':
         std::cout << "image file: " << optarg << std::endl;

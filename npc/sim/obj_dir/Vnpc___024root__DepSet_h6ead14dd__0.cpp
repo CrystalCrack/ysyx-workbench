@@ -15,32 +15,23 @@ VL_INLINE_OPT void Vnpc___024root___ico_sequent__TOP__0(Vnpc___024root* vlSelf) 
     QData/*32:0*/ __VdfgTmp_h191a42ad__0;
     __VdfgTmp_h191a42ad__0 = 0;
     // Body
-    vlSelf->npc__DOT__inst_type = 0U;
-    vlSelf->npc__DOT__memtoreg = 0U;
-    vlSelf->npc__DOT__ALU_op = 0U;
-    vlSelf->npc__DOT__ALUsrc2 = 0U;
-    if ((0x13U == (0x7fU & vlSelf->inst))) {
-        vlSelf->npc__DOT__inst_type = 0x20U;
-        vlSelf->npc__DOT__memtoreg = 0U;
-        if ((0U == (7U & (vlSelf->inst >> 0xcU)))) {
-            vlSelf->npc__DOT__ALU_op = 0U;
-        }
-        vlSelf->npc__DOT__ALUsrc2 = 1U;
-        vlSelf->npc__DOT__imm = (((- (IData)((vlSelf->inst 
-                                              >> 0x1fU))) 
-                                  << 0xcU) | (vlSelf->inst 
-                                              >> 0x14U));
-    }
+    vlSelf->npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__pair_list[0U] 
+        = (0x100000000ULL | (QData)((IData)((((- (IData)(
+                                                         (vlSelf->inst 
+                                                          >> 0x1fU))) 
+                                              << 0xcU) 
+                                             | (vlSelf->inst 
+                                                >> 0x14U)))));
+    vlSelf->npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__data_list[0U] 
+        = (((- (IData)((vlSelf->inst >> 0x1fU))) << 0xcU) 
+           | (vlSelf->inst >> 0x14U));
     vlSelf->__VdfgTmp_hfa87cd20__0 = vlSelf->npc__DOT__u_RegisterFile__DOT__rf
         [(0x1fU & (vlSelf->inst >> 0xfU))];
-    vlSelf->npc__DOT__ALU_B = ((IData)(vlSelf->npc__DOT__ALUsrc2)
-                                ? vlSelf->npc__DOT__imm
-                                : ((0U == (0x1fU & 
-                                           (vlSelf->inst 
-                                            >> 0x14U)))
-                                    ? 0U : vlSelf->npc__DOT__u_RegisterFile__DOT__rf
-                                   [(0x1fU & (vlSelf->inst 
-                                              >> 0x14U))]));
+    vlSelf->npc__DOT__idu_inst__DOT__inst_name = (IData)(
+                                                         (0x13U 
+                                                          == 
+                                                          (0x707fU 
+                                                           & vlSelf->inst)));
     if ((0U != (0x1fU & (vlSelf->inst >> 0xfU)))) {
         vlSelf->__VdfgTmp_hf55457f8__0 = (~ vlSelf->__VdfgTmp_hfa87cd20__0);
         vlSelf->npc__DOT__rf_rdata1 = vlSelf->__VdfgTmp_hfa87cd20__0;
@@ -51,10 +42,64 @@ VL_INLINE_OPT void Vnpc___024root___ico_sequent__TOP__0(Vnpc___024root* vlSelf) 
         vlSelf->npc__DOT__rf_rdata1 = 0U;
         vlSelf->npc__DOT__u_ALU__DOT__sub_inst__DOT____VdfgTmp_hc75629da__0 = 0U;
     }
+    vlSelf->npc__DOT__idu_inst__DOT__getmemtoreg__DOT__i0__DOT__lut_out 
+        = (((IData)(vlSelf->npc__DOT__idu_inst__DOT__inst_name) 
+            == vlSelf->npc__DOT__idu_inst__DOT__getmemtoreg__DOT__i0__DOT__key_list
+            [0U]) & vlSelf->npc__DOT__idu_inst__DOT__getmemtoreg__DOT__i0__DOT__data_list
+           [0U]);
+    vlSelf->npc__DOT__idu_inst__DOT__getmemtoreg__DOT__i0__DOT__hit 
+        = ((IData)(vlSelf->npc__DOT__idu_inst__DOT__inst_name) 
+           == vlSelf->npc__DOT__idu_inst__DOT__getmemtoreg__DOT__i0__DOT__key_list
+           [0U]);
+    vlSelf->npc__DOT__memtoreg = ((IData)(vlSelf->npc__DOT__idu_inst__DOT__getmemtoreg__DOT__i0__DOT__hit) 
+                                  & (IData)(vlSelf->npc__DOT__idu_inst__DOT__getmemtoreg__DOT__i0__DOT__lut_out));
+    vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__lut_out 
+        = ((- (IData)(((IData)(vlSelf->npc__DOT__idu_inst__DOT__inst_name) 
+                       == vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__key_list
+                       [0U]))) & vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__data_list
+           [0U]);
+    vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__hit 
+        = ((IData)(vlSelf->npc__DOT__idu_inst__DOT__inst_name) 
+           == vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__key_list
+           [0U]);
+    vlSelf->npc__DOT__ALU_op = ((IData)(vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__hit)
+                                 ? (IData)(vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__lut_out)
+                                 : 0U);
+    vlSelf->npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__lut_out 
+        = ((- (IData)(((IData)(vlSelf->npc__DOT__idu_inst__DOT__inst_name) 
+                       == vlSelf->npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__key_list
+                       [0U]))) & vlSelf->npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__data_list
+           [0U]);
+    vlSelf->npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__hit 
+        = ((IData)(vlSelf->npc__DOT__idu_inst__DOT__inst_name) 
+           == vlSelf->npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__key_list
+           [0U]);
+    vlSelf->npc__DOT__imm = ((IData)(vlSelf->npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__hit)
+                              ? vlSelf->npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__lut_out
+                              : 0U);
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__lut_out 
+        = (((IData)(vlSelf->npc__DOT__idu_inst__DOT__inst_name) 
+            == vlSelf->npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__key_list
+            [0U]) & vlSelf->npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__data_list
+           [0U]);
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__hit 
+        = ((IData)(vlSelf->npc__DOT__idu_inst__DOT__inst_name) 
+           == vlSelf->npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__key_list
+           [0U]);
+    vlSelf->npc__DOT__ALUsrc2 = (1U & ((~ (IData)(vlSelf->npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__hit)) 
+                                       | (IData)(vlSelf->npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__lut_out)));
     vlSelf->npc__DOT__u_ALU__DOT__u_MuxKeyWithDefault__DOT__i0__DOT__pair_list[5U] 
         = (0x800000000ULL | (QData)((IData)(vlSelf->__VdfgTmp_hf55457f8__0)));
     vlSelf->npc__DOT__u_ALU__DOT__u_MuxKeyWithDefault__DOT__i0__DOT__data_list[5U] 
         = (QData)((IData)(vlSelf->__VdfgTmp_hf55457f8__0));
+    vlSelf->npc__DOT__ALU_B = ((IData)(vlSelf->npc__DOT__ALUsrc2)
+                                ? vlSelf->npc__DOT__imm
+                                : ((0U == (0x1fU & 
+                                           (vlSelf->inst 
+                                            >> 0x14U)))
+                                    ? 0U : vlSelf->npc__DOT__u_RegisterFile__DOT__rf
+                                   [(0x1fU & (vlSelf->inst 
+                                              >> 0x14U))]));
     vlSelf->__VdfgTmp_ha8752fbf__0 = (vlSelf->npc__DOT__rf_rdata1 
                                       & vlSelf->npc__DOT__ALU_B);
     vlSelf->__VdfgTmp_haf74767f__0 = (vlSelf->npc__DOT__rf_rdata1 

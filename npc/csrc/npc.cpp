@@ -10,7 +10,7 @@ extern char *img_file;
 
 uint32_t pmem_read(uint32_t addr);
 
-
+extern int get_reg(uint32_t addr);
 void ebreak(){
   stop();
 }
@@ -39,10 +39,21 @@ int main(int argc, char **argv) {
   parse_args(argc, argv);
 
   std::cout<<"NPC simulation starts"<<std::endl;
-  while(state == RUN && sim_time < MAX_SIM_TIME) {  
+
+  while(1) {  
     dut->inst = pmem_read(dut->pc);
     single_cycle();
+
+    if(state == HALT){
+      if(get_reg(10) == 0){
+        printf(ANSI_COLOR_GREEN "HIT GOOD TRAP\n" ANSI_COLOR_RESET);
+      }else{
+        printf(ANSI_COLOR_RED "HIT BAD TRAP\n" ANSI_COLOR_RESET);
+      }
+      break;
+    }
   }
+
   std::cout << "simulation ended" << std::endl;
 
 

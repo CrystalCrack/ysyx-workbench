@@ -9,6 +9,10 @@ SIM_DIR = ./sim
 OBJ_DIR = $(BUILD_DIR)/obj_dir
 SIM_OBJ_DIR = $(SIM_DIR)/obj_dir
 BIN = $(BUILD_DIR)/$(TOPNAME)
+<<<<<<< HEAD
+=======
+INC_PATH += $(abspath ./csrc/include) 
+>>>>>>> tracer-ysyx
 
 $(shell mkdir -p $(BUILD_DIR))
 $(shell mkdir -p $(SIM_DIR))
@@ -25,12 +29,22 @@ SIM_CSRCS = $(shell find $(abspath ./csrc) -name "*.c" -or -name "*.cc" -or -nam
 CSRCS= $(SIM_CSRCS) $(SRC_AUTO_BIND)
 
 # Rules for NVBoard
+<<<<<<< HEAD
 include $(NVBOARD_HOME)/scripts/nvboard.mk
+=======
+# include $(NVBOARD_HOME)/scripts/nvboard.mk
+>>>>>>> tracer-ysyx
 
 # Rules for verilator
 INCFLAGS = $(addprefix -I, $(INC_PATH))
 CXXFLAGS += $(INCFLAGS) -DTOP_NAME="\"V$(TOPNAME)\""
 
+<<<<<<< HEAD
+=======
+# excutable args
+ARGS += -i $(IMG)
+
+>>>>>>> tracer-ysyx
 all:
 	@echo "Write this Makefile by your self."
 
@@ -41,12 +55,25 @@ Makefile.%: ./csrc/%
 	$(call git_commit, "sim RTL: $*")
 	@mkdir -p $(SIM_OBJ_DIR)/$(basename $*)
 	$(VERILATOR) $(VERILATOR_FLAGS) --top-module $(basename $*) $(VSRCS) $(abspath $^) --Mdir $(abspath $(SIM_OBJ_DIR)/$(basename $*))
+<<<<<<< HEAD
 	$(SIM_OBJ_DIR)/$(basename $*)/V$(TOPNAME)
 
 sim: $(VSRCS) $(SIM_CSRCS)
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	$(VERILATOR) $(VERILATOR_FLAGS) --top-module $(TOPNAME) $^ --Mdir $(SIM_OBJ_DIR)
 	$(SIM_OBJ_DIR)/V$(TOPNAME)
+=======
+	$(SIM_OBJ_DIR)/$(basename $*)/V$(TOPNAME) $(ARGS)
+
+sim: $(VSRCS) $(SIM_CSRCS)
+	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
+
+	$(VERILATOR) $(VERILATOR_FLAGS) --top-module $(TOPNAME) $^ \
+	$(addprefix -CFLAGS , $(CXXFLAGS)) \
+	--Mdir $(SIM_OBJ_DIR)
+
+	$(SIM_OBJ_DIR)/V$(TOPNAME) $(ARGS)
+>>>>>>> tracer-ysyx
 
 $(BIN): $(VSRCS) $(CSRCS) $(NVBOARD_ARCHIVE)
 	@rm -rf $(OBJ_DIR)

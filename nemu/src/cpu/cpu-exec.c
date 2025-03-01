@@ -16,6 +16,7 @@
 #include <cpu/cpu.h>
 #include <cpu/decode.h>
 #include <cpu/difftest.h>
+#include <cpu/ifetch.h>
 #include <locale.h>
 
 /* The assembly code of instructions executed is only output to the screen
@@ -24,6 +25,9 @@
  * You can modify this value as you want.
  */
 #define MAX_INST_TO_PRINT 10
+
+void display_iringbuf();
+void write_iringbuf(vaddr_t pc, uint32_t inst);
 
 CPU_state cpu = {};
 uint64_t g_nr_guest_inst = 0;
@@ -43,10 +47,17 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 }
 
 static void exec_once(Decode *s, vaddr_t pc) {
+
+  // write iringbuf
+  write_iringbuf(pc, vaddr_ifetch(pc, 4));
+
   s->pc = pc;
   s->snpc = pc;
   isa_exec_once(s);
+
   cpu.pc = s->dnpc;
+
+
 #ifdef CONFIG_ITRACE
   char *p = s->logbuf;
   p += snprintf(p, sizeof(s->logbuf), FMT_WORD ":", s->pc);
@@ -96,6 +107,7 @@ static void statistic() {
 }
 
 void assert_fail_msg() {
+  display_iringbuf();
   isa_reg_display();
   statistic();
 }

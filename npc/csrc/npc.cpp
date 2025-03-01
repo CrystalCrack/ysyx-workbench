@@ -1,87 +1,71 @@
-#include <stdlib.h>
-#include <iostream>
-#include <verilated.h>
-#include <verilated_vcd_c.h>
-#include "Vnpc.h"
-#include "Vnpc___024root.h"
-#include "Vnpc__Dpi.h"
+#include <cpu.h>
+#include <getopt.h>
 
 #define MAX_SIM_TIME 100
-#define MSIZE 0xFFFF
-#define MBIAS 0x80000000
 
-uint8_t pmem[MSIZE] = {
-  // 0x00500093 (addi x1, x0, 5)
-  0x93, 0x00, 0x50, 0x00,
+extern int sim_time;
+extern Vnpc *dut;
+extern CPU_state state;
+extern VerilatedVcdC *m_trace;
+extern char *img_file;
 
-  // 0xffd08113 (addi x2, x1, -3)
-  0x13, 0x81, 0xd0, 0xff,
+extern void get_reg(int addr, int* reg_data);
 
-  // 0xff600193 (addi x3, x0, -10)
-  0x93, 0x01, 0x60, 0xff,
-
-  // 0x00f18213 (addi x4, x3, 15)
-  0x13, 0x82, 0xf1, 0x00,
-
-  // 0x00000293 (addi x5, x0, 0)
-  0x93, 0x02, 0x00, 0x00,
-
-  // 0x06428313 (addi x6, x5, 100)
-  0x13, 0x83, 0x42, 0x06,
-
-  // 0x7ff00393 (addi x7, x0, 2047)
-  0x93, 0x03, 0xf0, 0x7f,
-
-  // 0x80000413 (addi x8, x0, -2048)
-  0x13, 0x04, 0x00, 0x80,
-
-  // 0x00148493 (addi x9, x9, 1)
-  0x93, 0x84, 0x14, 0x00,
-
-  //ebreak
-  0x73, 0x00, 0x10, 0x00
-};
-
-int halt = 0;
+long load_img();
+uint32_t pmem_read(uint32_t addr);
 
 void ebreak(){
-  halt = 1;
+    stop();
 }
 
-uint32_t pmem_read(uint32_t addr){
-  return *(uint32_t*)(pmem + addr - MBIAS);
+void parse_args(int argc, char** argv){
+    static struct option long_options[] = {
+        {"image", required_argument, 0, 'i'},
+        {0, 0, 0, 0}
+    };
+    int o;
+    while((o = getopt_long(argc, argv, "i:", long_options, NULL)) != -1){
+        switch(o){
+            case 'i':
+                img_file = optarg;
+                break;
+            default:
+                break;
+        }
+    }
 }
 
-int sim_time = 0;
-VerilatedVcdC *m_trace = new VerilatedVcdC;
+int main(int argc, char** argv){
 
-void single_cycle(Vnpc *top) {
-  top->clk = 1; top->eval();m_trace->dump(sim_time);sim_time++;
-  top->clk = 0; top->eval();m_trace->dump(sim_time);sim_time++;
-}
+    parse_args(argc, argv);
 
-void reset(Vnpc *top, int n) {
-  top->rst = 1;
-  while (n > 0) {
-    single_cycle(top);
-    n--;
-  }
-  top->rst = 0;
-}
+    cpu_init("npc.vcd");
 
-int main() {
-  Vnpc *dut = new Vnpc;
-  Verilated::traceEverOn(true);
-  dut->trace(m_trace, 10);
-  m_trace->open("npc.vcd");
-  reset(dut,10);
-  while(!halt) {
-    dut->inst = pmem_read(dut->pc);
-    single_cycle(dut);
-  }
-  std::cout << "simulation ended" << std::endl;
-  m_trace->close();
-  delete m_trace;
-  delete dut;
-  return 0;
+    load_img();
+
+    reset(5);
+
+    state = RUN;
+
+    while(sim_time < MAX_SIM_TIME){
+        svSetScope(svGetScopeFromName("TOP.npc.u_RegisterFile"));
+        dut->inst = pmem_read(dut->pc);
+        single_cycle();
+        if(state == HALT){
+            int reg_data;
+            get_reg(10, &reg_data);
+            if(reg_data == 0){
+                printf(ANSI_BOLD ANSI_COLOR_GREEN "HIT GOOD TRAP" ANSI_COLOR_RESET " at pc = 0x%08x\n", dut->pc);
+            }else{
+                printf(ANSI_BOLD ANSI_COLOR_RED "HIT BAD TRAP" ANSI_COLOR_RESET " at pc = 0x%08x\n", dut->pc);
+            }
+            break;
+        }
+    }
+
+    cpu_deinit();
+
+    return 0;
+
+
 }

@@ -1,6 +1,8 @@
 #include <stdint.h>
 #include <iostream>
-#include <macro.h>
+#include <common.h>
+
+
 #define MSIZE 0xFFFF
 #define MBIAS 0x80000000
 
@@ -50,10 +52,10 @@ static long load_img() {
   fseek(fp, 0, SEEK_END);
   long size = ftell(fp);
 
-  Log("The image is %s, size = %ld", img_file, size);
+  printf("The image is %s, size = %ld", img_file, size);
 
   fseek(fp, 0, SEEK_SET);
-  int ret = fread(guest_to_host(RESET_VECTOR), size, 1, fp);
+  int ret = fread(pmem, size, 1, fp);
   assert(ret == 1);
 
   fclose(fp);

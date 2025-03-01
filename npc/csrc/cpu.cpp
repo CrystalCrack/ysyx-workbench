@@ -1,48 +1,41 @@
-#include <stdlib.h>
-#include <iostream>
-#include <verilated.h>
-#include <verilated_vcd_c.h>
-#include "Vnpc.h"
-#include "Vnpc___024root.h"
-#include "Vnpc__Dpi.h"
+#include <cpu.h>
 
-int halt = 0;
-Vnpc *top;
+Cpu::Cpu() : sim_time(0), halt(0) {
+  dut = new Vnpc;
+  m_trace = new VerilatedVcdC;
+  sim_time = 0;
 
-void ebreak(){
+  Verilated::traceEverOn(true);
+  dut->trace(m_trace, 10);
+  m_trace->open("npc.vcd");
+  reset(10);
+}
+
+Cpu::~Cpu() {
+  m_trace->close();
+  delete m_trace;
+  delete dut;
+}
+
+void Cpu::single_cycle() {
+  dut->clk = 1; dut->eval(); m_trace->dump(sim_time); sim_time++;
+  dut->clk = 0; dut->eval(); m_trace->dump(sim_time); sim_time++;
+}
+
+void Cpu::stop() {
   halt = 1;
 }
 
-
-int sim_time = 0;
-VerilatedVcdC *m_trace = new VerilatedVcdC;
-
-void single_cycle(Vnpc *top) {
-  top->clk = 1; top->eval();m_trace->dump(sim_time);sim_time++;
-  top->clk = 0; top->eval();m_trace->dump(sim_time);sim_time++;
+CPU_state Cpu::state(){
+  if (halt) return HALT;
+  else return RUN;
 }
 
-void reset(Vnpc *top, int n) {
-  top->rst = 1;
+void Cpu::reset(int n) {
+  dut->rst = 1;
   while (n > 0) {
-    single_cycle(top);
+    single_cycle();
     n--;
   }
-  top->rst = 0;
-}
-
-void init_cpu(){
-    Vnpc *dut = new Vnpc;
-    Verilated::traceEverOn(true);
-    dut->trace(m_trace, 10);
-    m_trace->open("npc.vcd");
-    reset(dut,10);
-    while(!halt) {
-        dut->inst = pmem_read(dut->pc);
-        single_cycle(dut);
-    }
-    std::cout << "simulation ended" << std::endl;
-    m_trace->close();
-    delete m_trace;
-    delete dut;
+  dut->rst = 0;
 }

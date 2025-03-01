@@ -195,6 +195,7 @@ VL_ATTR_COLD void Vnpc___024root___ctor_var_reset(Vnpc___024root* vlSelf) {
     vlSelf->npc__DOT__rf_rdata1 = 0;
     vlSelf->npc__DOT__ALU_B = 0;
     vlSelf->npc__DOT__ALU_Cin = 0;
+    vlSelf->npc__DOT__stop_sim = 0;
     vlSelf->npc__DOT__idu_inst__DOT__inst_name = 0;
     for (int __Vi0 = 0; __Vi0 < 2; ++__Vi0) {
         vlSelf->npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__pair_list[__Vi0] = 0;
@@ -260,11 +261,11 @@ VL_ATTR_COLD void Vnpc___024root___ctor_var_reset(Vnpc___024root* vlSelf) {
     }
     vlSelf->npc__DOT__u_ALU__DOT__u_MuxKeyWithDefault__DOT__i0__DOT__lut_out = 0;
     vlSelf->npc__DOT__u_ALU__DOT__u_MuxKeyWithDefault__DOT__i0__DOT__hit = 0;
-    vlSelf->__VdfgTmp_h633a2119__0 = 0;
-    vlSelf->__VdfgTmp_h0d5c396e__0 = 0;
-    vlSelf->__VdfgTmp_h0c61718c__0 = 0;
-    vlSelf->__VdfgTmp_h0f61fa2a__0 = 0;
-    vlSelf->__VdfgTmp_hc8d59f1f__0 = 0;
+    vlSelf->__VdfgTmp_h2cfea135__0 = 0;
+    vlSelf->__VdfgTmp_h9821ef23__0 = 0;
+    vlSelf->__VdfgTmp_h9ad6bd1a__0 = 0;
+    vlSelf->__VdfgTmp_hae64f932__0 = 0;
+    vlSelf->__VdfgTmp_hecb924a4__0 = 0;
     vlSelf->__Vtrigrprev__TOP__clk = 0;
     for (int __Vi0 = 0; __Vi0 < 3; ++__Vi0) {
         vlSelf->__Vm_traceActivity[__Vi0] = 0;

@@ -20,6 +20,7 @@ class Vnpc___024root final : public VerilatedModule {
     CData/*0:0*/ npc__DOT__memtoreg;
     CData/*0:0*/ npc__DOT__ALUsrc2;
     CData/*0:0*/ npc__DOT__ALU_Cin;
+    CData/*0:0*/ npc__DOT__stop_sim;
     CData/*1:0*/ npc__DOT__idu_inst__DOT__inst_name;
     CData/*0:0*/ npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__hit;
     CData/*2:0*/ npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__lut_out;
@@ -32,7 +33,7 @@ class Vnpc___024root final : public VerilatedModule {
     CData/*0:0*/ npc__DOT__u_ALU__DOT__sub_overflow;
     CData/*0:0*/ npc__DOT__u_ALU__DOT__int_Cout;
     CData/*0:0*/ npc__DOT__u_ALU__DOT__u_MuxKeyWithDefault__DOT__i0__DOT__hit;
-    CData/*0:0*/ __VdfgTmp_hc8d59f1f__0;
+    CData/*0:0*/ __VdfgTmp_hecb924a4__0;
     CData/*0:0*/ __Vtrigrprev__TOP__clk;
     CData/*0:0*/ __VactContinue;
     VL_OUT(pc,31,0);
@@ -43,10 +44,10 @@ class Vnpc___024root final : public VerilatedModule {
     IData/*31:0*/ npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__lut_out;
     IData/*31:0*/ npc__DOT__u_ALU__DOT__add_result;
     IData/*31:0*/ npc__DOT__u_ALU__DOT__sub_result;
-    IData/*31:0*/ __VdfgTmp_h633a2119__0;
-    IData/*31:0*/ __VdfgTmp_h0d5c396e__0;
-    IData/*31:0*/ __VdfgTmp_h0c61718c__0;
-    IData/*31:0*/ __VdfgTmp_h0f61fa2a__0;
+    IData/*31:0*/ __VdfgTmp_h2cfea135__0;
+    IData/*31:0*/ __VdfgTmp_h9821ef23__0;
+    IData/*31:0*/ __VdfgTmp_h9ad6bd1a__0;
+    IData/*31:0*/ __VdfgTmp_hae64f932__0;
     IData/*31:0*/ __VstlIterCount;
     IData/*31:0*/ __VicoIterCount;
     IData/*31:0*/ __VactIterCount;

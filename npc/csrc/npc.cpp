@@ -33,7 +33,7 @@ void parse_args(int argc, char **argv) {
 
 int main(int argc, char **argv) {
 
-  extern void get_reg(int *reg_data, int addr);
+  extern void get_reg(int addr, int* reg_data);
   svSetScope(svGetScopeFromName("TOP.RegisterFile"));
 
   cpu_init("npc.vcd");

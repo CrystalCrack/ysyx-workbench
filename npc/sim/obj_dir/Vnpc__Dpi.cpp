@@ -16,9 +16,9 @@
 
 #ifndef VL_DPIDECL_get_reg_
 #define VL_DPIDECL_get_reg_
-svBitVecVal get_reg(int addr) {
-    // DPI export at /home/crystc/ysyx-workbench/npc/vsrc/RegisterFile.v:23:45
-    return Vnpc::get_reg(addr);
+void get_reg(int addr, int* reg_data) {
+    // DPI export at /home/crystc/ysyx-workbench/npc/vsrc/RegisterFile.v:23:19
+    return Vnpc::get_reg(addr, reg_data);
 }
 #endif
 

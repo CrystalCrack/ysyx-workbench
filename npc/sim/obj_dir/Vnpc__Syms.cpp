@@ -5,7 +5,7 @@
 #include "Vnpc.h"
 #include "Vnpc___024root.h"
 
-void Vnpc___024root____Vdpiexp_npc__DOT__u_RegisterFile__DOT__get_reg_TOP(Vnpc__Syms* __restrict vlSymsp, IData/*31:0*/ addr, IData/*31:0*/ &get_reg__Vfuncrtn);
+void Vnpc___024root____Vdpiexp_npc__DOT__u_RegisterFile__DOT__get_reg_TOP(Vnpc__Syms* __restrict vlSymsp, IData/*31:0*/ addr, IData/*31:0*/ &reg_data);
 
 // FUNCTIONS
 Vnpc__Syms::~Vnpc__Syms()

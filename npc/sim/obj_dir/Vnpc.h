@@ -72,7 +72,7 @@ class Vnpc VL_NOT_FINAL : public VerilatedModel {
     const char* name() const;
 
     /// DPI Export functions
-    static svBitVecVal get_reg(int addr);
+    static void get_reg(int addr, int* reg_data);
 
     // Abstract methods from VerilatedModel
     const char* hierName() const override final;

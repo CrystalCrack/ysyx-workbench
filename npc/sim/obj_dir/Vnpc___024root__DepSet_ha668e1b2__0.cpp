@@ -16,11 +16,11 @@ VL_INLINE_OPT void Vnpc___024root____Vdpiimwrap_npc__DOT__ebreak_TOP() {
     ebreak();
 }
 
-void Vnpc___024root____Vdpiexp_npc__DOT__u_RegisterFile__DOT__get_reg_TOP(Vnpc__Syms* __restrict vlSymsp, IData/*31:0*/ addr, IData/*31:0*/ &get_reg__Vfuncrtn) {
+void Vnpc___024root____Vdpiexp_npc__DOT__u_RegisterFile__DOT__get_reg_TOP(Vnpc__Syms* __restrict vlSymsp, IData/*31:0*/ addr, IData/*31:0*/ &reg_data) {
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vnpc___024root____Vdpiexp_npc__DOT__u_RegisterFile__DOT__get_reg_TOP\n"); );
     // Init
     // Body
-    get_reg__Vfuncrtn = vlSymsp->TOP.npc__DOT__u_RegisterFile__DOT__rf
+    reg_data = vlSymsp->TOP.npc__DOT__u_RegisterFile__DOT__rf
         [(0x1fU & addr)];
 }
 

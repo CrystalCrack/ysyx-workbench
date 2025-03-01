@@ -9,7 +9,6 @@ module IDU(
     output [6:0] opcode, 
 
     output reg [31:0] imm,
-    output reg [5:0] inst_type,//IRSBUJ
     output reg [2:0] ALU_op,
     output reg memtoreg,
     output reg ALUsrc2, // 0 for regsrc2, 1 for imm
@@ -28,26 +27,63 @@ module IDU(
     assign funct7 = inst[31:25];
     assign opcode = inst[6:0];
 
-    // choose type
-    always @(*) begin
-        inst_type = 6'b0;
-        ALU_op = 3'b0;
-        memtoreg = 0;
-        ALUsrc2 = 0;
-        case (opcode)
-            7'b0010011: begin
-                imm = immI;
-                inst_type = 6'b100000;
-                memtoreg = 0;
-                ALUsrc2 = 1;
-                case (funct3)
-                    3'd000: ALU_op = 3'b0;
-                    default: ;
-                endcase
-            end
-            default: ;
-        endcase
-    end
+    wire inst_name;
+    wire inst_is_addi;
+
+    assign inst_name = {inst_is_addi};
+
+    // decode
+    assign inst_is_addi = (opcode == 7'b0010011) && (funct3 == 3'b000);
+
+    
+    // assign imm = ({32{inst_is_addi}} & immI) ;
+    // assign ALU_op = ({3{inst_is_addi}} & 3'b000);
+    // assign memtoreg = (inst_is_addi & 1'b0);
+    // assign ALUsrc2 = (inst_is_addi & 1'b1);
+
+    MuxKeyWithDefault# (
+        .NR_KEY(1),
+        .KEY_LEN(1),
+        .DATA_LEN(32)
+    ) getimm(
+        .out         	(imm          ),
+        .key         	(inst_name          ),
+        .default_out 	(32'b0  ),
+        .lut         	({1'b1, immI}          )
+    );
+
+    MuxKeyWithDefault# (
+        .NR_KEY(1),
+        .KEY_LEN(1),
+        .DATA_LEN(3)
+    ) getALU_mode(
+        .out         	(ALU_op          ),
+        .key         	(inst_name          ),
+        .default_out 	(3'b000  ),
+        .lut         	({1'b1, 3'b000}          )
+    );
+    
+    MuxKeyWithDefault# (
+        .NR_KEY(1),
+        .KEY_LEN(1),
+        .DATA_LEN(1)
+    ) getmemtoreg(
+        .out         	(memtoreg          ),
+        .key         	(inst_name          ),
+        .default_out 	(1'b0  ),
+        .lut         	({1'b1, 1'b0}          )
+    );
+
+    MuxKeyWithDefault# (
+        .NR_KEY(1),
+        .KEY_LEN(1),
+        .DATA_LEN(1)
+    ) getALUsrc2(
+        .out         	(ALUsrc2          ),
+        .key         	(inst_name          ),
+        .default_out 	(1'b1  ),
+        .lut         	({1'b1, 1'b1}          )
+    );
 
     assign stop_sim = (inst==32'h0010_0073) ? 1 : 0;
 

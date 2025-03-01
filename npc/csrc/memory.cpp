@@ -6,7 +6,7 @@
 #define MSIZE 0xFFFF
 #define MBIAS 0x80000000
 
-static char *img_file = NULL;
+char *img_file = NULL;
 
 uint8_t pmem[MSIZE] = {
   // 0x00500093 (addi x1, x0, 5)

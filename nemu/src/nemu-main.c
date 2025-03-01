@@ -20,7 +20,6 @@ void am_init_monitor();
 void engine_start();
 int is_exit_status_bad();
 void free_sdb();
-void free_trace();
 
 __attribute__((unused)) static void test_expr(){
   word_t expr(char *e, bool *success);
@@ -64,8 +63,6 @@ int main(int argc, char *argv[]) {
   engine_start();
 
   free_sdb();
-
-  free_trace();
 
   return is_exit_status_bad();
 }

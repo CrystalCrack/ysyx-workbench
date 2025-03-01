@@ -34,7 +34,7 @@ void parse_args(int argc, char **argv) {
 int main(int argc, char **argv) {
 
   extern void get_reg(int addr, int* reg_data);
-  svSetScope(svGetScopeFromName("TOP.npc.u_RegisterFile"));
+  
 
   cpu_init("npc.vcd");
 
@@ -48,6 +48,7 @@ int main(int argc, char **argv) {
 
     if(state == HALT){
       int data;
+      svSetScope(svGetScopeFromName("TOP.npc.u_RegisterFile"));
       get_reg(10, &data);
       if(data == 1){
         printf(ANSI_COLOR_GREEN "HIT GOOD TRAP\n" ANSI_COLOR_RESET);

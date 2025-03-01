@@ -5,6 +5,8 @@
 #include "Vnpc.h"
 #include "Vnpc___024root.h"
 
+void Vnpc___024root____Vdpiexp_npc__DOT__u_RegisterFile__DOT__get_reg_TOP(Vnpc__Syms* __restrict vlSymsp, IData/*31:0*/ addr, IData/*31:0*/ &get_reg__Vfuncrtn);
+
 // FUNCTIONS
 Vnpc__Syms::~Vnpc__Syms()
 {
@@ -23,7 +25,10 @@ Vnpc__Syms::Vnpc__Syms(VerilatedContext* contextp, const char* namep, Vnpc* mode
     // Setup each module's pointers to their submodules
     // Setup each module's pointer back to symbol table (for public functions)
     TOP.__Vconfigure(true);
+    // Setup scopes
+    __Vscope_npc__u_RegisterFile.configure(this, name(), "npc.u_RegisterFile", "u_RegisterFile", -12, VerilatedScope::SCOPE_OTHER);
     // Setup export functions
     for (int __Vfinal = 0; __Vfinal < 2; ++__Vfinal) {
+        __Vscope_npc__u_RegisterFile.exportInsert(__Vfinal, "get_reg", (void*)(&Vnpc___024root____Vdpiexp_npc__DOT__u_RegisterFile__DOT__get_reg_TOP));
     }
 }

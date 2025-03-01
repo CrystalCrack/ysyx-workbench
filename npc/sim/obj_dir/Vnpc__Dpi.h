@@ -15,6 +15,10 @@ extern "C" {
 #endif
 
 
+    // DPI EXPORTS
+    // DPI export at /home/crystc/ysyx-workbench/npc/vsrc/RegisterFile.v:21:18
+    extern int get_reg(int addr);
+
     // DPI IMPORTS
     // DPI import at /home/crystc/ysyx-workbench/npc/vsrc/npc.sv:89:34
     extern void ebreak();

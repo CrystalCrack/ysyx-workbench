@@ -13,6 +13,10 @@ extern void get_reg(int addr, int* reg_data);
 
 long load_img();
 
+void ebreak(){
+    stop();
+}
+
 void parse_args(int argc, char** argv){
     static struct option long_options[] = {
         {"image", required_argument, 0, 'i'},

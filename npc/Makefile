@@ -32,6 +32,9 @@ CSRCS= $(SIM_CSRCS) $(SRC_AUTO_BIND)
 INCFLAGS = $(addprefix -I, $(INC_PATH))
 CXXFLAGS += $(INCFLAGS) -DTOP_NAME="\"V$(TOPNAME)\""
 
+# excutable args
+ARGS += -i $(IMG)
+
 all:
 	@echo "Write this Makefile by your self."
 
@@ -42,7 +45,7 @@ Makefile.%: ./csrc/%
 	$(call git_commit, "sim RTL: $*")
 	@mkdir -p $(SIM_OBJ_DIR)/$(basename $*)
 	$(VERILATOR) $(VERILATOR_FLAGS) --top-module $(basename $*) $(VSRCS) $(abspath $^) --Mdir $(abspath $(SIM_OBJ_DIR)/$(basename $*))
-	$(SIM_OBJ_DIR)/$(basename $*)/V$(TOPNAME)
+	$(SIM_OBJ_DIR)/$(basename $*)/V$(TOPNAME) $(ARGS)
 
 sim: $(VSRCS) $(SIM_CSRCS)
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
@@ -51,7 +54,7 @@ sim: $(VSRCS) $(SIM_CSRCS)
 	$(addprefix -CFLAGS , $(CXXFLAGS)) \
 	--Mdir $(SIM_OBJ_DIR)
 
-	$(SIM_OBJ_DIR)/V$(TOPNAME)
+	$(SIM_OBJ_DIR)/V$(TOPNAME) $(ARGS)
 
 $(BIN): $(VSRCS) $(CSRCS) $(NVBOARD_ARCHIVE)
 	@rm -rf $(OBJ_DIR)

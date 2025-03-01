@@ -3,7 +3,6 @@
 Cpu::Cpu() : sim_time(0), halt(0) {
   dut = new Vnpc;
   m_trace = new VerilatedVcdC;
-  sim_time = 0;
 
   Verilated::traceEverOn(true);
   dut->trace(m_trace, 10);

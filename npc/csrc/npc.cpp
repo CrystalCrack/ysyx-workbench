@@ -10,6 +10,8 @@ extern char *img_file;
 
 uint32_t pmem_read(uint32_t addr);
 
+extern void get_reg(int addr, int* reg_data);
+
 void ebreak(){
   stop();
 }
@@ -32,10 +34,7 @@ void parse_args(int argc, char **argv) {
 }
 
 int main(int argc, char **argv) {
-
-  extern void get_reg(int addr, int* reg_data);
   
-
   cpu_init("npc.vcd");
 
   parse_args(argc, argv);
@@ -50,7 +49,7 @@ int main(int argc, char **argv) {
       int data;
       svSetScope(svGetScopeFromName("TOP.npc.u_RegisterFile"));
       get_reg(10, &data);
-      if(data == 1){
+      if(data == 0){
         printf(ANSI_COLOR_GREEN "HIT GOOD TRAP\n" ANSI_COLOR_RESET);
       }else{
         printf(ANSI_COLOR_RED "HIT BAD TRAP\n" ANSI_COLOR_RESET);

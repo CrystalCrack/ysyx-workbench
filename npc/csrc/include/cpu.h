@@ -10,7 +10,7 @@ public:
   int sim_time;
   Vnpc *dut;
 
-  Cpu();
+  Cpu(const char* Vcd_file);
   ~Cpu();
   void single_cycle();
   void stop();

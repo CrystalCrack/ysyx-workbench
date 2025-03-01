@@ -1,12 +1,12 @@
 #include <cpu.h>
 
-Cpu::Cpu() : sim_time(0), halt(0) {
+Cpu::Cpu(const char* Vcd_file) : sim_time(0), halt(0) {
   dut = new Vnpc;
   m_trace = new VerilatedVcdC;
 
   Verilated::traceEverOn(true);
   dut->trace(m_trace, 10);
-  m_trace->open("npc.vcd");
+  m_trace->open(Vcd_file);
   reset(10);
 }
 

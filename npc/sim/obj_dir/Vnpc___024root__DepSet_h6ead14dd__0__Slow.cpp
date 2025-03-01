@@ -272,8 +272,8 @@ VL_ATTR_COLD void Vnpc___024root___ctor_var_reset(Vnpc___024root* vlSelf) {
     vlSelf->npc__DOT__idu_inst__DOT__inst_name = 0;
     vlSelf->npc__DOT__idu_inst__DOT__inst_is_addi = 0;
     vlSelf->npc__DOT__idu_inst__DOT__inst_is_jalr = 0;
-    vlSelf->npc__DOT__idu_inst__DOT__immI = 0;
     vlSelf->npc__DOT__idu_inst__DOT__inst_is_sw = 0;
+    vlSelf->npc__DOT__idu_inst__DOT__immI = 0;
     for (int __Vi0 = 0; __Vi0 < 7; ++__Vi0) {
         vlSelf->npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__pair_list[__Vi0] = 0;
     }

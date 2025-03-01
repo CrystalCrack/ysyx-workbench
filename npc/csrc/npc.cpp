@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
 
   std::cout<<"NPC simulation starts"<<std::endl;
 
-  while(sim_time < MAX_SIM_TIME){ {  
+  while(sim_time < MAX_SIM_TIME){ 
     dut->inst = pmem_read(dut->pc);
     state = RUN;
     single_cycle();

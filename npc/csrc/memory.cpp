@@ -42,7 +42,7 @@ uint8_t pmem[MSIZE] = {
 
 long load_img() {
   if (img_file == NULL) {
-    std::cout<<"No image is given. Use the default build-in image.";
+    std::cout<<"No image is given. Use the default build-in image."<<std::endl;
     return 4096; // built-in image size
   }
 

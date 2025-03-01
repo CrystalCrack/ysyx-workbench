@@ -4,7 +4,7 @@ int sim_time;
 Vnpc *dut;
 CPU_state state;
 VerilatedVcdC *m_trace;
-long load_img();
+
 
 void cpu_init(const char* Vcd_file){
   dut = new Vnpc;

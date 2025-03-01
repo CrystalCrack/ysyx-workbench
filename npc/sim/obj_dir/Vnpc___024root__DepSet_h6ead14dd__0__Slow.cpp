@@ -32,10 +32,15 @@ VL_ATTR_COLD void Vnpc___024root___eval_initial__TOP(Vnpc___024root* vlSelf) {
     Vnpc__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vnpc___024root___eval_initial__TOP\n"); );
     // Body
-    vlSelf->npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__key_list[0U] = 2U;
-    vlSelf->npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__key_list[1U] = 1U;
-    vlSelf->npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__data_list[0U] = 0U;
-    vlSelf->npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__pair_list[0U] = 0x200000000ULL;
+    vlSelf->npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__key_list[0U] = 7U;
+    vlSelf->npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__key_list[1U] = 6U;
+    vlSelf->npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__key_list[2U] = 5U;
+    vlSelf->npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__key_list[3U] = 4U;
+    vlSelf->npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__key_list[4U] = 3U;
+    vlSelf->npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__key_list[5U] = 2U;
+    vlSelf->npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__key_list[6U] = 1U;
+    vlSelf->npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__data_list[5U] = 0U;
+    vlSelf->npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__pair_list[5U] = 0x200000000ULL;
     vlSelf->npc__DOT__u_ALU__DOT__u_MuxKeyWithDefault__DOT__i0__DOT__key_list[0U] = 7U;
     vlSelf->npc__DOT__u_ALU__DOT__u_MuxKeyWithDefault__DOT__i0__DOT__key_list[1U] = 6U;
     vlSelf->npc__DOT__u_ALU__DOT__u_MuxKeyWithDefault__DOT__i0__DOT__key_list[2U] = 5U;
@@ -44,24 +49,90 @@ VL_ATTR_COLD void Vnpc___024root___eval_initial__TOP(Vnpc___024root* vlSelf) {
     vlSelf->npc__DOT__u_ALU__DOT__u_MuxKeyWithDefault__DOT__i0__DOT__key_list[5U] = 2U;
     vlSelf->npc__DOT__u_ALU__DOT__u_MuxKeyWithDefault__DOT__i0__DOT__key_list[6U] = 1U;
     vlSelf->npc__DOT__u_ALU__DOT__u_MuxKeyWithDefault__DOT__i0__DOT__key_list[7U] = 0U;
-    vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__key_list[0U] = 2U;
-    vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__key_list[1U] = 1U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__key_list[0U] = 7U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__key_list[1U] = 6U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__key_list[2U] = 5U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__key_list[3U] = 4U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__key_list[4U] = 3U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__key_list[5U] = 2U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__key_list[6U] = 1U;
     vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__data_list[0U] = 0U;
     vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__data_list[1U] = 0U;
-    vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__pair_list[0U] = 0x10U;
-    vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__pair_list[1U] = 8U;
-    vlSelf->npc__DOT__idu_inst__DOT__getmemtoreg__DOT__i0__DOT__key_list[0U] = 2U;
-    vlSelf->npc__DOT__idu_inst__DOT__getmemtoreg__DOT__i0__DOT__key_list[1U] = 1U;
-    vlSelf->npc__DOT__idu_inst__DOT__getmemtoreg__DOT__i0__DOT__data_list[0U] = 0U;
-    vlSelf->npc__DOT__idu_inst__DOT__getmemtoreg__DOT__i0__DOT__data_list[1U] = 0U;
-    vlSelf->npc__DOT__idu_inst__DOT__getmemtoreg__DOT__i0__DOT__pair_list[0U] = 4U;
-    vlSelf->npc__DOT__idu_inst__DOT__getmemtoreg__DOT__i0__DOT__pair_list[1U] = 2U;
-    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__key_list[0U] = 2U;
-    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__key_list[1U] = 1U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__data_list[2U] = 0U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__data_list[3U] = 0U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__data_list[4U] = 0U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__data_list[5U] = 0U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__data_list[6U] = 0U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__pair_list[0U] = 0x38U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__pair_list[1U] = 0x30U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__pair_list[2U] = 0x28U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__pair_list[3U] = 0x20U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__pair_list[4U] = 0x18U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__pair_list[5U] = 0x10U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__pair_list[6U] = 8U;
+    vlSelf->npc__DOT__idu_inst__DOT__getrdregsrc__DOT__i0__DOT__key_list[0U] = 7U;
+    vlSelf->npc__DOT__idu_inst__DOT__getrdregsrc__DOT__i0__DOT__key_list[1U] = 6U;
+    vlSelf->npc__DOT__idu_inst__DOT__getrdregsrc__DOT__i0__DOT__key_list[2U] = 5U;
+    vlSelf->npc__DOT__idu_inst__DOT__getrdregsrc__DOT__i0__DOT__key_list[3U] = 4U;
+    vlSelf->npc__DOT__idu_inst__DOT__getrdregsrc__DOT__i0__DOT__key_list[4U] = 3U;
+    vlSelf->npc__DOT__idu_inst__DOT__getrdregsrc__DOT__i0__DOT__key_list[5U] = 2U;
+    vlSelf->npc__DOT__idu_inst__DOT__getrdregsrc__DOT__i0__DOT__key_list[6U] = 1U;
+    vlSelf->npc__DOT__idu_inst__DOT__getrdregsrc__DOT__i0__DOT__data_list[0U] = 3U;
+    vlSelf->npc__DOT__idu_inst__DOT__getrdregsrc__DOT__i0__DOT__data_list[1U] = 2U;
+    vlSelf->npc__DOT__idu_inst__DOT__getrdregsrc__DOT__i0__DOT__data_list[2U] = 2U;
+    vlSelf->npc__DOT__idu_inst__DOT__getrdregsrc__DOT__i0__DOT__data_list[3U] = 0U;
+    vlSelf->npc__DOT__idu_inst__DOT__getrdregsrc__DOT__i0__DOT__data_list[4U] = 0U;
+    vlSelf->npc__DOT__idu_inst__DOT__getrdregsrc__DOT__i0__DOT__data_list[5U] = 0U;
+    vlSelf->npc__DOT__idu_inst__DOT__getrdregsrc__DOT__i0__DOT__data_list[6U] = 0U;
+    vlSelf->npc__DOT__idu_inst__DOT__getrdregsrc__DOT__i0__DOT__pair_list[0U] = 0x1fU;
+    vlSelf->npc__DOT__idu_inst__DOT__getrdregsrc__DOT__i0__DOT__pair_list[1U] = 0x1aU;
+    vlSelf->npc__DOT__idu_inst__DOT__getrdregsrc__DOT__i0__DOT__pair_list[2U] = 0x16U;
+    vlSelf->npc__DOT__idu_inst__DOT__getrdregsrc__DOT__i0__DOT__pair_list[3U] = 0x10U;
+    vlSelf->npc__DOT__idu_inst__DOT__getrdregsrc__DOT__i0__DOT__pair_list[4U] = 0xcU;
+    vlSelf->npc__DOT__idu_inst__DOT__getrdregsrc__DOT__i0__DOT__pair_list[5U] = 8U;
+    vlSelf->npc__DOT__idu_inst__DOT__getrdregsrc__DOT__i0__DOT__pair_list[6U] = 4U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc1__DOT__i0__DOT__key_list[0U] = 7U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc1__DOT__i0__DOT__key_list[1U] = 6U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc1__DOT__i0__DOT__key_list[2U] = 5U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc1__DOT__i0__DOT__key_list[3U] = 4U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc1__DOT__i0__DOT__key_list[4U] = 3U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc1__DOT__i0__DOT__key_list[5U] = 2U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc1__DOT__i0__DOT__key_list[6U] = 1U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc1__DOT__i0__DOT__data_list[0U] = 0U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc1__DOT__i0__DOT__data_list[1U] = 0U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc1__DOT__i0__DOT__data_list[2U] = 1U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc1__DOT__i0__DOT__data_list[3U] = 0U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc1__DOT__i0__DOT__data_list[4U] = 1U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc1__DOT__i0__DOT__data_list[5U] = 0U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc1__DOT__i0__DOT__data_list[6U] = 0U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc1__DOT__i0__DOT__pair_list[0U] = 0xeU;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc1__DOT__i0__DOT__pair_list[1U] = 0xcU;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc1__DOT__i0__DOT__pair_list[2U] = 0xbU;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc1__DOT__i0__DOT__pair_list[3U] = 8U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc1__DOT__i0__DOT__pair_list[4U] = 7U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc1__DOT__i0__DOT__pair_list[5U] = 4U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc1__DOT__i0__DOT__pair_list[6U] = 2U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__key_list[0U] = 7U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__key_list[1U] = 6U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__key_list[2U] = 5U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__key_list[3U] = 4U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__key_list[4U] = 3U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__key_list[5U] = 2U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__key_list[6U] = 1U;
     vlSelf->npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__data_list[0U] = 1U;
     vlSelf->npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__data_list[1U] = 1U;
-    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__pair_list[0U] = 5U;
-    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__pair_list[1U] = 3U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__data_list[2U] = 1U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__data_list[3U] = 1U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__data_list[4U] = 1U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__data_list[5U] = 1U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__data_list[6U] = 1U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__pair_list[0U] = 0xfU;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__pair_list[1U] = 0xdU;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__pair_list[2U] = 0xbU;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__pair_list[3U] = 9U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__pair_list[4U] = 7U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__pair_list[5U] = 5U;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__pair_list[6U] = 3U;
 }
 
 VL_ATTR_COLD void Vnpc___024root___eval_final(Vnpc___024root* vlSelf) {
@@ -187,56 +258,73 @@ VL_ATTR_COLD void Vnpc___024root___ctor_var_reset(Vnpc___024root* vlSelf) {
     vlSelf->rst = 0;
     vlSelf->pc = 0;
     vlSelf->inst = 0;
+    vlSelf->npc__DOT__dnpc = 0;
     vlSelf->npc__DOT__rs1 = 0;
     vlSelf->npc__DOT__imm = 0;
     vlSelf->npc__DOT__ALU_op = 0;
-    vlSelf->npc__DOT__memtoreg = 0;
+    vlSelf->npc__DOT__rdregsrc = 0;
+    vlSelf->npc__DOT__ALUsrc1 = 0;
     vlSelf->npc__DOT__ALUsrc2 = 0;
-    vlSelf->npc__DOT__rf_rdata1 = 0;
+    vlSelf->npc__DOT__ALU_A = 0;
     vlSelf->npc__DOT__ALU_B = 0;
     vlSelf->npc__DOT__ALU_Cin = 0;
     vlSelf->npc__DOT__stop_sim = 0;
     vlSelf->npc__DOT__idu_inst__DOT__inst_name = 0;
-    for (int __Vi0 = 0; __Vi0 < 2; ++__Vi0) {
+    vlSelf->npc__DOT__idu_inst__DOT__inst_is_addi = 0;
+    vlSelf->npc__DOT__idu_inst__DOT__inst_is_jalr = 0;
+    vlSelf->npc__DOT__idu_inst__DOT__immI = 0;
+    vlSelf->npc__DOT__idu_inst__DOT__inst_is_sw = 0;
+    for (int __Vi0 = 0; __Vi0 < 7; ++__Vi0) {
         vlSelf->npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__pair_list[__Vi0] = 0;
     }
-    for (int __Vi0 = 0; __Vi0 < 2; ++__Vi0) {
+    for (int __Vi0 = 0; __Vi0 < 7; ++__Vi0) {
         vlSelf->npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__key_list[__Vi0] = 0;
     }
-    for (int __Vi0 = 0; __Vi0 < 2; ++__Vi0) {
+    for (int __Vi0 = 0; __Vi0 < 7; ++__Vi0) {
         vlSelf->npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__data_list[__Vi0] = 0;
     }
     vlSelf->npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__lut_out = 0;
     vlSelf->npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__hit = 0;
-    for (int __Vi0 = 0; __Vi0 < 2; ++__Vi0) {
+    for (int __Vi0 = 0; __Vi0 < 7; ++__Vi0) {
         vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__pair_list[__Vi0] = 0;
     }
-    for (int __Vi0 = 0; __Vi0 < 2; ++__Vi0) {
+    for (int __Vi0 = 0; __Vi0 < 7; ++__Vi0) {
         vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__key_list[__Vi0] = 0;
     }
-    for (int __Vi0 = 0; __Vi0 < 2; ++__Vi0) {
+    for (int __Vi0 = 0; __Vi0 < 7; ++__Vi0) {
         vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__data_list[__Vi0] = 0;
     }
     vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__lut_out = 0;
     vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__hit = 0;
-    for (int __Vi0 = 0; __Vi0 < 2; ++__Vi0) {
-        vlSelf->npc__DOT__idu_inst__DOT__getmemtoreg__DOT__i0__DOT__pair_list[__Vi0] = 0;
+    for (int __Vi0 = 0; __Vi0 < 7; ++__Vi0) {
+        vlSelf->npc__DOT__idu_inst__DOT__getrdregsrc__DOT__i0__DOT__pair_list[__Vi0] = 0;
     }
-    for (int __Vi0 = 0; __Vi0 < 2; ++__Vi0) {
-        vlSelf->npc__DOT__idu_inst__DOT__getmemtoreg__DOT__i0__DOT__key_list[__Vi0] = 0;
+    for (int __Vi0 = 0; __Vi0 < 7; ++__Vi0) {
+        vlSelf->npc__DOT__idu_inst__DOT__getrdregsrc__DOT__i0__DOT__key_list[__Vi0] = 0;
     }
-    for (int __Vi0 = 0; __Vi0 < 2; ++__Vi0) {
-        vlSelf->npc__DOT__idu_inst__DOT__getmemtoreg__DOT__i0__DOT__data_list[__Vi0] = 0;
+    for (int __Vi0 = 0; __Vi0 < 7; ++__Vi0) {
+        vlSelf->npc__DOT__idu_inst__DOT__getrdregsrc__DOT__i0__DOT__data_list[__Vi0] = 0;
     }
-    vlSelf->npc__DOT__idu_inst__DOT__getmemtoreg__DOT__i0__DOT__lut_out = 0;
-    vlSelf->npc__DOT__idu_inst__DOT__getmemtoreg__DOT__i0__DOT__hit = 0;
-    for (int __Vi0 = 0; __Vi0 < 2; ++__Vi0) {
+    vlSelf->npc__DOT__idu_inst__DOT__getrdregsrc__DOT__i0__DOT__lut_out = 0;
+    vlSelf->npc__DOT__idu_inst__DOT__getrdregsrc__DOT__i0__DOT__hit = 0;
+    for (int __Vi0 = 0; __Vi0 < 7; ++__Vi0) {
+        vlSelf->npc__DOT__idu_inst__DOT__getALUsrc1__DOT__i0__DOT__pair_list[__Vi0] = 0;
+    }
+    for (int __Vi0 = 0; __Vi0 < 7; ++__Vi0) {
+        vlSelf->npc__DOT__idu_inst__DOT__getALUsrc1__DOT__i0__DOT__key_list[__Vi0] = 0;
+    }
+    for (int __Vi0 = 0; __Vi0 < 7; ++__Vi0) {
+        vlSelf->npc__DOT__idu_inst__DOT__getALUsrc1__DOT__i0__DOT__data_list[__Vi0] = 0;
+    }
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc1__DOT__i0__DOT__lut_out = 0;
+    vlSelf->npc__DOT__idu_inst__DOT__getALUsrc1__DOT__i0__DOT__hit = 0;
+    for (int __Vi0 = 0; __Vi0 < 7; ++__Vi0) {
         vlSelf->npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__pair_list[__Vi0] = 0;
     }
-    for (int __Vi0 = 0; __Vi0 < 2; ++__Vi0) {
+    for (int __Vi0 = 0; __Vi0 < 7; ++__Vi0) {
         vlSelf->npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__key_list[__Vi0] = 0;
     }
-    for (int __Vi0 = 0; __Vi0 < 2; ++__Vi0) {
+    for (int __Vi0 = 0; __Vi0 < 7; ++__Vi0) {
         vlSelf->npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__data_list[__Vi0] = 0;
     }
     vlSelf->npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__lut_out = 0;
@@ -261,11 +349,10 @@ VL_ATTR_COLD void Vnpc___024root___ctor_var_reset(Vnpc___024root* vlSelf) {
     }
     vlSelf->npc__DOT__u_ALU__DOT__u_MuxKeyWithDefault__DOT__i0__DOT__lut_out = 0;
     vlSelf->npc__DOT__u_ALU__DOT__u_MuxKeyWithDefault__DOT__i0__DOT__hit = 0;
-    vlSelf->__VdfgTmp_h2cfea135__0 = 0;
-    vlSelf->__VdfgTmp_h9821ef23__0 = 0;
-    vlSelf->__VdfgTmp_h9ad6bd1a__0 = 0;
-    vlSelf->__VdfgTmp_hae64f932__0 = 0;
-    vlSelf->__VdfgTmp_hecb924a4__0 = 0;
+    vlSelf->__VdfgTmp_h9e92ca9a__0 = 0;
+    vlSelf->__VdfgTmp_h9827ce54__0 = 0;
+    vlSelf->__VdfgTmp_h9f3ef2dc__0 = 0;
+    vlSelf->__VdfgTmp_hb94d753f__0 = 0;
     vlSelf->__Vtrigrprev__TOP__clk = 0;
     for (int __Vi0 = 0; __Vi0 < 3; ++__Vi0) {
         vlSelf->__Vm_traceActivity[__Vi0] = 0;

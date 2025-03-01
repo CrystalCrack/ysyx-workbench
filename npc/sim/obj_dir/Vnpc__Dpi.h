@@ -20,7 +20,7 @@ extern "C" {
     extern void get_reg(int addr, int* reg_data);
 
     // DPI IMPORTS
-    // DPI import at /home/crystc/ysyx-workbench/npc/vsrc/npc.sv:89:34
+    // DPI import at /home/crystc/ysyx-workbench/npc/vsrc/npc.sv:99:34
     extern void ebreak();
 
 #ifdef __cplusplus

@@ -28,6 +28,7 @@ module IDU(
     wire inst_is_lui;
     wire inst_is_jal;
     wire inst_is_jalr;
+    wire inst_is_sw;
 
     // decode
     assign inst_is_addi = (opcode == 7'b0010011) && (funct3 == 3'b000);

@@ -50,9 +50,9 @@ module IDU(
     ) getimm(
         .out         	(imm          ),
         .key         	(inst_name          ),
-        .default_out 	(32'b0  ),
+        .default_out 	(32'b1  ),
         .lut         	({2'b01, immI,
-                          2'b10, 32'b1}          )
+                          2'b10, 32'b0}          )
     );
 
     MuxKeyWithDefault# (

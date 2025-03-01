@@ -9,6 +9,7 @@ extern CPU_state state;
 extern char *img_file;
 
 uint32_t pmem_read(uint32_t addr);
+long load_img();
 
 extern void get_reg(int addr, int* reg_data);
 

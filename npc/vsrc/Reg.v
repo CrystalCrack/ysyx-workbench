@@ -12,11 +12,8 @@ module Reg #(WIDTH = 1, RESET_VAL = 0) (
   end
 
   export "DPI-C" function get_reg;
-  function get_reg;
-    input [WIDTH-1:0] addr;
-    begin
-      get_reg = dout[addr];
-    end
+  function int get_reg(input int addr);
+    return dout[addr];
   endfunction
 
 endmodule

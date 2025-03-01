@@ -11,9 +11,4 @@ module Reg #(WIDTH = 1, RESET_VAL = 0) (
     else if (wen) dout <= din;
   end
 
-  export "DPI-C" function get_reg;
-  function int get_reg(input int addr);
-    return dout[addr];
-  endfunction
-
 endmodule

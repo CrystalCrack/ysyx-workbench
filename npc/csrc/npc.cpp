@@ -39,6 +39,8 @@ int main(int argc, char **argv) {
 
   parse_args(argc, argv);
 
+  load_img();
+
   std::cout<<"NPC simulation starts"<<std::endl;
 
   while(1) {  

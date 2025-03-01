@@ -47,6 +47,7 @@ int main(int argc, char** argv){
     while(sim_time < MAX_SIM_TIME){
         svSetScope(svGetScopeFromName("TOP.npc.u_RegisterFile"));
         single_cycle();
+        state = RUN;
         if(state == HALT){
             int reg_data;
             get_reg(10, &reg_data);
@@ -58,6 +59,8 @@ int main(int argc, char** argv){
             break;
         }
     }
+
+    cpu_deinit();
 
     return 0;
 

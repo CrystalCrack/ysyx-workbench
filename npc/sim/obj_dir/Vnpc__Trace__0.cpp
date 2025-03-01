@@ -23,7 +23,7 @@ void Vnpc___024root__trace_chg_sub_0(Vnpc___024root* vlSelf, VerilatedVcd::Buffe
     // Init
     uint32_t* const oldp VL_ATTR_UNUSED = bufp->oldp(vlSymsp->__Vm_baseCode + 1);
     VlWide<10>/*319:0*/ __Vtemp_h25c1306d__0;
-    VlWide<3>/*95:0*/ __Vtemp_h5353840b__0;
+    VlWide<3>/*95:0*/ __Vtemp_h8eeb5ff4__0;
     // Body
     if (VL_UNLIKELY(vlSelf->__Vm_traceActivity[0U])) {
         bufp->chgCData(oldp+0,(vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__pair_list[0]),5);
@@ -255,19 +255,19 @@ void Vnpc___024root__trace_chg_sub_0(Vnpc___024root* vlSelf, VerilatedVcd::Buffe
                                                | (0x7feU 
                                                   & (vlSelf->inst 
                                                      >> 0x14U)))))),32);
-    __Vtemp_h5353840b__0[0U] = 1U;
-    __Vtemp_h5353840b__0[1U] = (2U | (0xfffffffcU & 
+    __Vtemp_h8eeb5ff4__0[0U] = 0U;
+    __Vtemp_h8eeb5ff4__0[1U] = (2U | (0xfffffffcU & 
                                       (((- (IData)(
                                                    (vlSelf->inst 
                                                     >> 0x1fU))) 
                                         << 0xeU) | 
                                        (0x3ffcU & (vlSelf->inst 
                                                    >> 0x12U)))));
-    __Vtemp_h5353840b__0[2U] = (4U | (3U & ((- (IData)(
+    __Vtemp_h8eeb5ff4__0[2U] = (4U | (3U & ((- (IData)(
                                                        (vlSelf->inst 
                                                         >> 0x1fU))) 
                                             >> 0x12U)));
-    bufp->chgWData(oldp+158,(__Vtemp_h5353840b__0),68);
+    bufp->chgWData(oldp+158,(__Vtemp_h8eeb5ff4__0),68);
 }
 
 void Vnpc___024root__trace_cleanup(void* voidSelf, VerilatedVcd* /*unused*/) {

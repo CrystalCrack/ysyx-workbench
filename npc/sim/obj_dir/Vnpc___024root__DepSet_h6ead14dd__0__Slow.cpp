@@ -34,8 +34,8 @@ VL_ATTR_COLD void Vnpc___024root___eval_initial__TOP(Vnpc___024root* vlSelf) {
     // Body
     vlSelf->npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__key_list[0U] = 2U;
     vlSelf->npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__key_list[1U] = 1U;
-    vlSelf->npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__data_list[0U] = 1U;
-    vlSelf->npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__pair_list[0U] = 0x200000001ULL;
+    vlSelf->npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__data_list[0U] = 0U;
+    vlSelf->npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__pair_list[0U] = 0x200000000ULL;
     vlSelf->npc__DOT__u_ALU__DOT__u_MuxKeyWithDefault__DOT__i0__DOT__key_list[0U] = 7U;
     vlSelf->npc__DOT__u_ALU__DOT__u_MuxKeyWithDefault__DOT__i0__DOT__key_list[1U] = 6U;
     vlSelf->npc__DOT__u_ALU__DOT__u_MuxKeyWithDefault__DOT__i0__DOT__key_list[2U] = 5U;

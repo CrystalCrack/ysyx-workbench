@@ -309,7 +309,7 @@ VL_ATTR_COLD void Vnpc___024root__trace_full_sub_0(Vnpc___024root* vlSelf, Veril
     // Init
     uint32_t* const oldp VL_ATTR_UNUSED = bufp->oldp(vlSymsp->__Vm_baseCode);
     VlWide<10>/*319:0*/ __Vtemp_h25c1306d__0;
-    VlWide<3>/*95:0*/ __Vtemp_h5353840b__0;
+    VlWide<3>/*95:0*/ __Vtemp_h8eeb5ff4__0;
     // Body
     bufp->fullCData(oldp+1,(vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__pair_list[0]),5);
     bufp->fullCData(oldp+2,(vlSelf->npc__DOT__idu_inst__DOT__getALU_mode__DOT__i0__DOT__pair_list[1]),5);
@@ -530,19 +530,19 @@ VL_ATTR_COLD void Vnpc___024root__trace_full_sub_0(Vnpc___024root* vlSelf, Veril
                                                 | (0x7feU 
                                                    & (vlSelf->inst 
                                                       >> 0x14U)))))),32);
-    __Vtemp_h5353840b__0[0U] = 1U;
-    __Vtemp_h5353840b__0[1U] = (2U | (0xfffffffcU & 
+    __Vtemp_h8eeb5ff4__0[0U] = 0U;
+    __Vtemp_h8eeb5ff4__0[1U] = (2U | (0xfffffffcU & 
                                       (((- (IData)(
                                                    (vlSelf->inst 
                                                     >> 0x1fU))) 
                                         << 0xeU) | 
                                        (0x3ffcU & (vlSelf->inst 
                                                    >> 0x12U)))));
-    __Vtemp_h5353840b__0[2U] = (4U | (3U & ((- (IData)(
+    __Vtemp_h8eeb5ff4__0[2U] = (4U | (3U & ((- (IData)(
                                                        (vlSelf->inst 
                                                         >> 0x1fU))) 
                                             >> 0x12U)));
-    bufp->fullWData(oldp+159,(__Vtemp_h5353840b__0),68);
+    bufp->fullWData(oldp+159,(__Vtemp_h8eeb5ff4__0),68);
     bufp->fullBit(oldp+162,(vlSelf->npc__DOT__ALU_Cin));
     bufp->fullBit(oldp+163,(0U));
     bufp->fullIData(oldp+164,(2U),32);
@@ -555,7 +555,7 @@ VL_ATTR_COLD void Vnpc___024root__trace_full_sub_0(Vnpc___024root* vlSelf, Veril
     bufp->fullBit(oldp+171,(1U));
     bufp->fullCData(oldp+172,(0x1dU),6);
     bufp->fullIData(oldp+173,(0x20U),32);
-    bufp->fullIData(oldp+174,(0U),32);
+    bufp->fullIData(oldp+174,(1U),32);
     bufp->fullIData(oldp+175,(0x22U),32);
     bufp->fullCData(oldp+176,(0x14U),6);
     bufp->fullIData(oldp+177,(8U),32);

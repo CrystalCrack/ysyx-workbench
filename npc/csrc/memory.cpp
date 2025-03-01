@@ -47,12 +47,12 @@ long load_img() {
   }
 
   FILE *fp = fopen(img_file, "rb");
-  Assert(fp, "Can not open '%s'", img_file);
+  Assert(fp, "Can not open '%s'\n", img_file);
 
   fseek(fp, 0, SEEK_END);
   long size = ftell(fp);
 
-  printf("The image is %s, size = %ld", img_file, size);
+  printf("The image is %s, size = %ld\n", img_file, size);
 
   fseek(fp, 0, SEEK_SET);
   int ret = fread(pmem, size, 1, fp);

@@ -6,7 +6,7 @@
 #include "verilated_dpi.h"
 
 
-int Vnpc::get_reg(int addr) {
+svBitVecVal Vnpc::get_reg(int addr) {
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vnpc___024root::get_reg\n"); );
     // Init
     IData/*31:0*/ addr__Vcvt;
@@ -20,7 +20,7 @@ int Vnpc::get_reg(int addr) {
     Vnpc__Vcb_get_reg_t __Vcb = (Vnpc__Vcb_get_reg_t)(VerilatedScope::exportFind(__Vscopep, __Vfuncnum));
     addr__Vcvt = addr;
     (*__Vcb)((Vnpc__Syms*)(__Vscopep->symsp()), addr__Vcvt, get_reg__Vfuncrtn__Vcvt);
-    int get_reg__Vfuncrtn;
-    for (size_t get_reg__Vfuncrtn__Vidx = 0; get_reg__Vfuncrtn__Vidx < 1; ++get_reg__Vfuncrtn__Vidx) get_reg__Vfuncrtn = get_reg__Vfuncrtn__Vcvt;
-    return get_reg__Vfuncrtn;
+    svBitVecVal get_reg__Vfuncrtn[1];
+    for (size_t get_reg__Vfuncrtn__Vidx = 0; get_reg__Vfuncrtn__Vidx < 1; ++get_reg__Vfuncrtn__Vidx) VL_SET_SVBV_I(32, get_reg__Vfuncrtn + 1 * get_reg__Vfuncrtn__Vidx, get_reg__Vfuncrtn__Vcvt);
+    return get_reg__Vfuncrtn[0];
 }

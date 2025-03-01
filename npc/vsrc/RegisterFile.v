@@ -20,8 +20,9 @@ module RegisterFile #(ADDR_WIDTH = 1, DATA_WIDTH = 1) (
     assign rdata2 = (ren&(raddr2!=0)) ? rf[raddr2] : 0;
 
     export "DPI-C" function get_reg;
-    function automatic bit [DATA_WIDTH-1:0] get_reg(input int addr);
-        return rf[addr];
+    function void get_reg(int addr);
+        output int reg_data;
+        reg_data = rf[addr];
     endfunction
 
 endmodule

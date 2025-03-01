@@ -16,8 +16,8 @@ extern "C" {
 
 
     // DPI EXPORTS
-    // DPI export at /home/crystc/ysyx-workbench/npc/vsrc/RegisterFile.v:21:18
-    extern int get_reg(int addr);
+    // DPI export at /home/crystc/ysyx-workbench/npc/vsrc/RegisterFile.v:23:45
+    extern svBitVecVal get_reg(int addr);
 
     // DPI IMPORTS
     // DPI import at /home/crystc/ysyx-workbench/npc/vsrc/npc.sv:89:34

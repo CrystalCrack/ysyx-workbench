@@ -36,6 +36,9 @@ void parse_args(int argc, char **argv) {
 
 int main(int argc, char **argv) {
 
+  extern void get_reg(int *reg_data, int addr);
+  svSetScope(svGetScopeFromName("TOP.RegisterFile"));
+
   cpu_init("npc.vcd");
 
   parse_args(argc, argv);
@@ -47,7 +50,9 @@ int main(int argc, char **argv) {
     single_cycle();
 
     if(state == HALT){
-      if(get_reg(10) == 0){
+      int data;
+      get_reg(&data, 10);
+      if(data == 1){
         printf(ANSI_COLOR_GREEN "HIT GOOD TRAP\n" ANSI_COLOR_RESET);
       }else{
         printf(ANSI_COLOR_RED "HIT BAD TRAP\n" ANSI_COLOR_RESET);

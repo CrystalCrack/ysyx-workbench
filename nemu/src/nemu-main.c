@@ -20,10 +20,7 @@ void am_init_monitor();
 void engine_start();
 int is_exit_status_bad();
 void free_sdb();
-<<<<<<< HEAD
-=======
 void free_trace();
->>>>>>> tracer-ysyx
 
 __attribute__((unused)) static void test_expr(){
   word_t expr(char *e, bool *success);

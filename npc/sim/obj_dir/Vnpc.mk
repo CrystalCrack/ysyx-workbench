@@ -36,20 +36,33 @@ VM_MODPREFIX = Vnpc
 # User CFLAGS (from -CFLAGS on Verilator command line)
 VM_USER_CFLAGS = \
 	-I/home/crystc/ysyx-workbench/npc/csrc/include \
+	-I/home/crystc/ysyx-workbench/npc/tools/capstone/repo/include \
 	-DTOP_NAME="Vnpc" \
 
 # User LDLIBS (from -LDFLAGS on Verilator command line)
 VM_USER_LDLIBS = \
+	-lreadline \
+	-ltinfo \
+	-ldl \
+	-pie \
 
 # User .cpp files (from .cpp's on Verilator command line)
 VM_USER_CLASSES = \
 	cpu \
+	difftest \
+	expr \
+	sdb \
+	trace \
+	watchpoint \
 	memory \
 	npc \
+	disasm \
 
 # User .cpp directories (from .cpp's on Verilator command line)
 VM_USER_DIR = \
 	/home/crystc/ysyx-workbench/npc/csrc \
+	/home/crystc/ysyx-workbench/npc/csrc/infrastructure \
+	/home/crystc/ysyx-workbench/npc/csrc/utils \
 
 
 ### Default rules...
@@ -63,9 +76,21 @@ VPATH += $(VM_USER_DIR)
 
 cpu.o: /home/crystc/ysyx-workbench/npc/csrc/cpu.cpp
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
+difftest.o: /home/crystc/ysyx-workbench/npc/csrc/infrastructure/difftest.c
+	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
+expr.o: /home/crystc/ysyx-workbench/npc/csrc/infrastructure/expr.c
+	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
+sdb.o: /home/crystc/ysyx-workbench/npc/csrc/infrastructure/sdb.c
+	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
+trace.o: /home/crystc/ysyx-workbench/npc/csrc/infrastructure/trace.c
+	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
+watchpoint.o: /home/crystc/ysyx-workbench/npc/csrc/infrastructure/watchpoint.c
+	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
 memory.o: /home/crystc/ysyx-workbench/npc/csrc/memory.cpp
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
 npc.o: /home/crystc/ysyx-workbench/npc/csrc/npc.cpp
+	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
+disasm.o: /home/crystc/ysyx-workbench/npc/csrc/utils/disasm.c
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
 
 ### Link rules... (from --exe)

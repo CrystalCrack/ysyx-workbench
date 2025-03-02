@@ -9,10 +9,7 @@ SIM_DIR = ./sim
 OBJ_DIR = $(BUILD_DIR)/obj_dir
 SIM_OBJ_DIR = $(SIM_DIR)/obj_dir
 BIN = $(BUILD_DIR)/$(TOPNAME)
-<<<<<<< HEAD
-=======
-INC_PATH += $(abspath ./csrc/include) 
->>>>>>> tracer-ysyx
+INC_PATH += $(abspath ./csrc/include) $(abspath ./tools/capstone/repo/include)
 
 $(shell mkdir -p $(BUILD_DIR))
 $(shell mkdir -p $(SIM_DIR))
@@ -28,23 +25,16 @@ SIM_ALL ?= $(notdir $(shell find $(abspath ./csrc) -name "*.c" -or -name "*.cc" 
 SIM_CSRCS = $(shell find $(abspath ./csrc) -name "*.c" -or -name "*.cc" -or -name "*.cpp")
 CSRCS= $(SIM_CSRCS) $(SRC_AUTO_BIND)
 
+LOCAL_ARGS += -d $(NEMU_HOME)/build/riscv32-nemu-interpreter-so
+
 # Rules for NVBoard
-<<<<<<< HEAD
-include $(NVBOARD_HOME)/scripts/nvboard.mk
-=======
 # include $(NVBOARD_HOME)/scripts/nvboard.mk
->>>>>>> tracer-ysyx
 
 # Rules for verilator
 INCFLAGS = $(addprefix -I, $(INC_PATH))
 CXXFLAGS += $(INCFLAGS) -DTOP_NAME="\"V$(TOPNAME)\""
+LDFLAGS += -lreadline -ltinfo -ldl -pie
 
-<<<<<<< HEAD
-=======
-# excutable args
-ARGS += -i $(IMG)
-
->>>>>>> tracer-ysyx
 all:
 	@echo "Write this Makefile by your self."
 
@@ -55,25 +45,17 @@ Makefile.%: ./csrc/%
 	$(call git_commit, "sim RTL: $*")
 	@mkdir -p $(SIM_OBJ_DIR)/$(basename $*)
 	$(VERILATOR) $(VERILATOR_FLAGS) --top-module $(basename $*) $(VSRCS) $(abspath $^) --Mdir $(abspath $(SIM_OBJ_DIR)/$(basename $*))
-<<<<<<< HEAD
-	$(SIM_OBJ_DIR)/$(basename $*)/V$(TOPNAME)
-
-sim: $(VSRCS) $(SIM_CSRCS)
-	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
-	$(VERILATOR) $(VERILATOR_FLAGS) --top-module $(TOPNAME) $^ --Mdir $(SIM_OBJ_DIR)
-	$(SIM_OBJ_DIR)/V$(TOPNAME)
-=======
 	$(SIM_OBJ_DIR)/$(basename $*)/V$(TOPNAME) $(ARGS)
 
 sim: $(VSRCS) $(SIM_CSRCS)
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 
 	$(VERILATOR) $(VERILATOR_FLAGS) --top-module $(TOPNAME) $^ \
-	$(addprefix -CFLAGS , $(CXXFLAGS)) \
+	$(addprefix -CFLAGS , $(CXXFLAGS)) $(addprefix -LDFLAGS , $(LDFLAGS)) \
 	--Mdir $(SIM_OBJ_DIR)
 
-	$(SIM_OBJ_DIR)/V$(TOPNAME) $(ARGS)
->>>>>>> tracer-ysyx
+	@echo ARGS:$(ARGS)
+	$(SIM_OBJ_DIR)/V$(TOPNAME) $(ARGS) $(LOCAL_ARGS)
 
 $(BIN): $(VSRCS) $(CSRCS) $(NVBOARD_ARCHIVE)
 	@rm -rf $(OBJ_DIR)

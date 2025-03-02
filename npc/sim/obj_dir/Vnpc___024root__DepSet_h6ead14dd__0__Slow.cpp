@@ -332,6 +332,7 @@ VL_ATTR_COLD void Vnpc___024root___ctor_var_reset(Vnpc___024root* vlSelf) {
     for (int __Vi0 = 0; __Vi0 < 32; ++__Vi0) {
         vlSelf->npc__DOT__u_RegisterFile__DOT__rf[__Vi0] = 0;
     }
+    vlSelf->npc__DOT__u_RegisterFile__DOT__unnamedblk1__DOT__i = 0;
     vlSelf->npc__DOT__u_ALU__DOT__add_overflow = 0;
     vlSelf->npc__DOT__u_ALU__DOT__sub_overflow = 0;
     vlSelf->npc__DOT__u_ALU__DOT__int_Cout = 0;

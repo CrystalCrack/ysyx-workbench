@@ -52,6 +52,7 @@ class Vnpc___024root final : public VerilatedModule {
         IData/*31:0*/ npc__DOT__ALU_B;
         IData/*31:0*/ npc__DOT__idu_inst__DOT__immI;
         IData/*31:0*/ npc__DOT__idu_inst__DOT__getimm__DOT__i0__DOT__lut_out;
+        IData/*31:0*/ npc__DOT__u_RegisterFile__DOT__unnamedblk1__DOT__i;
         IData/*31:0*/ npc__DOT__u_ALU__DOT__add_result;
         IData/*31:0*/ npc__DOT__u_ALU__DOT__sub_result;
         IData/*31:0*/ __VdfgTmp_h9e92ca9a__0;
@@ -78,9 +79,9 @@ class Vnpc___024root final : public VerilatedModule {
         VlUnpacked<CData/*2:0*/, 7> npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__key_list;
         VlUnpacked<CData/*0:0*/, 7> npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__data_list;
         VlUnpacked<IData/*31:0*/, 32> npc__DOT__u_RegisterFile__DOT__rf;
-        VlUnpacked<QData/*36:0*/, 8> npc__DOT__u_ALU__DOT__u_MuxKeyWithDefault__DOT__i0__DOT__pair_list;
     };
     struct {
+        VlUnpacked<QData/*36:0*/, 8> npc__DOT__u_ALU__DOT__u_MuxKeyWithDefault__DOT__i0__DOT__pair_list;
         VlUnpacked<CData/*2:0*/, 8> npc__DOT__u_ALU__DOT__u_MuxKeyWithDefault__DOT__i0__DOT__key_list;
         VlUnpacked<QData/*33:0*/, 8> npc__DOT__u_ALU__DOT__u_MuxKeyWithDefault__DOT__i0__DOT__data_list;
         VlUnpacked<CData/*0:0*/, 3> __Vm_traceActivity;

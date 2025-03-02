@@ -20,8 +20,8 @@ void Vnpc___024root____Vdpiexp_npc__DOT__u_RegisterFile__DOT__get_reg_TOP(Vnpc__
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vnpc___024root____Vdpiexp_npc__DOT__u_RegisterFile__DOT__get_reg_TOP\n"); );
     // Init
     // Body
-    reg_data = vlSymsp->TOP.npc__DOT__u_RegisterFile__DOT__rf
-        [(0x1fU & addr)];
+    reg_data = ((0U == addr) ? 0U : vlSymsp->TOP.npc__DOT__u_RegisterFile__DOT__rf
+                [(0x1fU & addr)]);
 }
 
 #ifdef VL_DEBUG

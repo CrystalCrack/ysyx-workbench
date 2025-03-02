@@ -16,11 +16,11 @@ extern "C" {
 
 
     // DPI EXPORTS
-    // DPI export at /home/crystc/ysyx-workbench/npc/vsrc/RegisterFile.v:23:19
+    // DPI export at /home/crystc/ysyx-workbench/npc/vsrc/RegisterFile.v:29:19
     extern void get_reg(int addr, int* reg_data);
 
     // DPI IMPORTS
-    // DPI import at /home/crystc/ysyx-workbench/npc/vsrc/npc.sv:99:34
+    // DPI import at /home/crystc/ysyx-workbench/npc/vsrc/npc.sv:100:34
     extern void ebreak();
 
 #ifdef __cplusplus

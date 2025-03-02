@@ -1,10 +1,5 @@
-#include <stdint.h>
-#include <iostream>
-#include <common.h>
 
-
-#define MSIZE 0xFFFF
-#define MBIAS 0x80000000
+#include <memory.h>
 
 char *img_file = NULL;
 
@@ -43,7 +38,7 @@ uint8_t pmem[MSIZE] = {
 long load_img() {
   if (img_file == NULL) {
     std::cout<<"No image is given. Use the default build-in image."<<std::endl;
-    return 4096; // built-in image size
+    return 40; // built-in image size
   }
 
   FILE *fp = fopen(img_file, "rb");
@@ -62,6 +57,22 @@ long load_img() {
   return size;
 }
 
-uint32_t pmem_read(uint32_t addr){
-  return *(uint32_t*)(pmem + addr - MBIAS);
+uint8_t pmem_read(uint32_t addr){
+  return *(pmem + addr - MBASE);
+}
+
+uint32_t paddr_read(uint32_t addr, int len){
+  uint32_t data = 0;
+  for(int i = 0; i < len; i++){
+    data |= pmem_read(addr + i) << (i * 8);
+  }
+  return data;
+}
+
+uint32_t vaddr_read(uint32_t addr, int len){
+  return paddr_read(addr, len);
+}
+
+uint8_t *guest_to_host(uint32_t addr) {
+  return pmem + addr - MBASE;
 }

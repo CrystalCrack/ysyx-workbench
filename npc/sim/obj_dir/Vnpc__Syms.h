@@ -17,6 +17,7 @@
 #include "Vnpc___024root.h"
 
 // DPI TYPES for DPI Export callbacks (Internal use)
+using Vnpc__Vcb_get_pc_inst_t = void (*) (Vnpc__Syms* __restrict vlSymsp, IData/*31:0*/ &cpu_pc, IData/*31:0*/ &cpu_inst);
 using Vnpc__Vcb_get_reg_t = void (*) (Vnpc__Syms* __restrict vlSymsp, IData/*31:0*/ addr, IData/*31:0*/ &reg_data);
 
 // SYMS CLASS (contains all model state)
@@ -33,6 +34,7 @@ class Vnpc__Syms final : public VerilatedSyms {
     Vnpc___024root                 TOP;
 
     // SCOPE NAMES
+    VerilatedScope __Vscope_npc;
     VerilatedScope __Vscope_npc__u_RegisterFile;
 
     // CONSTRUCTORS

@@ -24,6 +24,8 @@ void reset(int n);
 void cpu_exec(uint64_t n);
 void reg_display();
 uint32_t reg_str2val(const char *s);
+void Cget_reg(int addr, int* reg_data);
+void Cget_pc_inst(uint32_t* pc, uint32_t* inst);
 CPU_reg get_cpu_state();
 
 #endif

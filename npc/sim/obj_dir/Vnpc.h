@@ -28,8 +28,6 @@ class Vnpc VL_NOT_FINAL : public VerilatedModel {
     // propagate new values into/out from the Verilated model.
     VL_IN8(&clk,0,0);
     VL_IN8(&rst,0,0);
-    VL_OUT(&pc,31,0);
-    VL_IN(&inst,31,0);
 
     // CELLS
     // Public to allow access to /* verilator public */ items.
@@ -72,6 +70,7 @@ class Vnpc VL_NOT_FINAL : public VerilatedModel {
     const char* name() const;
 
     /// DPI Export functions
+    static void get_pc_inst(int* cpu_pc, int* cpu_inst);
     static void get_reg(int addr, int* reg_data);
 
     // Abstract methods from VerilatedModel

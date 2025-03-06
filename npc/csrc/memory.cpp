@@ -57,6 +57,42 @@ long load_img() {
   return size;
 }
 
+bool memory_out_of_bound(uint32_t addr) {
+  if (addr < MBASE || addr >= MBASE + MSIZE) {
+    printf("Memory access out of bound: addr = 0x%08x\n", addr);
+    return true;
+  }
+  return false;
+}
+
+extern "C" int pmem_read(int raddr) {
+  #ifdef CONFIG_MTRACE
+    printf("read memory from 0x" FMT_WORD "\n", raddr);
+  #endif
+
+  uint32_t addr = raddr & ~0x3u;
+  Assert(!memory_out_of_bound(addr), "read address out of bound\n");
+  return *(int *)(pmem + addr - MBASE);
+}
+
+extern "C" void pmem_write(int waddr, int wdata, char wmask) {
+  #ifdef CONFIG_MTRACE
+    printf("write memory to 0x" FMT_WORD "\n", waddr);
+  #endif
+
+  uint32_t addr = waddr & ~0x3u;
+  Assert(!memory_out_of_bound(addr), "write address out of bound\n");
+
+  int *p = (int *)(pmem + addr - MBASE);
+  int mask = 0;
+  for (int i = 0; i < 4; i++) {
+    if ((wmask >> i) & 0x1) {
+      mask |= 0xff << (i * 8);
+    }
+  }
+  *p = (*p & ~mask) | (wdata & mask);
+}
+
 uint8_t pmem_read(uint32_t addr){
   return *(pmem + addr - MBASE);
 }

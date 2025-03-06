@@ -14,8 +14,6 @@ Vnpc::Vnpc(VerilatedContext* _vcontextp__, const char* _vcname__)
     , vlSymsp{new Vnpc__Syms(contextp(), _vcname__, this)}
     , clk{vlSymsp->TOP.clk}
     , rst{vlSymsp->TOP.rst}
-    , pc{vlSymsp->TOP.pc}
-    , inst{vlSymsp->TOP.inst}
     , rootp{&(vlSymsp->TOP)}
 {
     // Register model with the context

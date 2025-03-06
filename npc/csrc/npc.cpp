@@ -9,7 +9,6 @@ extern Vnpc *dut;
 extern CPU_state state;
 extern VerilatedVcdC *m_trace;
 extern char *img_file;
-extern void get_reg(int addr, int* reg_data);
 
 
 /* memory */
@@ -31,9 +30,10 @@ long img_size;
 
 void ebreak(){
     int ret_code;
-    svSetScope(svGetScopeFromName("TOP.npc.u_RegisterFile"));
-    get_reg(10, &ret_code);
-    stop(ret_code, dut->pc);
+    uint32_t pc;
+    Cget_reg(10, &ret_code);
+    Cget_pc_inst(&pc, NULL);
+    stop(ret_code, pc);
 }
 
 void parse_args(int argc, char** argv){

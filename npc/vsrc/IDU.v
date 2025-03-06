@@ -1,4 +1,4 @@
-`define INST_NAME_LEN 3
+`define INST_NAME_LEN 5
 
 //instuction Decode Unit
 module IDU(
@@ -12,14 +12,20 @@ module IDU(
 
     output [31:0] imm,
     output [2:0] ALU_op,
-    output [1:0] rdregsrc, // 0 for ALU, 1 for mem, 2 for snpc, 3 for disable
+    output [2:0] rdregsrc, // 0 for ALU, 1 for mem, 2 for snpc, 3 for compare_result, 4 for disable
     output ALUsrc1, // 0 for regsrc1, 1 for pc
     output ALUsrc2, // 0 for regsrc2, 1 for imm
     output jump,
+    output branch,
+    output [1:0] cmp_type, // 0 for equal, 1 for unequal, 2 for less signed, 3 for less unsigned
+    output slt,
+    output [7:0] dwmask,
+    output dwen,
+    output dvalid,
 
     output stop_sim
 );
-    parameter NUM_OF_INST = 7;
+    parameter NUM_OF_INST = 17;
 
     wire [`INST_NAME_LEN-1:0] inst_name;
     wire inst_is_addi;
@@ -29,6 +35,16 @@ module IDU(
     wire inst_is_jal;
     wire inst_is_jalr;
     wire inst_is_sw;
+    wire inst_is_lw;
+    wire inst_is_add;
+    wire inst_is_beq;
+    wire inst_is_sltu;
+    wire inst_is_xor;
+    wire inst_is_or;
+    wire inst_is_sltiu;
+    wire inst_is_bne;
+    wire inst_is_lbu;
+    wire inst_is_sb;
 
     // decode
     assign inst_is_addi = (opcode == 7'b0010011) && (funct3 == 3'b000);
@@ -38,14 +54,34 @@ module IDU(
     assign inst_is_jal = (opcode == 7'b1101111);
     assign inst_is_jalr = (opcode == 7'b1100111) && (funct3 == 3'b000);
     assign inst_is_sw = (opcode == 7'b0100011) && (funct3 == 3'b010);
+    assign inst_is_lw = (opcode == 7'b0000011) && (funct3 == 3'b010);
+    assign inst_is_add = (opcode == 7'b0110011) && (funct3 == 3'b000) && (funct7 == 7'b0000000);
+    assign inst_is_beq = (opcode == 7'b1100011) && (funct3 == 3'b000);
+    assign inst_is_sltu = (opcode == 7'b0110011) && (funct3 == 3'b011) && (funct7 == 7'b0000000);
+    assign inst_is_xor = (opcode == 7'b0110011) && (funct3 == 3'b100);
+    assign inst_is_or = (opcode == 7'b0110011) && (funct3 == 3'b110);
+    assign inst_is_sltiu = (opcode == 7'b0010011) && (funct3 == 3'b011);
+    assign inst_is_bne = (opcode == 7'b1100011) && (funct3 == 3'b001);
+    assign inst_is_lbu = (opcode == 7'b0000011) && (funct3 == 3'b100);
+    assign inst_is_sb = (opcode == 7'b0100011) && (funct3 == 3'b000);
 
-    assign inst_name = inst_is_addi ? 1 : //addi
-                       inst_is_ebreak ? 2 : //ebreak
-                       inst_is_auipc ? 3 : //auipc
-                       inst_is_lui ? 4 : //lui
-                       inst_is_jal ? 5 : //jal
-                       inst_is_jalr ? 6 : //jalr
-                       inst_is_sw ? 7 : // sw
+    assign inst_name =  inst_is_addi ? 1 : //addi
+                        inst_is_ebreak ? 2 : //ebreak
+                        inst_is_auipc ? 3 : //auipc
+                        inst_is_lui ? 4 : //lui
+                        inst_is_jal ? 5 : //jal
+                        inst_is_jalr ? 6 : //jalr
+                        inst_is_sw ? 7 : // sw
+                        inst_is_lw ? 8 : // lw
+                        inst_is_add ? 9 : // add
+                        inst_is_beq ? 10 : // beq
+                        inst_is_sltu ? 11 : // sltu
+                        inst_is_xor ? 12 : // xor
+                        inst_is_or ? 13 : // or
+                        inst_is_sltiu ? 14 : // sltiu
+                        inst_is_bne ? 15 :  // bne
+                        inst_is_lbu ? 16 :  // lbu
+                        inst_is_sb ? 17 :  // sb
                        0; 
     
     // assign imm = ({32{inst_is_addi}} & immI) ;
@@ -81,7 +117,11 @@ module IDU(
                           `INST_NAME_LEN'd4, immU,
                           `INST_NAME_LEN'd5, immJ,
                           `INST_NAME_LEN'd6, immI,
-                          `INST_NAME_LEN'd7, immS}          )
+                          `INST_NAME_LEN'd7, immI,
+                          `INST_NAME_LEN'd8, immI,
+                          `INST_NAME_LEN'd9, 32'b0,
+                          `INST_NAME_LEN'd10, immB,
+                          `INST_NAME_LEN'd11, 32'b0}          )
     );
 
     MuxKeyWithDefault# (
@@ -98,7 +138,11 @@ module IDU(
                           `INST_NAME_LEN'd4, 3'b000,
                           `INST_NAME_LEN'd5, 3'b000,
                           `INST_NAME_LEN'd6, 3'b000,
-                          `INST_NAME_LEN'd7, 3'b000}          )
+                          `INST_NAME_LEN'd7, 3'b000,
+                          `INST_NAME_LEN'd8, 3'b000,
+                          `INST_NAME_LEN'd9, 3'b000,
+                          `INST_NAME_LEN'd10, 3'b001,
+                          `INST_NAME_LEN'd11, 3'b001}          )
     );
     
     MuxKeyWithDefault# (
@@ -115,7 +159,10 @@ module IDU(
                           `INST_NAME_LEN'd4, 2'd0,
                           `INST_NAME_LEN'd5, 2'd2,
                           `INST_NAME_LEN'd6, 2'd2,
-                          `INST_NAME_LEN'd7, 2'd3}          )
+                          `INST_NAME_LEN'd7, 2'd4,
+                          `INST_NAME_LEN'd8, 2'd1,
+                          `INST_NAME_LEN'd9, 2'd0,
+                          `INST_NAME_LEN'd10, 2'd0}          )
     );
 
     MuxKeyWithDefault# (
@@ -132,7 +179,10 @@ module IDU(
                           `INST_NAME_LEN'd4, 1'b0,
                           `INST_NAME_LEN'd5, 1'b1,
                           `INST_NAME_LEN'd6, 1'b0,
-                          `INST_NAME_LEN'd7, 1'b0}          )
+                          `INST_NAME_LEN'd7, 1'b0,
+                          `INST_NAME_LEN'd8, 1'b0,
+                          `INST_NAME_LEN'd9, 1'b0,
+                          `INST_NAME_LEN'd10, 1'b0}          )
     );
 
     MuxKeyWithDefault# (
@@ -149,8 +199,19 @@ module IDU(
                           `INST_NAME_LEN'd4, 1'b1,
                           `INST_NAME_LEN'd5, 1'b1,
                           `INST_NAME_LEN'd6, 1'b1,
-                          `INST_NAME_LEN'd7, 1'b1}          )
+                          `INST_NAME_LEN'd7, 1'b1,
+                          `INST_NAME_LEN'd8, 1'b1,
+                          `INST_NAME_LEN'd9, 1'b0,
+                          `INST_NAME_LEN'd10, 1'b0}          )
     );
+
+    assign branch = inst_is_beq | inst_is_bne;
+    assign slt = inst_is_sltu | inst_is_sltiu;
+    assign dvalid = inst_is_sw | inst_is_lw;
+    assign dwen = inst_is_sw;
+    assign dwmask = inst_is_sw ? 8'b0000_1111 : 
+                                 8'b0000_0000;
+    assign cmp_type = (inst_is_sltu | inst_is_sltiu) ? 2'd2 : 2'd0;
 
     assign stop_sim = inst_is_ebreak | ~(|inst_name);
 

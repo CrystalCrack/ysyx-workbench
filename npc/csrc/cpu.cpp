@@ -47,23 +47,38 @@ void stop(int code, uint32_t pc) {
   halt_ret = code;
 }
 
+void Cget_reg(int addr, int* ret_code){
+  svSetScope(svGetScopeFromName("TOP.npc.u_RegisterFile"));
+  get_reg(addr, ret_code);
+}
+
+void Cget_pc_inst(uint32_t* pc, uint32_t* inst){
+  svSetScope(svGetScopeFromName("TOP.npc"));
+  int pc_temp, inst_temp;
+  int* pc_ptr = pc==NULL ? &pc_temp : (int*)pc;
+  int* inst_ptr = inst==NULL ? &inst_temp : (int*)inst;
+  get_pc_inst(pc_ptr, inst_ptr);
+}
+
 static void exec_once() {
-  uint32_t pc = dut->pc;
-  uint32_t instru = paddr_read(pc, 4);
+
+  /* itrace */
+  uint32_t pc, instru;
+  Cget_pc_inst(&pc, NULL);
+  instru = paddr_read(pc, 4);
 
   /* ftrace */
   ftrace(pc, instru);
 
   // write iringbuf
-  // write_iringbuf(dut->pc, instru);
+  // write_iringbuf(pc, instru);
   
-  /* iftech and run */
-  dut->inst = instru;
+  /* run a cycle */
   single_cycle();
 
 #ifdef CONFIG_ITRACE
   char *p = logbuf;
-  p += snprintf(p, sizeof(logbuf), FMT_WORD ":", dut->pc);
+  p += snprintf(p, sizeof(logbuf), FMT_WORD ":", pc);
   int ilen = 4;
   int i;
   uint8_t *inst = (uint8_t *)&instru;
@@ -146,7 +161,7 @@ void reset(int n) {
 void reg_display(){
   int reg_data;
   for(int i = 0; i < 32; i++){
-    get_reg(i, &reg_data);
+    Cget_reg(i, &reg_data);
     printf("x%d: " FMT_WORD "\n", i, reg_data);
   }
 }
@@ -161,12 +176,14 @@ const char *regs[] = {
 uint32_t reg_str2val(const char *s) {
   int i;
   if(strcmp(s,"pc")==0){
-    return dut->pc;
+    uint32_t pc;
+    Cget_pc_inst(&pc, NULL);
+    return pc;
   }
   for(i=0;i<ARRLEN(regs);i++){
     if(strcmp(s,regs[i])==0){
       int reg_data;
-      get_reg(i, &reg_data);
+      Cget_reg(i, &reg_data);
       return reg_data;
     }
   }
@@ -176,8 +193,8 @@ uint32_t reg_str2val(const char *s) {
 CPU_reg get_cpu_state(){
   CPU_reg _this;
   for(int i = 0; i < 32; i++){
-    get_reg(i, (int*)&_this.gpr[i]);
+    Cget_reg(i, (int*)&_this.gpr[i]);
   }
-  _this.pc = dut->pc;
+  Cget_pc_inst(&_this.pc, NULL);
   return _this;
 }

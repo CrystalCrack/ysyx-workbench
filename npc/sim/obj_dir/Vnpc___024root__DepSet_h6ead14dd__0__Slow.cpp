@@ -256,9 +256,6 @@ VL_ATTR_COLD void Vnpc___024root___ctor_var_reset(Vnpc___024root* vlSelf) {
     // Body
     vlSelf->clk = 0;
     vlSelf->rst = 0;
-    vlSelf->pc = 0;
-    vlSelf->inst = 0;
-    vlSelf->npc__DOT__dnpc = 0;
     vlSelf->npc__DOT__rs1 = 0;
     vlSelf->npc__DOT__imm = 0;
     vlSelf->npc__DOT__ALU_op = 0;
@@ -269,6 +266,9 @@ VL_ATTR_COLD void Vnpc___024root___ctor_var_reset(Vnpc___024root* vlSelf) {
     vlSelf->npc__DOT__ALU_B = 0;
     vlSelf->npc__DOT__ALU_Cin = 0;
     vlSelf->npc__DOT__stop_sim = 0;
+    vlSelf->npc__DOT__pc = 0;
+    vlSelf->npc__DOT__inst = 0;
+    vlSelf->npc__DOT__u_PC__DOT__dnpc = 0;
     vlSelf->npc__DOT__idu_inst__DOT__inst_name = 0;
     vlSelf->npc__DOT__idu_inst__DOT__inst_is_addi = 0;
     vlSelf->npc__DOT__idu_inst__DOT__inst_is_jalr = 0;
@@ -350,10 +350,12 @@ VL_ATTR_COLD void Vnpc___024root___ctor_var_reset(Vnpc___024root* vlSelf) {
     }
     vlSelf->npc__DOT__u_ALU__DOT__u_MuxKeyWithDefault__DOT__i0__DOT__lut_out = 0;
     vlSelf->npc__DOT__u_ALU__DOT__u_MuxKeyWithDefault__DOT__i0__DOT__hit = 0;
-    vlSelf->__VdfgTmp_h9e92ca9a__0 = 0;
-    vlSelf->__VdfgTmp_h9827ce54__0 = 0;
-    vlSelf->__VdfgTmp_h9f3ef2dc__0 = 0;
-    vlSelf->__VdfgTmp_hb94d753f__0 = 0;
+    vlSelf->__VdfgTmp_h9d656ae0__0 = 0;
+    vlSelf->__VdfgTmp_h9c50524a__0 = 0;
+    vlSelf->__VdfgTmp_h9b55b1fc__0 = 0;
+    vlSelf->__VdfgTmp_h6a4a23bc__0 = 0;
+    vlSelf->__VdfgTmp_hf41dd485__0 = 0;
+    vlSelf->__Vfunc_npc__DOT__inst_mem__DOT__pmem_read__1__Vfuncout = 0;
     vlSelf->__Vtrigrprev__TOP__clk = 0;
     for (int __Vi0 = 0; __Vi0 < 3; ++__Vi0) {
         vlSelf->__Vm_traceActivity[__Vi0] = 0;

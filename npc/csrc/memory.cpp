@@ -1,5 +1,6 @@
 
 #include <memory.h>
+#include <cpu.h>
 
 char *img_file = NULL;
 
@@ -66,21 +67,28 @@ bool memory_out_of_bound(uint32_t addr) {
 }
 
 extern "C" int pmem_read(int raddr) {
+  uint32_t addr = raddr;
+  Assert(!memory_out_of_bound(addr), "read address out of bound\n");
+  int ret = *(int *)(pmem + addr - MBASE);
+
   #ifdef CONFIG_MTRACE
-    printf("read memory from 0x" FMT_WORD "\n", raddr);
+  static int last_raddr, last_ret;
+  CPU_reg _this = get_cpu_state();
+  if(_this.pc == raddr){
+    return ret;
+  }
+  if (last_raddr != raddr || last_ret != ret) {
+    printf(FMT_WORD ":read memory from " FMT_WORD ", get " FMT_WORD "\n", _this.pc, raddr, ret);
+    last_raddr = raddr;
+    last_ret = ret;
+  }
   #endif
 
-  uint32_t addr = raddr & ~0x3u;
-  Assert(!memory_out_of_bound(addr), "read address out of bound\n");
-  return *(int *)(pmem + addr - MBASE);
+  return ret;
 }
 
 extern "C" void pmem_write(int waddr, int wdata, char wmask) {
-  #ifdef CONFIG_MTRACE
-    printf("write memory to 0x" FMT_WORD "\n", waddr);
-  #endif
-
-  uint32_t addr = waddr & ~0x3u;
+  uint32_t addr = waddr;
   Assert(!memory_out_of_bound(addr), "write address out of bound\n");
 
   int *p = (int *)(pmem + addr - MBASE);
@@ -90,7 +98,18 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask) {
       mask |= 0xff << (i * 8);
     }
   }
-  *p = (*p & ~mask) | (wdata & mask);
+  uint32_t ret = (*p & ~mask) | (wdata & mask);
+  *p = ret;
+
+  #ifdef CONFIG_MTRACE
+  static int last_waddr, last_wdata;
+  CPU_reg _this = get_cpu_state();
+  if (last_waddr != waddr || last_wdata != ret) {
+    printf(FMT_WORD ":write " FMT_WORD " to " FMT_WORD "\n", _this.pc, ret, waddr);
+    last_waddr = waddr;
+    last_wdata = ret;
+  }
+  #endif
 }
 
 uint8_t pmem_read(uint32_t addr){

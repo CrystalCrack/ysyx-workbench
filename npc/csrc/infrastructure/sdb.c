@@ -100,9 +100,12 @@ static int cmd_x(char *args){
     printf("Invalid EXPR args.");
   }
   word_t data;
-  for(int i=0;i<N;i++){
-    data = vaddr_read(addr+i, 1);
-    printf("%X\t",data);
+  for (int i = 0; i < N; i++) {
+    data = vaddr_read(addr + i, 1);
+    if (i % 4 == 0) {
+      printf("\n0x%08X: ", addr + i);
+    }
+    printf("%02X ", data);
   }
   printf("\n");
   return 0;

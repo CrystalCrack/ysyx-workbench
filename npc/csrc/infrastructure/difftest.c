@@ -11,6 +11,7 @@ extern CPU_state state;
 extern int halt_ret;
 extern uint32_t halt_pc;
 
+void display_error_msg();
 
 void (*ref_difftest_memcpy)(paddr_t addr, void *buf, size_t n, bool direction) = NULL;
 void (*ref_difftest_regcpy)(void *dut, bool direction) = NULL;
@@ -82,6 +83,7 @@ static void checkregs(CPU_reg *ref, vaddr_t pc) {
     state = ABORT;
     halt_pc = pc;
     display_ref_dut_regs(ref);
+    display_error_msg();
   }
 }
 

@@ -23,6 +23,8 @@ void sdb_set_batch_mode();
 void init_disasm();
 /* difftest */
 void init_difftest(char *ref_so_file, long img_size, int port);
+/* trace */
+void display_iringbuf();
 
 char *elf_file = NULL;
 char *so_file = NULL;
@@ -106,6 +108,10 @@ void deinitialize(){
     free_trace();
 
     cpu_deinit();
+}
+
+void display_error_msg(){
+    display_iringbuf();
 }
 
 int main(int argc, char** argv){

@@ -9,7 +9,7 @@ module ALU(
     output wire [31:0] result
 );
     wire add_overflow, sub_overflow;
-    wire int_Cout;
+    wire add_Cout, sub_Cout;
     wire [31:0] add_result, sub_result;
 
     assign zero = ~(|result);
@@ -18,7 +18,7 @@ module ALU(
         .B(B),
         .Cin(Cin),
         .sum(add_result),
-        .Cout(int_Cout),
+        .Cout(add_Cout),
         .overflow(add_overflow)
     );
     adder sub_inst(
@@ -26,27 +26,31 @@ module ALU(
         .B(~B),
         .Cin(1),
         .sum(sub_result),
-        .Cout(),
+        .Cout(sub_Cout),
         .overflow(sub_overflow)
     );
 
+    assign Cout = mode == 3'b000 ? add_Cout :
+                  mode == 3'b001 ? sub_Cout : 1'b0;
+
     // output declaration of module MuxKeyWithDefault
-    wire [33:0] out;
-    MuxKeyWithDefault #(8, 3, 34) u_MuxKeyWithDefault(
+    wire [32:0] out;
+    MuxKeyWithDefault #(8, 3, 33) u_MuxKeyWithDefault(
         .out         	(out          ),
         .key         	(mode          ),
-        .default_out 	(34'b0  ),
-        .lut         	({3'b000, int_Cout, add_overflow, add_result,
-                          3'b001, 1'b0, sub_overflow, sub_result,
-                          3'b010, 1'b0, 1'b0, ~A,
-                          3'b011, 1'b0, 1'b0, A&B,
-                          3'b100, 1'b0, 1'b0, A|B,
-                          3'b101, 1'b0, 1'b0, A^B,
-                          3'b110, 1'b0, 1'b0, 31'b0, sub_overflow^sub_result[3],
-                          3'b111, 1'b0, 1'b0, 31'b0, ~(|sub_result)}          )
+        .default_out 	(33'b0  ),
+        .lut         	({3'b000, add_overflow, add_result,
+                          3'b001, sub_overflow, sub_result,
+                          3'b010, 1'b0, $signed(A)>>>B[4:0],
+                          3'b011, 1'b0, A&B,
+                          3'b100, 1'b0, A|B,
+                          3'b101, 1'b0, A^B,
+                          3'b110, 1'b0, A<<B[4:0],
+                          3'b111, 1'b0, A>>B[4:0]
+                        })
     );
 
-    assign {Cout, overflow, result} = out;
+    assign {overflow, result} = out;
     
 endmodule
 

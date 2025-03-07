@@ -71,7 +71,7 @@ static void exec_once() {
   ftrace(pc, instru);
 
   // write iringbuf
-  // write_iringbuf(pc, instru);
+  write_iringbuf(pc, instru);
   
   /* run a cycle */
   single_cycle();

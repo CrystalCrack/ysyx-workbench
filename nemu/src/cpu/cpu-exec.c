@@ -48,7 +48,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 static void exec_once(Decode *s, vaddr_t pc) {
 
   // write iringbuf
-  write_iringbuf(pc, vaddr_ifetch(pc, 4));
+  IFDEF(CONFIG_ITRACE, write_iringbuf(pc, vaddr_ifetch(pc, 4)));
 
   s->pc = pc;
   s->snpc = pc;
@@ -86,12 +86,18 @@ static void exec_once(Decode *s, vaddr_t pc) {
 static void execute(uint64_t n) {
   Decode s;
   for (;n > 0; n --) {
+
     exec_once(&s, cpu.pc);
+
     g_nr_guest_inst ++;
+
     trace_and_difftest(&s, cpu.pc);
+
     // check watchpoint
     if(check_wp()) { nemu_state.state = NEMU_STOP; }
     if (nemu_state.state != NEMU_RUNNING) break;
+
+    // device
     IFDEF(CONFIG_DEVICE, device_update());
   }
 }
@@ -106,7 +112,7 @@ static void statistic() {
 }
 
 void assert_fail_msg() {
-  display_iringbuf();
+  IFDEF(CONFIG_ITRACE, display_iringbuf());
   isa_reg_display();
   statistic();
 }

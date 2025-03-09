@@ -49,6 +49,8 @@ VM_USER_LDLIBS = \
 # User .cpp files (from .cpp's on Verilator command line)
 VM_USER_CLASSES = \
 	cpu \
+	mmio \
+	timer \
 	difftest \
 	expr \
 	sdb \
@@ -61,6 +63,7 @@ VM_USER_CLASSES = \
 # User .cpp directories (from .cpp's on Verilator command line)
 VM_USER_DIR = \
 	/home/crystc/ysyx-workbench/npc/csrc \
+	/home/crystc/ysyx-workbench/npc/csrc/device \
 	/home/crystc/ysyx-workbench/npc/csrc/infrastructure \
 	/home/crystc/ysyx-workbench/npc/csrc/utils \
 
@@ -75,6 +78,10 @@ include $(VERILATOR_ROOT)/include/verilated.mk
 VPATH += $(VM_USER_DIR)
 
 cpu.o: /home/crystc/ysyx-workbench/npc/csrc/cpu.cpp
+	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
+mmio.o: /home/crystc/ysyx-workbench/npc/csrc/device/mmio.c
+	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
+timer.o: /home/crystc/ysyx-workbench/npc/csrc/device/timer.c
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
 difftest.o: /home/crystc/ysyx-workbench/npc/csrc/infrastructure/difftest.c
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<

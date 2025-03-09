@@ -28,11 +28,21 @@ uint8_t* guest_to_host(paddr_t paddr) { return pmem + paddr - CONFIG_MBASE; }
 paddr_t host_to_guest(uint8_t *haddr) { return haddr - pmem + CONFIG_MBASE; }
 
 static word_t pmem_read(paddr_t addr, int len) {
+
   word_t ret = host_read(guest_to_host(addr), len);
+  
+  if(addr != cpu.pc){
+    IFDEF(CONFIG_MTRACE, printf("(NEMU) " FMT_WORD ":read from " FMT_WORD ", get " FMT_WORD "\n",cpu.pc , addr, ret));
+    // printf(ANSI_FG_GREEN "(NEMU) " FMT_WORD ":read from " FMT_WORD ", get " FMT_WORD "\n" ANSI_NONE ,cpu.pc , addr, ret);
+  }
+  
   return ret;
 }
 
 static void pmem_write(paddr_t addr, int len, word_t data) {
+
+  IFDEF(CONFIG_MTRACE, printf("(NEMU) " FMT_WORD ":write " FMT_WORD " to " FMT_WORD "\n",cpu.pc , data, addr));
+  // printf(ANSI_FG_GREEN "(NEMU) " FMT_WORD ":write " FMT_WORD " to " FMT_WORD "\n" ANSI_NONE,cpu.pc , data, addr);
   host_write(guest_to_host(addr), len, data);
 }
 
@@ -51,7 +61,6 @@ void init_mem() {
 }
 
 word_t paddr_read(paddr_t addr, int len) {
-  IFDEF(CONFIG_MTRACE, printf("pread %d from " FMT_PADDR "\n", len, addr));
   if (likely(in_pmem(addr))) return pmem_read(addr, len);
   IFDEF(CONFIG_DEVICE, return mmio_read(addr, len));
   out_of_bound(addr);
@@ -59,7 +68,6 @@ word_t paddr_read(paddr_t addr, int len) {
 }
 
 void paddr_write(paddr_t addr, int len, word_t data) {
-  IFDEF(CONFIG_MTRACE, printf("pwrite %d to " FMT_PADDR "\n", len, addr));
   if (likely(in_pmem(addr))) { pmem_write(addr, len, data); return; }
   IFDEF(CONFIG_DEVICE, mmio_write(addr, len, data); return);
   out_of_bound(addr);

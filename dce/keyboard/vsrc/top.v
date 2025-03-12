@@ -33,7 +33,7 @@ ps2_keyboard ps2_controller(
 reg [2:0] state = 0;
 localparam IDLE     = 3'b000;
 localparam BREAK    = 3'b001;
-localparam NEW_KEY  = 3'b010;
+//localparam NEW_KEY  = 3'b010;
 
 // Key Processing
 reg [7:0] current_key = 0;

@@ -39,6 +39,13 @@ static debug_module_config_t difftest_dm_config = {
 struct diff_context_t {
   word_t gpr[MUXDEF(CONFIG_RVE, 16, 32)];
   word_t pc;
+<<<<<<< HEAD
+=======
+  word_t mtvec;
+  word_t mstatus;
+  word_t mcause;
+  word_t mepc;
+>>>>>>> 2ef2916 (restore git repo)
 };
 
 static sim_t* s = NULL;
@@ -60,6 +67,14 @@ void sim_t::diff_get_regs(void* diff_context) {
     ctx->gpr[i] = state->XPR[i];
   }
   ctx->pc = state->pc;
+<<<<<<< HEAD
+=======
+  // CSR
+  ctx->mtvec = state->mtvec->read();
+  ctx->mstatus = state->mstatus->read();
+  ctx->mcause = state->mcause->read();
+  ctx->mepc = state->mepc->read();
+>>>>>>> 2ef2916 (restore git repo)
 }
 
 void sim_t::diff_set_regs(void* diff_context) {
@@ -68,6 +83,14 @@ void sim_t::diff_set_regs(void* diff_context) {
     state->XPR.write(i, (sword_t)ctx->gpr[i]);
   }
   state->pc = ctx->pc;
+<<<<<<< HEAD
+=======
+  // CSR
+  state->mtvec->write(ctx->mtvec);
+  state->mstatus->write(ctx->mstatus);
+  state->mcause->write(ctx->mcause);
+  state->mepc->write(ctx->mepc);
+>>>>>>> 2ef2916 (restore git repo)
 }
 
 void sim_t::diff_memcpy(reg_t dest, void* src, size_t n) {

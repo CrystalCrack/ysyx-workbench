@@ -67,7 +67,11 @@ int main(int argc, char *argv[]) {
 
   free_sdb();
 
+<<<<<<< HEAD
   IFDEF(CONFIG_TRACE, free_trace());
+=======
+  IFDEF(CONFIG_FTRACE, free_trace());
+>>>>>>> 2ef2916 (restore git repo)
 
   return is_exit_status_bad();
 }

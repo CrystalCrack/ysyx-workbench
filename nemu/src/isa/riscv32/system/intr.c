@@ -16,13 +16,6 @@
 #include <isa.h>
 
 word_t isa_raise_intr(word_t NO, vaddr_t epc) {
-<<<<<<< HEAD
-  /* TODO: Trigger an interrupt/exception with ``NO''.
-   * Then return the address of the interrupt/exception vector.
-   */
-
-  return 0;
-=======
   IFDEF(CONFIG_ETRACE, printf(ANSI_FG_YELLOW "Exception trace:" ANSI_NONE " epc = " FMT_WORD " cause = " FMT_WORD "\n", epc, NO));
   cpu.csrs.mcause = NO;
   cpu.csrs.mepc = epc;
@@ -35,7 +28,6 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   cpu.csrs.mstatus &= ~(1 << 3); // clear mie
 
   return cpu.csrs.mtvec;
->>>>>>> 2ef2916 (restore git repo)
 }
 
 word_t isa_query_intr() {

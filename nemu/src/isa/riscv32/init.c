@@ -30,15 +30,10 @@ static void restart() {
   /* Set the initial program counter. */
   cpu.pc = RESET_VECTOR;
 
-<<<<<<< HEAD
-  /* The zero register is always 0. */
-  cpu.gpr[0] = 0;
-=======
   cpu.gpr[0] = 0;
 
   cpu.csrs.mstatus = 0x1800;
 
->>>>>>> 2ef2916 (restore git repo)
 }
 
 void init_isa() {

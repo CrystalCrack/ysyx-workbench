@@ -19,17 +19,12 @@
 #include <cpu/decode.h>
 
 #define R(i) gpr(i)
-<<<<<<< HEAD
-=======
 #define CSR(i) *get_csr(i)
->>>>>>> 2ef2916 (restore git repo)
 #define Mr vaddr_read
 #define Mw vaddr_write
 
 IFDEF(CONFIG_FTRACE, void ftrace(int rd, int rs, vaddr_t pc, vaddr_t dnpc));
 
-<<<<<<< HEAD
-=======
 static word_t* get_csr(int csr) {
   switch (csr) {
     case 0x305: return &cpu.csrs.mtvec;
@@ -40,7 +35,6 @@ static word_t* get_csr(int csr) {
   }
 }
 
->>>>>>> 2ef2916 (restore git repo)
 enum {
   TYPE_I, TYPE_U, TYPE_S, TYPE_J, TYPE_Reg, TYPE_B,
   TYPE_N, // none
@@ -128,14 +122,11 @@ static int decode_exec(Decode *s) {
   INSTPAT("???????????? ????? 110 ????? 00100 11", ori     , I, R(rd) = src1 | imm);
   INSTPAT("0000001 ????? ????? 011 ????? 01100 11", mulhu  , Reg, R(rd) = ((uint64_t)src1 * (uint64_t)src2) >> 32);
 
-<<<<<<< HEAD
-=======
   INSTPAT("???????????? ????? 001 ????? 1110011", csrrw   , I, R(rd) = CSR(imm); CSR(imm) = src1);  // csr read write
   INSTPAT("???????????? ????? 010 ????? 1110011", csrrs   , I, R(rd) = CSR(imm); CSR(imm) = CSR(imm) | src1);  // csr read set
 
   INSTPAT("000000000000 00000 000 00000 11100 11", ecall  , N, s->dnpc = isa_raise_intr(R(17), s->pc));
   INSTPAT("0011000 00010 00000 000 00000 11100 11", mret  , N, s->dnpc = CSR(0x341));
->>>>>>> 2ef2916 (restore git repo)
   INSTPAT("0000000 00001 00000 000 00000 11100 11", ebreak , N, NEMUTRAP(s->pc, R(10))); // R(10) is $a0
   INSTPAT("??????? ????? ????? ??? ????? ????? ??", inv    , N, INV(s->pc));
   INSTPAT_END();

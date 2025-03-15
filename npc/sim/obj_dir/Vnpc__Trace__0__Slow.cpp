@@ -504,7 +504,7 @@ VL_ATTR_COLD void Vnpc___024root__trace_full_top_0(void* voidSelf, VerilatedVcd:
 extern const VlWide<13>/*415:0*/ Vnpc__ConstPool__CONST_h29d7fa2e_0;
 extern const VlWide<10>/*319:0*/ Vnpc__ConstPool__CONST_h8b049ae1_0;
 extern const VlWide<11>/*351:0*/ Vnpc__ConstPool__CONST_h845ddab0_0;
-extern const VlWide<13>/*415:0*/ Vnpc__ConstPool__CONST_h82d8b3ba_0;
+extern const VlWide<13>/*415:0*/ Vnpc__ConstPool__CONST_hb8eeb3ba_0;
 
 VL_ATTR_COLD void Vnpc___024root__trace_full_sub_0(Vnpc___024root* vlSelf, VerilatedVcd::Buffer* bufp) {
     if (false && vlSelf) {}  // Prevent unused
@@ -1155,7 +1155,7 @@ VL_ATTR_COLD void Vnpc___024root__trace_full_sub_0(Vnpc___024root* vlSelf, Veril
     bufp->fullIData(oldp+348,(0x20U),32);
     bufp->fullIData(oldp+349,(1U),32);
     bufp->fullIData(oldp+350,(0x26U),32);
-    bufp->fullWData(oldp+351,(Vnpc__ConstPool__CONST_h82d8b3ba_0),387);
+    bufp->fullWData(oldp+351,(Vnpc__ConstPool__CONST_hb8eeb3ba_0),387);
     bufp->fullIData(oldp+364,(0U),32);
     bufp->fullCData(oldp+365,(0U),8);
     bufp->fullIData(oldp+366,(4U),32);

@@ -302,7 +302,7 @@ module IDU(
         .key         	(inst_name          ),
         .default_out 	(3'b0  ),
         .lut         	({  `INST_NAME_LEN'd1, 3'd0,
-                            `INST_NAME_LEN'd2, 3'd0,
+                            `INST_NAME_LEN'd2, 3'd4,
                             `INST_NAME_LEN'd3, 3'd0,
                             `INST_NAME_LEN'd4, 3'd0,
                             `INST_NAME_LEN'd5, 3'd2,

@@ -177,7 +177,7 @@ module IDU(
     assign immJ = {{12{inst[31]}}, inst[19:12], inst[20], inst[30:21], 1'b0};
     assign rs1 = (stop_sim | inst_is_lui | inst_is_ecall | inst_is_mret) ? 5'd0 : inst[19:15];
     assign rs2 = inst_is_csrrw ? 0 : 
-                 inst_is_ecall ? 5'd17 : inst[24:20];
+                 inst_is_ecall ? 5'd15 : inst[24:20];
     assign rd = stop_sim ? 10 : inst[11:7];
     assign funct3 = inst[14:12];
     assign funct7 = inst[31:25];

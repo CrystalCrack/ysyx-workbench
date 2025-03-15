@@ -53,7 +53,7 @@ void Cget_reg(int addr, int* ret_code){
 }
 
 void Cget_CSR(int* mtvec_rdata, int* mcause_rdata, int* mepc_rdata, int* mstatus_rdata){
-  svSetScope(svGetScopeFromName("TOP.npc.u_CSR"));
+  svSetScope(svGetScopeFromName("TOP.npc"));
   get_CSR(mtvec_rdata, mcause_rdata, mepc_rdata, mstatus_rdata);
 }
 

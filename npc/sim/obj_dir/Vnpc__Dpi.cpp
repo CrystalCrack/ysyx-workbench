@@ -14,6 +14,14 @@
 #include "Vnpc__Dpi.h"
 #include "Vnpc.h"
 
+#ifndef VL_DPIDECL_get_CSR_
+#define VL_DPIDECL_get_CSR_
+void get_CSR(int* mtvec_rdata, int* mcause_rdata, int* mepc_rdata, int* mstatus_rdata) {
+    // DPI export at /home/crystc/ysyx-workbench/npc/vsrc/npc.sv:251:19
+    return Vnpc::get_CSR(mtvec_rdata, mcause_rdata, mepc_rdata, mstatus_rdata);
+}
+#endif
+
 #ifndef VL_DPIDECL_get_pc_inst_
 #define VL_DPIDECL_get_pc_inst_
 void get_pc_inst(int* cpu_pc, int* cpu_inst) {

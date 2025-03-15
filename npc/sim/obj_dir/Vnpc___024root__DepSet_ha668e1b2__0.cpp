@@ -16,6 +16,11 @@ void Vnpc___024root____Vdpiexp_npc__DOT__get_pc_inst_TOP(Vnpc__Syms* __restrict 
     cpu_inst = vlSymsp->TOP.npc__DOT__inst;
 }
 
+void Vnpc___024root____Vdpiexp_npc__DOT__get_CSR_TOP(Vnpc__Syms* __restrict vlSymsp, IData/*31:0*/ &mtvec_rdata, IData/*31:0*/ &mcause_rdata, IData/*31:0*/ &mepc_rdata, IData/*31:0*/ &mstatus_rdata) {
+    VL_DEBUG_IF(VL_DBG_MSGF("+    Vnpc___024root____Vdpiexp_npc__DOT__get_CSR_TOP\n"); );
+    // Init
+}
+
 extern "C" void ebreak();
 
 VL_INLINE_OPT void Vnpc___024root____Vdpiimwrap_npc__DOT__ebreak_TOP() {

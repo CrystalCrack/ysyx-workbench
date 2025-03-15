@@ -16,13 +16,15 @@ extern "C" {
 
 
     // DPI EXPORTS
+    // DPI export at /home/crystc/ysyx-workbench/npc/vsrc/npc.sv:251:19
+    extern void get_CSR(int* mtvec_rdata, int* mcause_rdata, int* mepc_rdata, int* mstatus_rdata);
     // DPI export at /home/crystc/ysyx-workbench/npc/vsrc/npc.sv:243:19
     extern void get_pc_inst(int* cpu_pc, int* cpu_inst);
     // DPI export at /home/crystc/ysyx-workbench/npc/vsrc/RegisterFile.v:29:19
     extern void get_reg(int addr, int* reg_data);
 
     // DPI IMPORTS
-    // DPI import at /home/crystc/ysyx-workbench/npc/vsrc/npc.sv:250:34
+    // DPI import at /home/crystc/ysyx-workbench/npc/vsrc/npc.sv:262:34
     extern void ebreak();
     // DPI import at /home/crystc/ysyx-workbench/npc/vsrc/memory.v:10:33
     extern int pmem_read(int raddr);

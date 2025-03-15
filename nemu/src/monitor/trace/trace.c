@@ -131,6 +131,7 @@ void free_trace(){
     }
 }
 
+
 #define IRNGBUF_LEN 32
 typedef struct iringbuf_unit {
   vaddr_t pc;

@@ -20,7 +20,7 @@ void am_init_monitor();
 void engine_start();
 int is_exit_status_bad();
 void free_sdb();
-#ifdef CONFIG_ITRACE
+#ifdef CONFIG_TRACE
 void free_trace();
 #endif
 
@@ -67,7 +67,7 @@ int main(int argc, char *argv[]) {
 
   free_sdb();
 
-  IFDEF(CONFIG_FTRACE, free_trace());
+  IFDEF(CONFIG_TRACE, free_trace());
 
   return is_exit_status_bad();
 }

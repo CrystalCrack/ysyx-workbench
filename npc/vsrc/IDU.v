@@ -496,7 +496,7 @@ module IDU(
     );
     
     assign csr_wen = inst_is_csrrw ? csr_wen_int :
-                     inst_is_csrrs ? 3'b100 :
+                     inst_is_csrrs ? csr_wen_int :
                      inst_is_ecall ? 3'b011 : 3'b000;
 
 

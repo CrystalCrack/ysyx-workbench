@@ -3652,7 +3652,9 @@ VL_INLINE_OPT void Vnpc___024root___nba_sequent__TOP__0(Vnpc___024root* vlSelf) 
     if (vlSelf->rst) {
         vlSelf->npc__DOT__mcause_rdata = 0U;
     } else if ((2U & (IData)(vlSelf->npc__DOT____Vcellout__idu_inst__csr_wen))) {
-        vlSelf->npc__DOT__mcause_rdata = vlSelf->npc__DOT__rf_rdata2;
+        vlSelf->npc__DOT__mcause_rdata = ((0x73U == vlSelf->npc__DOT__inst)
+                                           ? vlSelf->npc__DOT__rf_rdata2
+                                           : (IData)(vlSelf->npc__DOT__u_ALU__DOT__out));
     }
     vlSelf->npc__DOT__sel_csr__DOT__i0__DOT__pair_list[1U] 
         = (0x34200000000ULL | (QData)((IData)(vlSelf->npc__DOT__mcause_rdata)));
@@ -3661,7 +3663,9 @@ VL_INLINE_OPT void Vnpc___024root___nba_sequent__TOP__0(Vnpc___024root* vlSelf) 
     if (vlSelf->rst) {
         vlSelf->npc__DOT__mepc_rdata = 0U;
     } else if ((1U & (IData)(vlSelf->npc__DOT____Vcellout__idu_inst__csr_wen))) {
-        vlSelf->npc__DOT__mepc_rdata = vlSelf->npc__DOT__pc;
+        vlSelf->npc__DOT__mepc_rdata = ((0x73U == vlSelf->npc__DOT__inst)
+                                         ? vlSelf->npc__DOT__pc
+                                         : (IData)(vlSelf->npc__DOT__u_ALU__DOT__out));
     }
     vlSelf->npc__DOT__sel_csr__DOT__i0__DOT__pair_list[2U] 
         = (0x34100000000ULL | (QData)((IData)(vlSelf->npc__DOT__mepc_rdata)));

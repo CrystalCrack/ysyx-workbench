@@ -102,17 +102,22 @@ void initialize(int argc, char** argv){
     state = RUNNING;
 }
 
+int is_deinit = 0;
+
 void deinitialize(){
     free_sdb();
 
     free_trace();
 
-    cpu_deinit();
+    if(is_deinit == 0){
+        cpu_deinit();
+    }
 }
 
 void display_error_msg(){
     display_iringbuf();
     cpu_deinit();
+    is_deinit = 1;
 }
 
 int main(int argc, char** argv){

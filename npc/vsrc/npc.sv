@@ -13,7 +13,7 @@ module npc(
     wire [2:0] rdregsrc;
     wire [1:0] cmp_type;
     wire ALUsrc1;
-    wire ALUsrc2;
+    wire [1:0] ALUsrc2;
     wire jump;
     wire branch;
 
@@ -24,6 +24,7 @@ module npc(
     wire [31:0] rf_rdata2;
     wire [4:0] rf_raddr1;
     wire [4:0] rf_raddr2;
+    wire [11:0] csr_raddr;
 
     /* ALU signals */
     wire [31:0] ALU_result;
@@ -102,13 +103,16 @@ module npc(
         .dwmask(dwmask),
         .dwen(dwen),
         .dvalid(dvalid),
+        .csr_raddr(csr_raddr),
+        .csr_wen({mtvec_wen, mcause_wen, mepc_wen}),
         .stop_sim(stop_sim)
     );
 
     assign rf_wdata = rdregsrc == 0 ? ALU_result :
                       rdregsrc == 1 ? drdata_ext :
                       rdregsrc == 2 ? snpc : 
-                      rdregsrc == 3 ? cmp_result : 32'b0;
+                      rdregsrc == 3 ? cmp_result : 
+                      rdregsrc == 5 ? target_rdata : 32'b0;
 
     assign rf_raddr1 = rs1;
     assign rf_raddr2 = rs2;
@@ -127,7 +131,9 @@ module npc(
     );
     
     assign ALU_A = ALUsrc1 ? pc : rf_rdata1;
-    assign ALU_B = ALUsrc2 ? imm : rf_rdata2;
+    assign ALU_B = (ALUsrc2==2'd0) ? imm : 
+                   (ALUsrc2==2'd1) ? rf_rdata2 :
+                   target_rdata;
     ALU u_ALU(
         .mode(ALU_op),
         .A(ALU_A),
@@ -175,6 +181,63 @@ module npc(
                         funct3 == 3'b001 ? {{16{drdata[15]}}, drdata[15:0]} : //lh
                         funct3 == 3'b101 ? {16'b0, drdata[15:0]} : //lhu
                                   drdata; //lw
+
+    // CSRs
+    wire mtvec_wen, mcause_wen, mepc_wen, mstatus_wen;
+    wire [31:0] mtvec_wdata, mcause_wdata, mepc_wdata, mstatus_wdata;
+    wire [31:0] mtvec_rdata, mcause_rdata, mepc_rdata, mstatus_rdata, target_rdata;
+    
+    MuxKeyWithDefault #(
+        .NR_KEY(4),
+        .KEY_LEN(12),
+        .DATA_LEN(32)
+        )sel_csr(
+        .out         	(target_rdata),
+        .key         	(csr_raddr),
+        .default_out 	(32'h0000_0000),
+        .lut         	({12'h300, mstatus_rdata,
+                         12'h341, mepc_rdata,
+                         12'h342, mcause_rdata,
+                         12'h305, mtvec_rdata})
+    );
+    
+    Reg #(.WIDTH(32), .RESET_VAL(0))
+        mtvec(
+        .clk  	(clk   ),
+        .rst  	(rst   ),
+        .din  	(mtvec_wdata   ),
+        .dout 	(mtvec_rdata),  
+        .wen  	(mtvec_wen)   
+    );
+    assign mtvec_wdata = ALU_result;
+    Reg #(.WIDTH(32), .RESET_VAL(0))
+        mcause(
+        .clk  	(clk   ),
+        .rst  	(rst   ),
+        .din  	(mcause_wdata   ),
+        .dout 	(mcause_rdata),  
+        .wen  	(mcause_wen)   
+    );
+    assign mcause_wdata = rf_rdata2;
+    Reg #(.WIDTH(32), .RESET_VAL(0))
+        mepc(
+        .clk  	(clk   ),
+        .rst  	(rst   ),
+        .din  	(mepc_wdata   ),
+        .dout 	(mepc_rdata),  
+        .wen  	(mepc_wen)   
+    );
+    assign mepc_wdata = pc;
+    Reg #(.WIDTH(32), .RESET_VAL(32'h0000_1800))
+        mstatus(
+        .clk  	(clk   ),
+        .rst  	(rst   ),
+        .din  	(mstatus_wdata   ),
+        .dout 	(mstatus_rdata),  
+        .wen  	(mstatus_wen)   
+    );
+    assign mstatus_wen = 1'b0;
+    assign mstatus_wdata = 32'h0000_1800;
 
     export "DPI-C" function get_pc_inst;
     function void get_pc_inst();

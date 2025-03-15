@@ -12,19 +12,21 @@ module IDU(
 
     output [31:0] imm,
     output [2:0] ALU_op,
-    output [2:0] rdregsrc, // 0 for ALU, 1 for mem, 2 for snpc, 3 for compare_result, 4 for disable
+    output [2:0] rdregsrc, // 0 for ALU, 1 for mem, 2 for snpc, 3 for compare_result, 4 for disable, 5 for CSR
     output ALUsrc1, // 0 for regsrc1, 1 for pc
-    output ALUsrc2, // 0 for regsrc2, 1 for imm
+    output [1:0] ALUsrc2, // 0 for regsrc2, 1 for imm
     output jump,
     output branch,
     output [1:0] cmp_type, // 0 for equal, 1 for unequal, 2 for less signed, 3 for less unsigned
     output [7:0] dwmask,
     output dwen,
     output dvalid,
+    output [11:0] csr_raddr,
+    output [2:0] csr_wen, // mtvec, mcause, mepc
 
     output stop_sim
 );
-    parameter NUM_OF_INST = 39;
+    parameter NUM_OF_INST = 43;
 
     wire [`INST_NAME_LEN-1:0] inst_name;
     wire inst_is_addi;
@@ -66,6 +68,10 @@ module IDU(
     wire inst_is_lb;
     wire inst_is_slti;
     wire inst_is_ori;
+    wire inst_is_csrrw;
+    wire inst_is_csrrs;
+    wire inst_is_ecall;
+    wire inst_is_mret;
 
     // decode
     assign inst_is_addi = (opcode == 7'b0010011) && (funct3 == 3'b000);
@@ -107,6 +113,10 @@ module IDU(
     assign inst_is_lb = (opcode == 7'b0000011) && (funct3 == 3'b000);
     assign inst_is_slti = (opcode == 7'b0010011) && (funct3 == 3'b010);
     assign inst_is_ori = (opcode == 7'b0010011) && (funct3 == 3'b110);
+    assign inst_is_csrrw = (opcode == 7'b1110011) && (funct3 == 3'b001);
+    assign inst_is_csrrs = (opcode == 7'b1110011) && (funct3 == 3'b010);
+    assign inst_is_ecall = inst==32'h0000_0073;
+    assign inst_is_mret = inst==32'h3020_0073;
 
 
     assign inst_name =  inst_is_addi ? 1 : //addi
@@ -148,7 +158,11 @@ module IDU(
                         inst_is_lb ? 37 :  // lb
                         inst_is_slti ? 38 :  // slti
                         inst_is_ori ? 39 :  // ori
-                       0; 
+                        inst_is_csrrw ? 40 :  // csrrw
+                        inst_is_csrrs ? 41 :  // csrrs
+                        inst_is_ecall ? 42 :  // ecall
+                        inst_is_mret ? 43 :  // mret
+                        0; 
     
     // assign imm = ({32{inst_is_addi}} & immI) ;
     // assign ALU_op = ({3{inst_is_addi}} & 3'b000);
@@ -161,13 +175,14 @@ module IDU(
     assign immS = {{20{inst[31]}}, inst[31:25], inst[11:7]};
     assign immB = {{20{inst[31]}}, inst[7], inst[30:25], inst[11:8], 1'b0};
     assign immJ = {{12{inst[31]}}, inst[19:12], inst[20], inst[30:21], 1'b0};
-    assign rs1 = (stop_sim | inst_is_lui) ? 5'd0 : inst[19:15];
-    assign rs2 = inst[24:20];
+    assign rs1 = (stop_sim | inst_is_lui | inst_is_ecall | inst_is_mret) ? 5'd0 : inst[19:15];
+    assign rs2 = inst_is_csrrw ? 0 : 
+                 inst_is_ecall ? 5'd17 : inst[24:20];
     assign rd = stop_sim ? 10 : inst[11:7];
     assign funct3 = inst[14:12];
     assign funct7 = inst[31:25];
     assign opcode = inst[6:0];
-    assign jump = inst_is_jal | inst_is_jalr;
+    assign jump = inst_is_jal | inst_is_jalr | inst_is_ecall | inst_is_mret;
 
     MuxKeyWithDefault# (
         .NR_KEY(NUM_OF_INST),
@@ -215,8 +230,12 @@ module IDU(
                             `INST_NAME_LEN'd36, 32'b0,
                             `INST_NAME_LEN'd37, immI,
                             `INST_NAME_LEN'd38, immI,
-                            `INST_NAME_LEN'd39, immI
-                          }          )
+                            `INST_NAME_LEN'd39, immI,
+                            `INST_NAME_LEN'd40, immI,
+                            `INST_NAME_LEN'd41, immI,
+                            `INST_NAME_LEN'd42, 32'b0,
+                            `INST_NAME_LEN'd43, 32'b0
+                                                    })  
     );
 
     MuxKeyWithDefault# (
@@ -265,11 +284,15 @@ module IDU(
                             `INST_NAME_LEN'd36, 3'b111,
                             `INST_NAME_LEN'd37, 3'b000,
                             `INST_NAME_LEN'd38, 3'b001,
-                            `INST_NAME_LEN'd39, 3'b100
+                            `INST_NAME_LEN'd39, 3'b100,
+                            `INST_NAME_LEN'd40, 3'b001,
+                            `INST_NAME_LEN'd41, 3'b100,
+                            `INST_NAME_LEN'd42, 3'b001,
+                            `INST_NAME_LEN'd43, 3'b001
                           }          )
     );
     
-    // 0 for ALU, 1 for mem, 2 for snpc, 3 for compare_result, 4 for disable
+    // 0 for ALU, 1 for mem, 2 for snpc, 3 for compare_result, 4 for disable, 5 for CSR
     MuxKeyWithDefault# (
         .NR_KEY(NUM_OF_INST),
         .KEY_LEN(`INST_NAME_LEN),
@@ -316,7 +339,11 @@ module IDU(
                             `INST_NAME_LEN'd36, 3'd0,
                             `INST_NAME_LEN'd37, 3'd1,
                             `INST_NAME_LEN'd38, 3'd3,
-                            `INST_NAME_LEN'd39, 3'd0
+                            `INST_NAME_LEN'd39, 3'd0,
+                            `INST_NAME_LEN'd40, 3'd5,
+                            `INST_NAME_LEN'd41, 3'd5,
+                            `INST_NAME_LEN'd42, 3'd4,
+                            `INST_NAME_LEN'd43, 3'd4
                           }          )
     );
 
@@ -367,58 +394,66 @@ module IDU(
                             `INST_NAME_LEN'd36, 1'b0,
                             `INST_NAME_LEN'd37, 1'b0,
                             `INST_NAME_LEN'd38, 1'b0,
-                            `INST_NAME_LEN'd39, 1'b0
+                            `INST_NAME_LEN'd39, 1'b0,
+                            `INST_NAME_LEN'd40, 1'b0,
+                            `INST_NAME_LEN'd41, 1'b0,
+                            `INST_NAME_LEN'd42, 1'b0,
+                            `INST_NAME_LEN'd43, 1'b0
                           }          )
     );
 
-    // 0 for regsrc2, 1 for imm
+    // 0 for regsrc2, 1 for imm, 2 for CSR
     MuxKeyWithDefault# (
         .NR_KEY(NUM_OF_INST),
         .KEY_LEN(`INST_NAME_LEN),
-        .DATA_LEN(1)
+        .DATA_LEN(2)
     ) getALUsrc2(
         .out         	(ALUsrc2          ),
         .key         	(inst_name          ),
-        .default_out 	(1'b1  ),
-        .lut         	({  `INST_NAME_LEN'd1, 1'b1,
-                            `INST_NAME_LEN'd2, 1'b1,
-                            `INST_NAME_LEN'd3, 1'b1,
-                            `INST_NAME_LEN'd4, 1'b1,
-                            `INST_NAME_LEN'd5, 1'b1,
-                            `INST_NAME_LEN'd6, 1'b1,
-                            `INST_NAME_LEN'd7, 1'b1,
-                            `INST_NAME_LEN'd8, 1'b1,
-                            `INST_NAME_LEN'd9, 1'b0,
-                            `INST_NAME_LEN'd10, 1'b1,
-                            `INST_NAME_LEN'd11, 1'b0,
-                            `INST_NAME_LEN'd12, 1'b0,
-                            `INST_NAME_LEN'd13, 1'b0,
-                            `INST_NAME_LEN'd14, 1'b1,
-                            `INST_NAME_LEN'd15, 1'b1,
-                            `INST_NAME_LEN'd16, 1'b1,
-                            `INST_NAME_LEN'd17, 1'b1,
-                            `INST_NAME_LEN'd18, 1'b0,
-                            `INST_NAME_LEN'd19, 1'b1,
-                            `INST_NAME_LEN'd20, 1'b1,
-                            `INST_NAME_LEN'd21, 1'b0,
-                            `INST_NAME_LEN'd22, 1'b0,
-                            `INST_NAME_LEN'd23, 1'b1,
-                            `INST_NAME_LEN'd24, 1'b1,
-                            `INST_NAME_LEN'd25, 1'b1,
-                            `INST_NAME_LEN'd26, 1'b1,
-                            `INST_NAME_LEN'd27, 1'b1,
-                            `INST_NAME_LEN'd28, 1'b1,
-                            `INST_NAME_LEN'd29, 1'b1,
-                            `INST_NAME_LEN'd30, 1'b0,
-                            `INST_NAME_LEN'd31, 1'b1,
-                            `INST_NAME_LEN'd32, 1'b1,
-                            `INST_NAME_LEN'd33, 1'b0,
-                            `INST_NAME_LEN'd34, 1'b1,
-                            `INST_NAME_LEN'd35, 1'b0,
-                            `INST_NAME_LEN'd36, 1'b0,
-                            `INST_NAME_LEN'd37, 1'b1,
-                            `INST_NAME_LEN'd38, 1'b1,
-                            `INST_NAME_LEN'd39, 1'b1
+        .default_out 	(2'b1  ),
+        .lut         	({  `INST_NAME_LEN'd1, 2'b1,
+                            `INST_NAME_LEN'd2, 2'b1,
+                            `INST_NAME_LEN'd3, 2'b1,
+                            `INST_NAME_LEN'd4, 2'b1,
+                            `INST_NAME_LEN'd5, 2'b1,
+                            `INST_NAME_LEN'd6, 2'b1,
+                            `INST_NAME_LEN'd7, 2'b1,
+                            `INST_NAME_LEN'd8, 2'b1,
+                            `INST_NAME_LEN'd9, 2'b0,
+                            `INST_NAME_LEN'd10, 2'b1,
+                            `INST_NAME_LEN'd11, 2'b0,
+                            `INST_NAME_LEN'd12, 2'b0,
+                            `INST_NAME_LEN'd13, 2'b0,
+                            `INST_NAME_LEN'd14, 2'b1,
+                            `INST_NAME_LEN'd15, 2'b1,
+                            `INST_NAME_LEN'd16, 2'b1,
+                            `INST_NAME_LEN'd17, 2'b1,
+                            `INST_NAME_LEN'd18, 2'b0,
+                            `INST_NAME_LEN'd19, 2'b1,
+                            `INST_NAME_LEN'd20, 2'b1,
+                            `INST_NAME_LEN'd21, 2'b0,
+                            `INST_NAME_LEN'd22, 2'b0,
+                            `INST_NAME_LEN'd23, 2'b1,
+                            `INST_NAME_LEN'd24, 2'b1,
+                            `INST_NAME_LEN'd25, 2'b1,
+                            `INST_NAME_LEN'd26, 2'b1,
+                            `INST_NAME_LEN'd27, 2'b1,
+                            `INST_NAME_LEN'd28, 2'b1,
+                            `INST_NAME_LEN'd29, 2'b1,
+                            `INST_NAME_LEN'd30, 2'b0,
+                            `INST_NAME_LEN'd31, 2'b1,
+                            `INST_NAME_LEN'd32, 2'b1,
+                            `INST_NAME_LEN'd33, 2'b0,
+                            `INST_NAME_LEN'd34, 2'b1,
+                            `INST_NAME_LEN'd35, 2'b0,
+                            `INST_NAME_LEN'd36, 2'b0,
+                            `INST_NAME_LEN'd37, 2'b1,
+                            `INST_NAME_LEN'd38, 2'b1,
+                            `INST_NAME_LEN'd39, 2'b1,
+                            `INST_NAME_LEN'd40, 2'b0,
+                            `INST_NAME_LEN'd41, 2'd2,
+                            `INST_NAME_LEN'd42, 2'd2,
+                            `INST_NAME_LEN'd43, 2'd2
                           }          )
     );
 
@@ -441,6 +476,14 @@ module IDU(
 
     // unrecognized instruction or ebreak
     assign stop_sim = inst_is_ebreak | ~(|inst_name);
+
+    // CSR
+    assign csr_raddr = (inst_is_csrrw | inst_is_csrrs) ? inst[31:20] :
+                       inst_is_ecall ? 12'h305 :
+                       inst_is_mret ? 12'h341 : 0;
+    assign csr_wen = inst_is_csrrw ? 3'b100 :
+                     inst_is_csrrs ? 3'b100 :
+                     inst_is_ecall ? 3'b011 : 3'b000;
 
 
 

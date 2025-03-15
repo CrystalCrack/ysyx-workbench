@@ -96,6 +96,10 @@ void display_ref_dut_regs(CPU_reg *ref_r){
     Log("reg[%d]: ref = " FMT_WORD ", dut = " FMT_WORD, i, ref_r->gpr[i], this_r.gpr[i]);
   }
   Log("PC: ref = " FMT_WORD ", dut = " FMT_WORD, ref_r->pc, this_r.pc);
+  Log("mtvec: ref = " FMT_WORD ", dut = " FMT_WORD, ref_r->mtvec, this_r.mtvec);
+  Log("mstatus: ref = " FMT_WORD ", dut = " FMT_WORD, ref_r->mstatus, this_r.mstatus);
+  Log("mcause: ref = " FMT_WORD ", dut = " FMT_WORD, ref_r->mcause, this_r.mcause);
+  Log("mepc: ref = " FMT_WORD ", dut = " FMT_WORD, ref_r->mepc, this_r.mepc);
 }
 
 static void checkregs(CPU_reg *ref, vaddr_t pc) {

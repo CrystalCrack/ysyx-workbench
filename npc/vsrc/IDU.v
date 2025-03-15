@@ -285,10 +285,10 @@ module IDU(
                             `INST_NAME_LEN'd37, 3'b000,
                             `INST_NAME_LEN'd38, 3'b001,
                             `INST_NAME_LEN'd39, 3'b100,
-                            `INST_NAME_LEN'd40, 3'b001,
+                            `INST_NAME_LEN'd40, 3'b000,
                             `INST_NAME_LEN'd41, 3'b100,
-                            `INST_NAME_LEN'd42, 3'b001,
-                            `INST_NAME_LEN'd43, 3'b001
+                            `INST_NAME_LEN'd42, 3'b000,
+                            `INST_NAME_LEN'd43, 3'b000
                           }          )
     );
     

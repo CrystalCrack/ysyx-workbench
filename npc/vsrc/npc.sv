@@ -105,6 +105,7 @@ module npc(
         .dvalid(dvalid),
         .csr_raddr(csr_raddr),
         .csr_wen({mtvec_wen, mcause_wen, mepc_wen}),
+        .inst_is_ecall(inst_is_ecall),
         .stop_sim(stop_sim)
     );
 
@@ -186,6 +187,7 @@ module npc(
     wire mtvec_wen, mcause_wen, mepc_wen, mstatus_wen;
     wire [31:0] mtvec_wdata, mcause_wdata, mepc_wdata, mstatus_wdata;
     wire [31:0] mtvec_rdata, mcause_rdata, mepc_rdata, mstatus_rdata, target_rdata;
+    wire inst_is_ecall;
     
     MuxKeyWithDefault #(
         .NR_KEY(4),
@@ -218,7 +220,7 @@ module npc(
         .dout 	(mcause_rdata),  
         .wen  	(mcause_wen)   
     );
-    assign mcause_wdata = rf_rdata2;
+    assign mcause_wdata = inst_is_ecall ? rf_rdata2 : ALU_result;
     Reg #(.WIDTH(32), .RESET_VAL(0))
         mepc(
         .clk  	(clk   ),
@@ -227,7 +229,7 @@ module npc(
         .dout 	(mepc_rdata),  
         .wen  	(mepc_wen)   
     );
-    assign mepc_wdata = pc;
+    assign mepc_wdata = inst_is_ecall ? pc : ALU_result;
     Reg #(.WIDTH(32), .RESET_VAL(32'h0000_1800))
         mstatus(
         .clk  	(clk   ),

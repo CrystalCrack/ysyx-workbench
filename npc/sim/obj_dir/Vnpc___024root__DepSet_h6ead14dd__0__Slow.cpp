@@ -1095,8 +1095,9 @@ VL_ATTR_COLD void Vnpc___024root___stl_sequent__TOP__0(Vnpc___024root* vlSelf) {
                                              >> 0x14U)));
         vlSelf->npc__DOT____Vcellout__idu_inst__csr_wen 
             = ((IData)(vlSelf->npc__DOT__idu_inst__DOT__inst_is_csrrs)
-                ? 4U : ((0x73U == vlSelf->npc__DOT__inst)
-                         ? 3U : 0U));
+                ? (IData)(vlSelf->npc__DOT__idu_inst__DOT__csr_wen_int)
+                : ((0x73U == vlSelf->npc__DOT__inst)
+                    ? 3U : 0U));
     }
     vlSelf->npc__DOT__sel_csr__DOT__i0__DOT__lut_out 
         = ((- (IData)(((IData)(vlSelf->npc__DOT__csr_raddr) 

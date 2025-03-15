@@ -23,6 +23,7 @@ module IDU(
     output dvalid,
     output [11:0] csr_raddr,
     output [2:0] csr_wen, // mtvec, mcause, mepc
+    output inst_is_ecall,
 
     output stop_sim
 );
@@ -70,7 +71,6 @@ module IDU(
     wire inst_is_ori;
     wire inst_is_csrrw;
     wire inst_is_csrrs;
-    wire inst_is_ecall;
     wire inst_is_mret;
 
     // decode

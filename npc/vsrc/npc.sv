@@ -131,8 +131,8 @@ module npc(
     );
     
     assign ALU_A = ALUsrc1 ? pc : rf_rdata1;
-    assign ALU_B = (ALUsrc2==2'd0) ? imm : 
-                   (ALUsrc2==2'd1) ? rf_rdata2 :
+    assign ALU_B = (ALUsrc2==2'd0) ? rf_rdata2 : 
+                   (ALUsrc2==2'd1) ? imm :
                    target_rdata;
     ALU u_ALU(
         .mode(ALU_op),

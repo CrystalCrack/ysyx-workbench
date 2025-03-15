@@ -17,7 +17,7 @@
 #ifndef VL_DPIDECL_get_pc_inst_
 #define VL_DPIDECL_get_pc_inst_
 void get_pc_inst(int* cpu_pc, int* cpu_inst) {
-    // DPI export at /home/crystc/ysyx-workbench/npc/vsrc/npc.sv:180:19
+    // DPI export at /home/crystc/ysyx-workbench/npc/vsrc/npc.sv:243:19
     return Vnpc::get_pc_inst(cpu_pc, cpu_inst);
 }
 #endif

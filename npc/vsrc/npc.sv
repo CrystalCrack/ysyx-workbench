@@ -247,6 +247,18 @@ module npc(
         cpu_inst = inst;
     endfunction
 
+    export "DPI-C" function get_CSR;
+    function void get_CSR();
+        output int mtvec_rdata;
+        output int mcause_rdata;
+        output int mepc_rdata;
+        output int mstatus_rdata;
+        mtvec_rdata = mtvec_rdata;
+        mcause_rdata = mcause_rdata;
+        mepc_rdata = mepc_rdata;
+        mstatus_rdata = mstatus_rdata;
+    endfunction
+
     import "DPI-C" function void ebreak();
     always @ (posedge clk) begin
         if(stop_sim) begin

@@ -52,6 +52,11 @@ void Cget_reg(int addr, int* ret_code){
   get_reg(addr, ret_code);
 }
 
+void Cget_CSR(int* mtvec_rdata, int* mcause_rdata, int* mepc_rdata, int* mstatus_rdata){
+  svSetScope(svGetScopeFromName("TOP.npc.u_CSR"));
+  get_CSR(mtvec_rdata, mcause_rdata, mepc_rdata, mstatus_rdata);
+}
+
 void Cget_pc_inst(uint32_t* pc, uint32_t* inst){
   svSetScope(svGetScopeFromName("TOP.npc"));
   int pc_temp, inst_temp;
@@ -196,5 +201,6 @@ CPU_reg get_cpu_state(){
     Cget_reg(i, (int*)&_this.gpr[i]);
   }
   Cget_pc_inst(&_this.pc, NULL);
+  Cget_CSR((int*)&_this.mtvec, (int*)&_this.mcause, (int*)&_this.mepc, (int*)&_this.mstatus);
   return _this;
 }

@@ -71,6 +71,22 @@ bool difftest_checkregs(CPU_reg *ref_r, vaddr_t pc) {
       Log("reg[%d] mismatch: ref = " FMT_WORD ", dut = " FMT_WORD, i, ref_r->gpr[i], this_r.gpr[i]);
     }
   }
+  if(this_r.mtvec != ref_r->mtvec){
+    flag = false;
+    Log("mtvec mismatch: ref = " FMT_WORD ", dut = " FMT_WORD, ref_r->mtvec, this_r.mtvec);
+  }
+  if(this_r.mstatus != ref_r->mstatus){
+    flag = false;
+    Log("mstatus mismatch: ref = " FMT_WORD ", dut = " FMT_WORD, ref_r->mstatus, this_r.mstatus);
+  }
+  if(this_r.mcause != ref_r->mcause){
+    flag = false;
+    Log("mcause mismatch: ref = " FMT_WORD ", dut = " FMT_WORD, ref_r->mcause, this_r.mcause);
+  }
+  if(this_r.mepc != ref_r->mepc){
+    flag = false;
+    Log("mepc mismatch: ref = " FMT_WORD ", dut = " FMT_WORD, ref_r->mepc, this_r.mepc);
+  }
   return flag;
 }
 

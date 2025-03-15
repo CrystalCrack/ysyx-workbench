@@ -249,14 +249,14 @@ module npc(
 
     export "DPI-C" function get_CSR;
     function void get_CSR();
-        output int mtvec_rdata;
-        output int mcause_rdata;
-        output int mepc_rdata;
-        output int mstatus_rdata;
-        mtvec_rdata = mtvec_rdata;
-        mcause_rdata = mcause_rdata;
-        mepc_rdata = mepc_rdata;
-        mstatus_rdata = mstatus_rdata;
+        output int mtvec_data;
+        output int mcause_data;
+        output int mepc_data;
+        output int mstatus_data;
+        mtvec_data = mtvec_rdata;
+        mcause_data = mcause_rdata;
+        mepc_data = mepc_rdata;
+        mstatus_data = mstatus_rdata;
     endfunction
 
     import "DPI-C" function void ebreak();

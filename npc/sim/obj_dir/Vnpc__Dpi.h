@@ -17,7 +17,7 @@ extern "C" {
 
     // DPI EXPORTS
     // DPI export at /home/crystc/ysyx-workbench/npc/vsrc/npc.sv:251:19
-    extern void get_CSR(int* mtvec_rdata, int* mcause_rdata, int* mepc_rdata, int* mstatus_rdata);
+    extern void get_CSR(int* mtvec_data, int* mcause_data, int* mepc_data, int* mstatus_data);
     // DPI export at /home/crystc/ysyx-workbench/npc/vsrc/npc.sv:243:19
     extern void get_pc_inst(int* cpu_pc, int* cpu_inst);
     // DPI export at /home/crystc/ysyx-workbench/npc/vsrc/RegisterFile.v:29:19

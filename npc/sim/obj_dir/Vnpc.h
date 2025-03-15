@@ -70,7 +70,7 @@ class Vnpc VL_NOT_FINAL : public VerilatedModel {
     const char* name() const;
 
     /// DPI Export functions
-    static void get_CSR(int* mtvec_rdata, int* mcause_rdata, int* mepc_rdata, int* mstatus_rdata);
+    static void get_CSR(int* mtvec_data, int* mcause_data, int* mepc_data, int* mstatus_data);
     static void get_pc_inst(int* cpu_pc, int* cpu_inst);
     static void get_reg(int addr, int* reg_data);
 

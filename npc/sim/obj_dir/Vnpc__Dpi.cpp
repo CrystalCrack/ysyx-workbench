@@ -16,9 +16,9 @@
 
 #ifndef VL_DPIDECL_get_CSR_
 #define VL_DPIDECL_get_CSR_
-void get_CSR(int* mtvec_rdata, int* mcause_rdata, int* mepc_rdata, int* mstatus_rdata) {
+void get_CSR(int* mtvec_data, int* mcause_data, int* mepc_data, int* mstatus_data) {
     // DPI export at /home/crystc/ysyx-workbench/npc/vsrc/npc.sv:251:19
-    return Vnpc::get_CSR(mtvec_rdata, mcause_rdata, mepc_rdata, mstatus_rdata);
+    return Vnpc::get_CSR(mtvec_data, mcause_data, mepc_data, mstatus_data);
 }
 #endif
 

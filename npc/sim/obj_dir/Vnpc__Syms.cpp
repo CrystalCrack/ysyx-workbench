@@ -5,7 +5,7 @@
 #include "Vnpc.h"
 #include "Vnpc___024root.h"
 
-void Vnpc___024root____Vdpiexp_npc__DOT__get_CSR_TOP(Vnpc__Syms* __restrict vlSymsp, IData/*31:0*/ &mtvec_rdata, IData/*31:0*/ &mcause_rdata, IData/*31:0*/ &mepc_rdata, IData/*31:0*/ &mstatus_rdata);
+void Vnpc___024root____Vdpiexp_npc__DOT__get_CSR_TOP(Vnpc__Syms* __restrict vlSymsp, IData/*31:0*/ &mtvec_data, IData/*31:0*/ &mcause_data, IData/*31:0*/ &mepc_data, IData/*31:0*/ &mstatus_data);
 void Vnpc___024root____Vdpiexp_npc__DOT__get_pc_inst_TOP(Vnpc__Syms* __restrict vlSymsp, IData/*31:0*/ &cpu_pc, IData/*31:0*/ &cpu_inst);
 void Vnpc___024root____Vdpiexp_npc__DOT__u_RegisterFile__DOT__get_reg_TOP(Vnpc__Syms* __restrict vlSymsp, IData/*31:0*/ addr, IData/*31:0*/ &reg_data);
 

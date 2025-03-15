@@ -481,7 +481,21 @@ module IDU(
     assign csr_raddr = (inst_is_csrrw | inst_is_csrrs) ? inst[31:20] :
                        inst_is_ecall ? 12'h305 :
                        inst_is_mret ? 12'h341 : 0;
-    assign csr_wen = inst_is_csrrw ? 3'b100 :
+    wire [2:0] csr_wen_int;
+    MuxKeyWithDefault #(
+        .NR_KEY(3),
+        .KEY_LEN(12),
+        .DATA_LEN(3)
+    ) getcsrwen(
+        .out(csr_wen_int),
+        .key(csr_raddr),
+        .default_out(3'b000),
+        .lut({12'h305, 3'b100,
+              12'h342, 3'b010,
+              12'h341, 3'b001})
+    );
+    
+    assign csr_wen = inst_is_csrrw ? csr_wen_int :
                      inst_is_csrrs ? 3'b100 :
                      inst_is_ecall ? 3'b011 : 3'b000;
 

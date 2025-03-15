@@ -17,6 +17,7 @@
 #include "Vnpc___024root.h"
 
 // DPI TYPES for DPI Export callbacks (Internal use)
+using Vnpc__Vcb_get_CSR_t = void (*) (Vnpc__Syms* __restrict vlSymsp, IData/*31:0*/ &mtvec_data, IData/*31:0*/ &mcause_data, IData/*31:0*/ &mepc_data, IData/*31:0*/ &mstatus_data);
 using Vnpc__Vcb_get_pc_inst_t = void (*) (Vnpc__Syms* __restrict vlSymsp, IData/*31:0*/ &cpu_pc, IData/*31:0*/ &cpu_inst);
 using Vnpc__Vcb_get_reg_t = void (*) (Vnpc__Syms* __restrict vlSymsp, IData/*31:0*/ addr, IData/*31:0*/ &reg_data);
 

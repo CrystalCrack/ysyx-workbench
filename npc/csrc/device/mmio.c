@@ -1,4 +1,5 @@
 #include <device.h>
+#include <cpu.h>
 
 extern int sim_time;
 void difftest_skip_ref();
@@ -29,6 +30,9 @@ uint32_t mmio_read(paddr_t addr) {
           // high 32 bits of time
           ret = get_time() >> 32;
         }
+        #ifdef CONFIG_DTRACE
+        printf("(NPC) " FMT_WORD ":read from RTC, get " FMT_WORD "\n", get_cpu_state().pc, ret);
+        #endif
         return ret;
     }
     return 0;
@@ -40,8 +44,11 @@ void mmio_write(paddr_t addr, uint32_t data) {
     if (sim_time-last_simtime < 3) {
         return;
     }
-  last_simtime = sim_time;
+    last_simtime = sim_time;
     if(addr == SERIAL_PORT) {
+        #ifdef CONFIG_DTRACE
+        printf("(NPC) " FMT_WORD ":write to serial port: %c\n", get_cpu_state().pc, (char)data);
+        #endif
         putchar((char)data);
     } else if(addr>=RTC_ADDR && addr<RTC_ADDR+0x8) {
         return;

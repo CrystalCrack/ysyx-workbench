@@ -14,6 +14,10 @@ enum CPU_state {
 typedef struct {
     uint32_t gpr[32];
     uint32_t pc;
+    word_t mtvec;
+    word_t mstatus;
+    word_t mcause;
+    word_t mepc;
 } CPU_reg;
 
 void cpu_init(const char* Vcd_file);

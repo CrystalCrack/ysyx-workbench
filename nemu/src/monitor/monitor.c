@@ -113,7 +113,7 @@ void init_monitor(int argc, char *argv[]) {
   init_log(log_file);
 
   /* Initialize trace. */
-  IFDEF(CONFIG_ITRACE, init_trace(elf_file));
+  IFDEF(CONFIG_TRACE, init_trace(elf_file));
 
   /* Initialize memory. */
   init_mem();

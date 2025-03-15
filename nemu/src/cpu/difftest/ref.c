@@ -33,11 +33,19 @@ __EXPORT void difftest_regcpy(void *dut, bool direction) {
       cpu.gpr[i] = dut_cpu->gpr[i];
     }
     cpu.pc = dut_cpu->pc;
+    cpu.csrs.mtvec = dut_cpu->csrs.mtvec;
+    cpu.csrs.mstatus = dut_cpu->csrs.mstatus;
+    cpu.csrs.mcause = dut_cpu->csrs.mcause;
+    cpu.csrs.mepc = dut_cpu->csrs.mepc;
   } else {
     for(int i = 0; i < 32; i++) {
       dut_cpu->gpr[i] = cpu.gpr[i];
     }
     dut_cpu->pc = cpu.pc;
+    dut_cpu->csrs.mtvec = cpu.csrs.mtvec;
+    dut_cpu->csrs.mstatus = cpu.csrs.mstatus;
+    dut_cpu->csrs.mcause = cpu.csrs.mcause;
+    dut_cpu->csrs.mepc = cpu.csrs.mepc;
   }
 }
 

@@ -2,6 +2,7 @@
 #define CONFIG_ITRACE
 #define CONFIG_DIFFTEST
 #define CONFIG_MTRACE
+#define CONFIG_DTRACE
 #define CONFIG_DEVICE
 
 // ----------------------------------------------------------------------------------------
@@ -9,9 +10,10 @@
 // ----------------------------------------------------------------------------------------
 
 #undef EXPR_DEBUG
-#undef CONFIG_ITRACE
+// #undef CONFIG_ITRACE
 #undef CONFIG_DIFFTEST
 #undef CONFIG_MTRACE
+#undef CONFIG_DTRACE
 // #undef CONFIG_DEVICE
 
 

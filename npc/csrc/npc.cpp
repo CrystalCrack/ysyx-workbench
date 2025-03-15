@@ -112,6 +112,7 @@ void deinitialize(){
 
 void display_error_msg(){
     display_iringbuf();
+    cpu_deinit();
 }
 
 int main(int argc, char** argv){

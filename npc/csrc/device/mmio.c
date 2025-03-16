@@ -49,7 +49,7 @@ void mmio_write(paddr_t addr, uint32_t data) {
         #ifdef CONFIG_DTRACE
         printf("(NPC) " FMT_WORD ":write to serial port: %c\n", get_cpu_state().pc, (char)data);
         #endif
-        putchar((char)data);
+        putc((char)data, stderr);
     } else if(addr>=RTC_ADDR && addr<RTC_ADDR+0x8) {
         return;
     }

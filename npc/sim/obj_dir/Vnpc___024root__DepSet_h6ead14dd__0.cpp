@@ -15,9 +15,7 @@ VL_INLINE_OPT void Vnpc___024root___ico_sequent__TOP__0(Vnpc___024root* vlSelf) 
     Vnpc__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vnpc___024root___ico_sequent__TOP__0\n"); );
     // Body
-    vlSelf->npc__DOT__IFU_valid = ((~ (IData)(vlSelf->rst)) 
-                                   & (0U == (IData)(vlSelf->npc__DOT__u_IFU__DOT__state)));
-    if (vlSelf->npc__DOT__IFU_valid) {
+    if (((~ (IData)(vlSelf->rst)) & (0U == (IData)(vlSelf->npc__DOT__u_IFU__DOT__state)))) {
         Vnpc___024root____Vdpiimwrap_npc__DOT__u_IFU__DOT__inst_mem__DOT__pmem_read_TOP(vlSelf->npc__DOT__pc, vlSelf->__Vfunc_npc__DOT__u_IFU__DOT__inst_mem__DOT__pmem_read__1__Vfuncout);
         vlSelf->npc__DOT__inst = vlSelf->__Vfunc_npc__DOT__u_IFU__DOT__inst_mem__DOT__pmem_read__1__Vfuncout;
     } else {
@@ -3518,7 +3516,6 @@ VL_INLINE_OPT void Vnpc___024root___nba_sequent__TOP__0(Vnpc___024root* vlSelf) 
     __Vdlyvset__npc__DOT__u_RegisterFile__DOT__rf__v32 = 0U;
     if (vlSelf->rst) {
         vlSelf->npc__DOT__u_RegisterFile__DOT__unnamedblk1__DOT__i = 0x20U;
-        vlSelf->npc__DOT__u_IFU__DOT__state = 0U;
         __Vdlyvset__npc__DOT__u_RegisterFile__DOT__rf__v0 = 1U;
         vlSelf->npc__DOT__mstatus_rdata = 0x1800U;
         vlSelf->npc__DOT__mtvec_rdata = 0U;
@@ -3526,12 +3523,6 @@ VL_INLINE_OPT void Vnpc___024root___nba_sequent__TOP__0(Vnpc___024root* vlSelf) 
         vlSelf->npc__DOT__mepc_rdata = 0U;
         vlSelf->npc__DOT__pc = 0x80000000U;
     } else {
-        vlSelf->npc__DOT__u_IFU__DOT__state = ((0U 
-                                                == (IData)(vlSelf->npc__DOT__u_IFU__DOT__state))
-                                                ? ((IData)(vlSelf->npc__DOT__IFU_valid)
-                                                    ? 1U
-                                                    : 0U)
-                                                : 0U);
         if ((4U != (IData)(vlSelf->npc__DOT__rdregsrc))) {
             __Vdlyvval__npc__DOT__u_RegisterFile__DOT__rf__v32 
                 = ((0U == (IData)(vlSelf->npc__DOT__rdregsrc))
@@ -3628,6 +3619,7 @@ VL_INLINE_OPT void Vnpc___024root___nba_sequent__TOP__0(Vnpc___024root* vlSelf) 
         }
         vlSelf->npc__DOT__pc = vlSelf->npc__DOT__u_PC__DOT__dnpc;
     }
+    vlSelf->npc__DOT__u_IFU__DOT__state = 0U;
     if (__Vdlyvset__npc__DOT__u_RegisterFile__DOT__rf__v0) {
         vlSelf->npc__DOT__u_RegisterFile__DOT__rf[0U] = 0U;
         vlSelf->npc__DOT__u_RegisterFile__DOT__rf[1U] = 0U;
@@ -3666,8 +3658,6 @@ VL_INLINE_OPT void Vnpc___024root___nba_sequent__TOP__0(Vnpc___024root* vlSelf) 
         vlSelf->npc__DOT__u_RegisterFile__DOT__rf[__Vdlyvdim0__npc__DOT__u_RegisterFile__DOT__rf__v32] 
             = __Vdlyvval__npc__DOT__u_RegisterFile__DOT__rf__v32;
     }
-    vlSelf->npc__DOT__IFU_valid = ((~ (IData)(vlSelf->rst)) 
-                                   & (0U == (IData)(vlSelf->npc__DOT__u_IFU__DOT__state)));
     vlSelf->npc__DOT__sel_csr__DOT__i0__DOT__pair_list[3U] 
         = (0x30000000000ULL | (QData)((IData)(vlSelf->npc__DOT__mstatus_rdata)));
     vlSelf->npc__DOT__sel_csr__DOT__i0__DOT__data_list[3U] 
@@ -3684,7 +3674,7 @@ VL_INLINE_OPT void Vnpc___024root___nba_sequent__TOP__0(Vnpc___024root* vlSelf) 
         = (0x34100000000ULL | (QData)((IData)(vlSelf->npc__DOT__mepc_rdata)));
     vlSelf->npc__DOT__sel_csr__DOT__i0__DOT__data_list[2U] 
         = vlSelf->npc__DOT__mepc_rdata;
-    if (vlSelf->npc__DOT__IFU_valid) {
+    if (((~ (IData)(vlSelf->rst)) & (0U == (IData)(vlSelf->npc__DOT__u_IFU__DOT__state)))) {
         Vnpc___024root____Vdpiimwrap_npc__DOT__u_IFU__DOT__inst_mem__DOT__pmem_read_TOP(vlSelf->npc__DOT__pc, vlSelf->__Vfunc_npc__DOT__u_IFU__DOT__inst_mem__DOT__pmem_read__1__Vfuncout);
         vlSelf->npc__DOT__inst = vlSelf->__Vfunc_npc__DOT__u_IFU__DOT__inst_mem__DOT__pmem_read__1__Vfuncout;
     } else {

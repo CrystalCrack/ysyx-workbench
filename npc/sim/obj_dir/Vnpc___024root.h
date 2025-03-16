@@ -17,7 +17,6 @@ class Vnpc___024root final : public VerilatedModule {
     struct {
         VL_IN8(clk,0,0);
         VL_IN8(rst,0,0);
-        CData/*0:0*/ npc__DOT__IFU_valid;
         CData/*4:0*/ npc__DOT__rs1;
         CData/*4:0*/ npc__DOT__rs2;
         CData/*2:0*/ npc__DOT__ALU_op;
@@ -79,9 +78,9 @@ class Vnpc___024root final : public VerilatedModule {
         CData/*0:0*/ npc__DOT__idu_inst__DOT__getALUsrc1__DOT__i0__DOT__hit;
         CData/*1:0*/ npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__lut_out;
         CData/*0:0*/ npc__DOT__idu_inst__DOT__getALUsrc2__DOT__i0__DOT__hit;
+        CData/*2:0*/ npc__DOT__idu_inst__DOT__getcsrwen__DOT__i0__DOT__lut_out;
     };
     struct {
-        CData/*2:0*/ npc__DOT__idu_inst__DOT__getcsrwen__DOT__i0__DOT__lut_out;
         CData/*0:0*/ npc__DOT__idu_inst__DOT__getcsrwen__DOT__i0__DOT__hit;
         CData/*0:0*/ npc__DOT__u_ALU__DOT__add_overflow;
         CData/*0:0*/ npc__DOT__u_ALU__DOT__sub_overflow;
@@ -145,9 +144,9 @@ class Vnpc___024root final : public VerilatedModule {
         VlUnpacked<QData/*35:0*/, 8> npc__DOT__u_ALU__DOT__u_MuxKeyWithDefault__DOT__i0__DOT__pair_list;
         VlUnpacked<CData/*2:0*/, 8> npc__DOT__u_ALU__DOT__u_MuxKeyWithDefault__DOT__i0__DOT__key_list;
         VlUnpacked<QData/*32:0*/, 8> npc__DOT__u_ALU__DOT__u_MuxKeyWithDefault__DOT__i0__DOT__data_list;
+        VlUnpacked<QData/*43:0*/, 4> npc__DOT__sel_csr__DOT__i0__DOT__pair_list;
     };
     struct {
-        VlUnpacked<QData/*43:0*/, 4> npc__DOT__sel_csr__DOT__i0__DOT__pair_list;
         VlUnpacked<SData/*11:0*/, 4> npc__DOT__sel_csr__DOT__i0__DOT__key_list;
         VlUnpacked<IData/*31:0*/, 4> npc__DOT__sel_csr__DOT__i0__DOT__data_list;
         VlUnpacked<CData/*0:0*/, 3> __Vm_traceActivity;

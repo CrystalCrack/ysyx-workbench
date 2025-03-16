@@ -3,7 +3,12 @@ module npc(
     input rst
 );
 
+    /* IFetch signals */
+    wire [31:0] inst;
+    wire IFU_valid;
+
     /* Decode signals */
+    wire IDU_ready;
     wire [4:0] rs1, rs2, rd;
     wire [31:0] imm;
     wire [2:0] funct3;
@@ -61,8 +66,7 @@ module npc(
     
 
     /* Memory signals */
-    wire [31:0] inst;
-    reg ivalid;
+    // reg ivalid;
     wire [31:0] draddr;
     wire [31:0] dwaddr;
     wire [31:0] dwdata;
@@ -151,18 +155,28 @@ module npc(
     assign cmp_result = cmp_type==0 ? {31'b0, equal} :
                         cmp_type==1 ? {31'b0, ~equal} :
                         cmp_type==2 ? {31'b0, signed_less} : {31'b0, unsigned_less};
-    
-    assign ivalid = ~rst;
-    /* instruction memory */
-    memory inst_mem(
-        .raddr 	(pc  ),
-        .waddr 	(0    ),
-        .wdata 	(0    ),
-        .wmask 	(0    ),
-        .wen   	(0    ),
-        .valid 	(ivalid  ),
-        .rdata 	(inst  )
+
+    IFU u_IFU(
+        .clk(clk),
+        .rst(rst),
+        .pc(pc),
+        .inst(inst),
+        .ready(IDU_ready),
+        .valid(IFU_valid)
     );
+    assign IDU_ready = 1;
+    
+    // assign ivalid = ~rst;
+    // /* instruction memory */
+    // memory inst_mem(
+    //     .raddr 	(pc  ),
+    //     .waddr 	(0    ),
+    //     .wdata 	(0    ),
+    //     .wmask 	(0    ),
+    //     .wen   	(0    ),
+    //     .valid 	(ivalid  ),
+    //     .rdata 	(inst  )
+    // );
 
     assign draddr = ALU_result;
     assign dwaddr = ALU_result;

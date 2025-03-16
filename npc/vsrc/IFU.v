@@ -18,7 +18,7 @@ module IFU(
         end else begin
             case (state)
                 IDLE: begin
-                    state <= valid ? WAIT_READY : IDLE;
+                    state <= valid ? (ready ? IDLE : WAIT_READY) : IDLE;
                 end
                 WAIT_READY: begin
                     state <= ready ? IDLE : WAIT_READY;

@@ -25,7 +25,10 @@ module IDU(
     output [2:0] csr_wen, // mtvec, mcause, mepc
     output inst_is_ecall,
 
-    output stop_sim
+    output stop_sim,
+
+    input ready,
+    output valid
 );
     parameter NUM_OF_INST = 43;
 

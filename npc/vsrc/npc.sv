@@ -31,12 +31,12 @@ module npc(
     );
     assign snpcF = pcF + 4;
 
-        IFU u_IFU(
+    IFU u_IFU(
         .clk(clk),
         .rst(rst),
         .pc(pcF),
         .inst(instF),
-        .s_valid(validW),
+        .s_valid(ifetch_en),
         .m_ready(readyD),
         .m_valid(validF)
     );

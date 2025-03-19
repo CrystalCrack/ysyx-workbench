@@ -52,7 +52,7 @@ module npc(
     wire [7:0] mwmaskD;
     // RegisterFile
     wire [4:0] rf_raddr1, rf_raddr2, rs1, rs2;
-    wire [31:0] src1D, src2D, rf_rdata1, rf_rdata2;
+    wire [31:0] src1D, src2D;
     // immediate extend
     wire [31:0] immD;
     // csr
@@ -124,8 +124,8 @@ module npc(
         .wen    	(~disableW),
         .raddr1 	(rf_raddr1  ),
         .raddr2 	(rf_raddr2  ),
-        .rdata1 	(rf_rdata1  ),
-        .rdata2 	(rf_rdata2  ),
+        .rdata1 	(src1D  ),
+        .rdata2 	(src2D  ),
         .ren    	(1'b1     )
     );
 

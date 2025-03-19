@@ -498,7 +498,7 @@ module npc(
 
     export "DPI-C" function is_inst_done;
     function void is_inst_done();
-        output int done;
+        output wire done;
         done = validW;
     endfunction
 

@@ -7,6 +7,7 @@
 
 void Vnpc___024root____Vdpiexp_npc__DOT__get_CSR_TOP(Vnpc__Syms* __restrict vlSymsp, IData/*31:0*/ &csr_mtvec, IData/*31:0*/ &csr_mcause, IData/*31:0*/ &csr_mepc, IData/*31:0*/ &csr_mstatus);
 void Vnpc___024root____Vdpiexp_npc__DOT__get_pc_inst_TOP(Vnpc__Syms* __restrict vlSymsp, IData/*31:0*/ &cpu_pc, IData/*31:0*/ &cpu_inst);
+void Vnpc___024root____Vdpiexp_npc__DOT__is_inst_done_TOP(Vnpc__Syms* __restrict vlSymsp, IData/*31:0*/ &done);
 void Vnpc___024root____Vdpiexp_npc__DOT__u_RegisterFile__DOT__get_reg_TOP(Vnpc__Syms* __restrict vlSymsp, IData/*31:0*/ addr, IData/*31:0*/ &reg_data);
 
 // FUNCTIONS
@@ -34,6 +35,7 @@ Vnpc__Syms::Vnpc__Syms(VerilatedContext* contextp, const char* namep, Vnpc* mode
     for (int __Vfinal = 0; __Vfinal < 2; ++__Vfinal) {
         __Vscope_npc.exportInsert(__Vfinal, "get_CSR", (void*)(&Vnpc___024root____Vdpiexp_npc__DOT__get_CSR_TOP));
         __Vscope_npc.exportInsert(__Vfinal, "get_pc_inst", (void*)(&Vnpc___024root____Vdpiexp_npc__DOT__get_pc_inst_TOP));
+        __Vscope_npc.exportInsert(__Vfinal, "is_inst_done", (void*)(&Vnpc___024root____Vdpiexp_npc__DOT__is_inst_done_TOP));
         __Vscope_npc__u_RegisterFile.exportInsert(__Vfinal, "get_reg", (void*)(&Vnpc___024root____Vdpiexp_npc__DOT__u_RegisterFile__DOT__get_reg_TOP));
     }
 }

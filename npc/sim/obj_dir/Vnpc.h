@@ -73,6 +73,7 @@ class Vnpc VL_NOT_FINAL : public VerilatedModel {
     static void get_CSR(int* csr_mtvec, int* csr_mcause, int* csr_mepc, int* csr_mstatus);
     static void get_pc_inst(int* cpu_pc, int* cpu_inst);
     static void get_reg(int addr, int* reg_data);
+    static void is_inst_done(int* done);
 
     // Abstract methods from VerilatedModel
     const char* hierName() const override final;

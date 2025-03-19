@@ -46,6 +46,20 @@ void Vnpc::get_CSR(int* csr_mtvec, int* csr_mcause, int* csr_mepc, int* csr_msta
     for (size_t csr_mstatus__Vidx = 0; csr_mstatus__Vidx < 1; ++csr_mstatus__Vidx) *csr_mstatus = csr_mstatus__Vcvt;
 }
 
+void Vnpc::is_inst_done(int* done) {
+    VL_DEBUG_IF(VL_DBG_MSGF("+    Vnpc___024root::is_inst_done\n"); );
+    // Init
+    IData/*31:0*/ done__Vcvt;
+    done__Vcvt = 0;
+    // Body
+    static int __Vfuncnum = -1;
+    if (VL_UNLIKELY(__Vfuncnum == -1)) __Vfuncnum = Verilated::exportFuncNum("is_inst_done");
+    const VerilatedScope* __Vscopep = Verilated::dpiScope();
+    Vnpc__Vcb_is_inst_done_t __Vcb = (Vnpc__Vcb_is_inst_done_t)(VerilatedScope::exportFind(__Vscopep, __Vfuncnum));
+    (*__Vcb)((Vnpc__Syms*)(__Vscopep->symsp()), done__Vcvt);
+    for (size_t done__Vidx = 0; done__Vidx < 1; ++done__Vidx) *done = done__Vcvt;
+}
+
 void Vnpc::get_reg(int addr, int* reg_data) {
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vnpc___024root::get_reg\n"); );
     // Init

@@ -16,15 +16,17 @@ extern "C" {
 
 
     // DPI EXPORTS
-    // DPI export at vsrc/npc.sv:484:19
+    // DPI export at vsrc/npc.sv:481:19
     extern void get_CSR(int* csr_mtvec, int* csr_mcause, int* csr_mepc, int* csr_mstatus);
-    // DPI export at vsrc/npc.sv:476:19
+    // DPI export at vsrc/npc.sv:473:19
     extern void get_pc_inst(int* cpu_pc, int* cpu_inst);
     // DPI export at vsrc/RegisterFile.v:29:19
     extern void get_reg(int addr, int* reg_data);
+    // DPI export at vsrc/npc.sv:500:19
+    extern void is_inst_done(int* done);
 
     // DPI IMPORTS
-    // DPI import at vsrc/npc.sv:495:34
+    // DPI import at vsrc/npc.sv:492:34
     extern void ebreak();
     // DPI import at vsrc/memory.v:10:33
     extern int pmem_read(int raddr);

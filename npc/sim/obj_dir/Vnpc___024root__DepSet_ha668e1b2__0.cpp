@@ -34,6 +34,13 @@ VL_INLINE_OPT void Vnpc___024root____Vdpiimwrap_npc__DOT__ebreak_TOP() {
     ebreak();
 }
 
+void Vnpc___024root____Vdpiexp_npc__DOT__is_inst_done_TOP(Vnpc__Syms* __restrict vlSymsp, IData/*31:0*/ &done) {
+    VL_DEBUG_IF(VL_DBG_MSGF("+    Vnpc___024root____Vdpiexp_npc__DOT__is_inst_done_TOP\n"); );
+    // Init
+    // Body
+    done = vlSymsp->TOP.npc__DOT__u_Wstage_bus__DOT__state;
+}
+
 extern "C" int pmem_read(int raddr);
 
 VL_INLINE_OPT void Vnpc___024root____Vdpiimwrap_npc__DOT__u_IFU__DOT__inst_mem__DOT__pmem_read_TOP(IData/*31:0*/ raddr, IData/*31:0*/ &pmem_read__Vfuncrtn) {

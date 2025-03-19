@@ -93,13 +93,18 @@ VL_INLINE_OPT void Vnpc___024root___nba_sequent__TOP__0(Vnpc___024root* vlSelf) 
                                                     ((IData)(vlSelf->npc__DOT__ifetch_en)
                                                       ? 1U
                                                       : 0U))));
+    vlSelf->npc__DOT__rst_d2 = vlSelf->npc__DOT__rst_d1;
     if (vlSelf->rst) {
         vlSelf->npc__DOT__u_RegisterFile__DOT__unnamedblk1__DOT__i = 0x20U;
         __Vdly__npc__DOT__dstagebus_inst__DOT__state = 0U;
+        vlSelf->npc__DOT__u_IFU__DOT__state = __Vdly__npc__DOT__u_IFU__DOT__state;
+        vlSelf->npc__DOT__rst_d1 = 1U;
         __Vdly__npc__DOT__pcF = 0x80000000U;
         __Vdly__npc__DOT__u_Wstage_bus__DOT__state = 0U;
         __Vdly__npc__DOT__u_Xstage_bus__DOT__state = 0U;
         __Vdly__npc__DOT__u_Mstage_bus__DOT__state = 0U;
+        __Vdlyvset__npc__DOT__u_RegisterFile__DOT__rf__v0 = 1U;
+        vlSelf->npc__DOT__mdataW = 0U;
     } else {
         if (vlSelf->npc__DOT__dstagebus_inst__DOT__state) {
             if (vlSelf->npc__DOT__dstagebus_inst__DOT__state) {
@@ -110,6 +115,8 @@ VL_INLINE_OPT void Vnpc___024root___nba_sequent__TOP__0(Vnpc___024root* vlSelf) 
             __Vdly__npc__DOT__dstagebus_inst__DOT__state 
                 = vlSelf->npc__DOT__u_IFU__DOT__state;
         }
+        vlSelf->npc__DOT__u_IFU__DOT__state = __Vdly__npc__DOT__u_IFU__DOT__state;
+        vlSelf->npc__DOT__rst_d1 = 0U;
         if (vlSelf->npc__DOT__u_Wstage_bus__DOT__state) {
             __Vdly__npc__DOT__pcF = vlSelf->npc__DOT__dnpcX;
             if (vlSelf->npc__DOT__u_Wstage_bus__DOT__state) {
@@ -138,18 +145,6 @@ VL_INLINE_OPT void Vnpc___024root___nba_sequent__TOP__0(Vnpc___024root* vlSelf) 
             __Vdly__npc__DOT__u_Mstage_bus__DOT__state 
                 = vlSelf->npc__DOT__u_Xstage_bus__DOT__state;
         }
-    }
-    VL_WRITEF("rst: %1#\nrst_d1: %1#\nrst_d2: %1#\n",
-              1,vlSelf->rst,1,(IData)(vlSelf->npc__DOT__rst_d1),
-              1,vlSelf->npc__DOT__rst_d2);
-    vlSelf->npc__DOT__rst_d2 = vlSelf->npc__DOT__rst_d1;
-    vlSelf->npc__DOT__u_IFU__DOT__state = __Vdly__npc__DOT__u_IFU__DOT__state;
-    if (vlSelf->rst) {
-        vlSelf->npc__DOT__rst_d1 = 1U;
-        __Vdlyvset__npc__DOT__u_RegisterFile__DOT__rf__v0 = 1U;
-        vlSelf->npc__DOT__mdataW = 0U;
-    } else {
-        vlSelf->npc__DOT__rst_d1 = 0U;
         if ((5U != (IData)(vlSelf->npc__DOT__rdregsrcW))) {
             __Vdlyvval__npc__DOT__u_RegisterFile__DOT__rf__v32 
                 = vlSelf->npc__DOT__rddataW;

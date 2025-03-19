@@ -20,6 +20,7 @@
 using Vnpc__Vcb_get_CSR_t = void (*) (Vnpc__Syms* __restrict vlSymsp, IData/*31:0*/ &csr_mtvec, IData/*31:0*/ &csr_mcause, IData/*31:0*/ &csr_mepc, IData/*31:0*/ &csr_mstatus);
 using Vnpc__Vcb_get_pc_inst_t = void (*) (Vnpc__Syms* __restrict vlSymsp, IData/*31:0*/ &cpu_pc, IData/*31:0*/ &cpu_inst);
 using Vnpc__Vcb_get_reg_t = void (*) (Vnpc__Syms* __restrict vlSymsp, IData/*31:0*/ addr, IData/*31:0*/ &reg_data);
+using Vnpc__Vcb_is_inst_done_t = void (*) (Vnpc__Syms* __restrict vlSymsp, IData/*31:0*/ &done);
 
 // SYMS CLASS (contains all model state)
 class Vnpc__Syms final : public VerilatedSyms {

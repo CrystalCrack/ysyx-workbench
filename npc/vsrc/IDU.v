@@ -27,7 +27,7 @@ module IDU(
 );
 
     // decode
-    wire lui, auipc, jal, load, store, Iarith, Rarith, ebreak, csrRelated, mismatch;
+    wire lui, auipc, jal, load, store, Iarith, Rarith, ebreak, csrRelated, csrrw, csrrs, mismatch;
     assign lui = opcode == 7'b0110111;
     assign auipc = opcode == 7'b0010111;
     assign jal = opcode == 7'b1101111;
@@ -41,6 +41,8 @@ module IDU(
     assign ecallD = opcode == 7'b1110011 && funct3 == 3'b000 && funct12 == 12'b0000_0000_0000;
     assign mretD = opcode == 7'b1110011 && funct3 == 3'b000 && funct12 == 12'b0011_0000_0010;
     assign csrRelated = opcode == 7'b1110011;
+    assign csrrw = csrRelated & (funct3 == 3'b001);
+    assign csrrs = csrRelated & (funct3 == 3'b010);
     assign mismatch = ~(lui | auipc | jal | jalrD | branchD | load | store | Iarith | Rarith | ebreak | ecallD | mretD | csrRelated);
 
     assign stop_sim = ebreak | mismatch;
@@ -124,7 +126,7 @@ module IDU(
     assign srl = (Iarith | Rarith) & (funct3 == 3'b101) & (funct7 == 7'b0000000);
     assign sra = (Iarith | Rarith) & (funct3 == 3'b101) & (funct7 == 7'b0100000);
     assign xor_ = (Iarith | Rarith) & (funct3 == 3'b100);
-    assign or_ = ((Iarith | Rarith) & (funct3 == 3'b110)) | (csrRelated & (funct3 == 3'b010));
+    assign or_ = ((Iarith | Rarith) & (funct3 == 3'b110)) | (csrRelated);
     assign and_ = (Iarith | Rarith) & (funct3 == 3'b111);
     MuxKeyWithDefault #(
         .NR_KEY(7),
@@ -165,17 +167,18 @@ module IDU(
     assign ALUsrc1D = auipc ? 2'd1 :
                       lui ? 2'd2 : 2'd0;
 
-    // 0-regsrc2, 1-imm, 2-csr
+    // 0-regsrc2, 1-imm, 2-csr, 3-zero
     MuxKeyWithDefault #(
-        .NR_KEY(2),
-        .KEY_LEN(2),
+        .NR_KEY(3),
+        .KEY_LEN(3),
         .DATA_LEN(2)
     ) get_ALUsrc2 (
         .out(ALUsrc2D),
-        .key({Rarith | branchD, csrRelated}),
+        .key({Rarith | branchD, csrrw, csrrs}),
         .default_out(2'd1),
-        .lut({2'b10, 2'd0,
-              2'b01, 2'd2})
+        .lut({3'b100, 2'd0,
+              3'b010, 2'd3,
+              3'b001, 2'd2})
     );
 
     assign write_csr = csrRelated | ecallD;

@@ -285,7 +285,8 @@ module npc(
     assign ALU_A = (ALUsrc1X==2'd0) ? src1X : 
                    (ALUsrc1X==2'd1) ? pcX : 32'd0;
     assign ALU_B = (ALUsrc2X==2'd0) ? src2X : 
-                   (ALUsrc2X==2'd1) ? immX : csrX;
+                   (ALUsrc2X==2'd1) ? immX : 
+                   (ALUsrc2X==2'd2) ? csrX : 32'd0;
     ALU u_ALU(
         .mode(ALU_opX),
         .A(ALU_A),

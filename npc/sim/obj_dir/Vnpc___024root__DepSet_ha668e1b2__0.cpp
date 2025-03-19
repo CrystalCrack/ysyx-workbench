@@ -38,7 +38,7 @@ void Vnpc___024root____Vdpiexp_npc__DOT__is_inst_done_TOP(Vnpc__Syms* __restrict
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vnpc___024root____Vdpiexp_npc__DOT__is_inst_done_TOP\n"); );
     // Init
     // Body
-    done = vlSymsp->TOP.npc__DOT__u_Wstage_bus__DOT__state;
+    done = vlSymsp->TOP.npc__DOT__validW_d;
 }
 
 extern "C" int pmem_read(int raddr);

@@ -71,10 +71,10 @@ void Cget_pc_inst(uint32_t* pc, uint32_t* inst){
   get_pc_inst(pc_ptr, inst_ptr);
 }
 
-int Cis_cycle_done(){
+int Cis_inst_done(){
   int done;
   svSetScope(svGetScopeFromName("TOP.npc"));
-  is_cycle_done(&done);
+  is_inst_done(&done);
   return done;
 }
 
@@ -94,7 +94,7 @@ static void exec_once() {
   /* run a cycle */
   do{
     single_cycle();
-  }while(!Cis_cycle_done());
+  }while(!Cis_inst_done());
 
 #ifdef CONFIG_ITRACE
   char *p = logbuf;

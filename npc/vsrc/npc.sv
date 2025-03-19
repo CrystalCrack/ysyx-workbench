@@ -14,6 +14,9 @@ module npc(
     wire [31:0] instF, pcF, snpcF;
 
     always @(posedge clk) begin
+        display("rst: %d", rst);
+        display("rst_d1: %d", rst_d1);
+        display("rst_d2: %d", rst_d2);
         rst_d1 <= rst;
         rst_d2 <= rst_d1;
     end

@@ -100,12 +100,12 @@ class Vnpc___024root final : public VerilatedModule {
         IData/*31:0*/ npc__DOT__u_ALU__DOT__sub_result;
         IData/*31:0*/ npc__DOT__ext_mdata__DOT__i0__DOT__lut_out;
         IData/*31:0*/ npc__DOT__sel_WB__DOT__i0__DOT__lut_out;
-        IData/*31:0*/ __VdfgTmp_h468c645e__0;
-        IData/*31:0*/ __VdfgTmp_hc20fdb71__0;
-        IData/*31:0*/ __VdfgTmp_hc5593bcf__0;
-        IData/*31:0*/ __VdfgTmp_hc2b79a77__0;
-        IData/*31:0*/ __VdfgTmp_h46a938df__0;
-        IData/*31:0*/ __VdfgTmp_h46b7e40b__0;
+        IData/*31:0*/ __VdfgTmp_h104e4682__0;
+        IData/*31:0*/ __VdfgTmp_h9a2a8d3a__0;
+        IData/*31:0*/ __VdfgTmp_h9edba206__0;
+        IData/*31:0*/ __VdfgTmp_h9dd7d0a0__0;
+        IData/*31:0*/ __VdfgTmp_h104a0626__0;
+        IData/*31:0*/ __VdfgTmp_h1042264f__0;
         IData/*31:0*/ __Vfunc_npc__DOT__u_IFU__DOT__inst_mem__DOT__pmem_read__1__Vfuncout;
         IData/*31:0*/ __Vfunc_npc__DOT__data_mem__DOT__pmem_read__2__Vfuncout;
         IData/*31:0*/ __VstlIterCount;

@@ -31,6 +31,7 @@ class Vnpc___024root final : public VerilatedModule {
         CData/*0:0*/ npc__DOT__write_csr;
         CData/*7:0*/ npc__DOT__mwmaskD;
         CData/*4:0*/ npc__DOT__rf_raddr2;
+        CData/*1:0*/ npc__DOT__ALUsrc1X;
         CData/*0:0*/ npc__DOT__Cout;
         CData/*0:0*/ npc__DOT__slt;
         CData/*0:0*/ npc__DOT__cmp_resultX;
@@ -78,15 +79,16 @@ class Vnpc___024root final : public VerilatedModule {
         IData/*31:0*/ npc__DOT__pcF;
         IData/*31:0*/ npc__DOT__src1D;
         IData/*31:0*/ npc__DOT__src2D;
-        IData/*31:0*/ npc__DOT__immD;
     };
     struct {
+        IData/*31:0*/ npc__DOT__immD;
         IData/*31:0*/ npc__DOT__mtvec_data;
         IData/*31:0*/ npc__DOT__mcause_data;
         IData/*31:0*/ npc__DOT__mepc_data;
         IData/*31:0*/ npc__DOT__mstatus_data;
         IData/*31:0*/ npc__DOT__csr_rdata;
         IData/*31:0*/ npc__DOT__csrD;
+        IData/*31:0*/ npc__DOT__ALU_A;
         IData/*31:0*/ npc__DOT__ALU_B;
         IData/*31:0*/ npc__DOT__dnpc_;
         IData/*31:0*/ npc__DOT__rdata;
@@ -99,12 +101,12 @@ class Vnpc___024root final : public VerilatedModule {
         IData/*31:0*/ npc__DOT__u_ALU__DOT__sub_result;
         IData/*31:0*/ npc__DOT__ext_mdata__DOT__i0__DOT__lut_out;
         IData/*31:0*/ npc__DOT__sel_WB__DOT__i0__DOT__lut_out;
-        IData/*31:0*/ __VdfgTmp_h33f2d7e0__0;
-        IData/*31:0*/ __VdfgTmp_hbd794ce0__0;
-        IData/*31:0*/ __VdfgTmp_hba841254__0;
-        IData/*31:0*/ __VdfgTmp_hbf5e64b2__0;
-        IData/*31:0*/ __VdfgTmp_h33980478__0;
-        IData/*31:0*/ __VdfgTmp_h33eef79d__0;
+        IData/*31:0*/ __VdfgTmp_h468c645e__0;
+        IData/*31:0*/ __VdfgTmp_hc20fdb71__0;
+        IData/*31:0*/ __VdfgTmp_hc5593bcf__0;
+        IData/*31:0*/ __VdfgTmp_hc2b79a77__0;
+        IData/*31:0*/ __VdfgTmp_h46a938df__0;
+        IData/*31:0*/ __VdfgTmp_h46b7e40b__0;
         IData/*31:0*/ __Vfunc_npc__DOT__u_IFU__DOT__inst_mem__DOT__pmem_read__1__Vfuncout;
         IData/*31:0*/ __Vfunc_npc__DOT__data_mem__DOT__pmem_read__2__Vfuncout;
         IData/*31:0*/ __VstlIterCount;
@@ -143,10 +145,10 @@ class Vnpc___024root final : public VerilatedModule {
         VlUnpacked<QData/*35:0*/, 8> npc__DOT__u_ALU__DOT__u_MuxKeyWithDefault__DOT__i0__DOT__pair_list;
         VlUnpacked<CData/*2:0*/, 8> npc__DOT__u_ALU__DOT__u_MuxKeyWithDefault__DOT__i0__DOT__key_list;
         VlUnpacked<QData/*32:0*/, 8> npc__DOT__u_ALU__DOT__u_MuxKeyWithDefault__DOT__i0__DOT__data_list;
-        VlUnpacked<CData/*3:0*/, 6> npc__DOT__sel_cmp__DOT__i0__DOT__pair_list;
-        VlUnpacked<CData/*2:0*/, 6> npc__DOT__sel_cmp__DOT__i0__DOT__key_list;
     };
     struct {
+        VlUnpacked<CData/*3:0*/, 6> npc__DOT__sel_cmp__DOT__i0__DOT__pair_list;
+        VlUnpacked<CData/*2:0*/, 6> npc__DOT__sel_cmp__DOT__i0__DOT__key_list;
         VlUnpacked<CData/*0:0*/, 6> npc__DOT__sel_cmp__DOT__i0__DOT__data_list;
         VlUnpacked<QData/*34:0*/, 5> npc__DOT__ext_mdata__DOT__i0__DOT__pair_list;
         VlUnpacked<CData/*2:0*/, 5> npc__DOT__ext_mdata__DOT__i0__DOT__key_list;

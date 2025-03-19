@@ -11,7 +11,7 @@
 
 #undef EXPR_DEBUG
 // #undef CONFIG_ITRACE
-#undef CONFIG_DIFFTEST
+// #undef CONFIG_DIFFTEST
 #undef CONFIG_MTRACE
 #undef CONFIG_DTRACE
 // #undef CONFIG_DEVICE

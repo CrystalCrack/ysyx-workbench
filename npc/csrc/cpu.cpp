@@ -144,7 +144,6 @@ void reset(int n) {
     n--;
   }
   dut->rst = 0;
-  single_cycle();
 }
 
 void reg_display(){

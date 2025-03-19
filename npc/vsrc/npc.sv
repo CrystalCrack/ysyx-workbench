@@ -9,7 +9,7 @@ module npc(
     /*                           Fetch Stage                                */
     /* -------------------------------------------------------------------- */
     wire validF;
-    wire start;
+    wire start, ifetch_en;
     reg rst_d1, rst_d2;
     wire [31:0] instF, pcF, snpcF;
 
@@ -18,10 +18,11 @@ module npc(
         rst_d2 <= rst_d1;
     end
     assign start = ~rst & rst_d1; // negedge detect
+    assign ifetch_en = ~rst & (validW | start);
     PC u_PC(
         .clk(clk),
         .rst(rst),
-        .en(~rst & (validW | start) ),
+        .en(ifetch_en),
         .dnpc(dnpcX),
         .pc(pcF)
     );

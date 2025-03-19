@@ -22,7 +22,7 @@ module IFU(
                     state <= s_valid ? WAIT_READY : IDLE;
                 end
                 WAIT_READY: begin
-                    state <= ready ? IDLE : WAIT_READY;
+                    state <= m_ready ? IDLE : WAIT_READY;
                 end
                 default: begin
                     state <= IDLE;

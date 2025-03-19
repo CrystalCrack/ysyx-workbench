@@ -16,16 +16,16 @@
 
 #ifndef VL_DPIDECL_get_CSR_
 #define VL_DPIDECL_get_CSR_
-void get_CSR(int* mtvec_data, int* mcause_data, int* mepc_data, int* mstatus_data) {
-    // DPI export at /home/crystc/ysyx-workbench/npc/vsrc/npc.sv:267:19
-    return Vnpc::get_CSR(mtvec_data, mcause_data, mepc_data, mstatus_data);
+void get_CSR(int* csr_mtvec, int* csr_mcause, int* csr_mepc, int* csr_mstatus) {
+    // DPI export at /home/crystc/ysyx-workbench/npc/vsrc/npc.sv:473:19
+    return Vnpc::get_CSR(csr_mtvec, csr_mcause, csr_mepc, csr_mstatus);
 }
 #endif
 
 #ifndef VL_DPIDECL_get_pc_inst_
 #define VL_DPIDECL_get_pc_inst_
 void get_pc_inst(int* cpu_pc, int* cpu_inst) {
-    // DPI export at /home/crystc/ysyx-workbench/npc/vsrc/npc.sv:259:19
+    // DPI export at /home/crystc/ysyx-workbench/npc/vsrc/npc.sv:465:19
     return Vnpc::get_pc_inst(cpu_pc, cpu_inst);
 }
 #endif

@@ -12,18 +12,18 @@ void Vnpc___024root____Vdpiexp_npc__DOT__get_pc_inst_TOP(Vnpc__Syms* __restrict 
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vnpc___024root____Vdpiexp_npc__DOT__get_pc_inst_TOP\n"); );
     // Init
     // Body
-    cpu_pc = vlSymsp->TOP.npc__DOT__pc;
-    cpu_inst = vlSymsp->TOP.npc__DOT__inst;
+    cpu_pc = vlSymsp->TOP.npc__DOT__pcF;
+    cpu_inst = vlSymsp->TOP.npc__DOT__instF;
 }
 
-void Vnpc___024root____Vdpiexp_npc__DOT__get_CSR_TOP(Vnpc__Syms* __restrict vlSymsp, IData/*31:0*/ &mtvec_data, IData/*31:0*/ &mcause_data, IData/*31:0*/ &mepc_data, IData/*31:0*/ &mstatus_data) {
+void Vnpc___024root____Vdpiexp_npc__DOT__get_CSR_TOP(Vnpc__Syms* __restrict vlSymsp, IData/*31:0*/ &csr_mtvec, IData/*31:0*/ &csr_mcause, IData/*31:0*/ &csr_mepc, IData/*31:0*/ &csr_mstatus) {
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vnpc___024root____Vdpiexp_npc__DOT__get_CSR_TOP\n"); );
     // Init
     // Body
-    mtvec_data = vlSymsp->TOP.npc__DOT__mtvec_rdata;
-    mcause_data = vlSymsp->TOP.npc__DOT__mcause_rdata;
-    mepc_data = vlSymsp->TOP.npc__DOT__mepc_rdata;
-    mstatus_data = vlSymsp->TOP.npc__DOT__mstatus_rdata;
+    csr_mtvec = vlSymsp->TOP.npc__DOT__mtvec_data;
+    csr_mcause = vlSymsp->TOP.npc__DOT__mcause_data;
+    csr_mepc = vlSymsp->TOP.npc__DOT__mepc_data;
+    csr_mstatus = vlSymsp->TOP.npc__DOT__mstatus_data;
 }
 
 extern "C" void ebreak();
@@ -32,14 +32,6 @@ VL_INLINE_OPT void Vnpc___024root____Vdpiimwrap_npc__DOT__ebreak_TOP() {
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vnpc___024root____Vdpiimwrap_npc__DOT__ebreak_TOP\n"); );
     // Body
     ebreak();
-}
-
-void Vnpc___024root____Vdpiexp_npc__DOT__u_RegisterFile__DOT__get_reg_TOP(Vnpc__Syms* __restrict vlSymsp, IData/*31:0*/ addr, IData/*31:0*/ &reg_data) {
-    VL_DEBUG_IF(VL_DBG_MSGF("+    Vnpc___024root____Vdpiexp_npc__DOT__u_RegisterFile__DOT__get_reg_TOP\n"); );
-    // Init
-    // Body
-    reg_data = ((0U == addr) ? 0U : vlSymsp->TOP.npc__DOT__u_RegisterFile__DOT__rf
-                [(0x1fU & addr)]);
 }
 
 extern "C" int pmem_read(int raddr);
@@ -66,6 +58,14 @@ VL_INLINE_OPT void Vnpc___024root____Vdpiimwrap_npc__DOT__u_IFU__DOT__inst_mem__
     char wmask__Vcvt;
     for (size_t wmask__Vidx = 0; wmask__Vidx < 1; ++wmask__Vidx) wmask__Vcvt = wmask;
     pmem_write(waddr__Vcvt, wdata__Vcvt, wmask__Vcvt);
+}
+
+void Vnpc___024root____Vdpiexp_npc__DOT__u_RegisterFile__DOT__get_reg_TOP(Vnpc__Syms* __restrict vlSymsp, IData/*31:0*/ addr, IData/*31:0*/ &reg_data) {
+    VL_DEBUG_IF(VL_DBG_MSGF("+    Vnpc___024root____Vdpiexp_npc__DOT__u_RegisterFile__DOT__get_reg_TOP\n"); );
+    // Init
+    // Body
+    reg_data = ((0U == addr) ? 0U : vlSymsp->TOP.npc__DOT__u_RegisterFile__DOT__rf
+                [(0x1fU & addr)]);
 }
 
 #ifdef VL_DEBUG

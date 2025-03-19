@@ -95,8 +95,6 @@ void initialize(int argc, char** argv){
 
     init_difftest(so_file, img_size, 1);
 
-    reset(5);
-
     welcome();
 
     state = RUNNING;

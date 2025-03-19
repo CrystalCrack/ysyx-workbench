@@ -124,7 +124,7 @@ module IDU(
     assign srl = (Iarith | Rarith) & (funct3 == 3'b101) & (funct7 == 7'b0000000);
     assign sra = (Iarith | Rarith) & (funct3 == 3'b101) & (funct7 == 7'b0100000);
     assign xor_ = (Iarith | Rarith) & (funct3 == 3'b100);
-    assign or_ = (Iarith | Rarith) & (funct3 == 3'b110);
+    assign or_ = ((Iarith | Rarith) & (funct3 == 3'b110)) | (csrRelated & (funct3 == 3'b010));
     assign and_ = (Iarith | Rarith) & (funct3 == 3'b111);
     MuxKeyWithDefault #(
         .NR_KEY(7),
@@ -153,7 +153,7 @@ module IDU(
         .DATA_LEN(3)
     ) get_rdregsrc (
         .out(rdregsrcD),
-        .key({load, jumpD, condset, csrRelated | ecallD, is_disable}),
+        .key({load, jumpD, condset, csrRelated, is_disable}),
         .default_out(3'd0),
         .lut({5'b10000, 3'd1,
               5'b01000, 3'd2,

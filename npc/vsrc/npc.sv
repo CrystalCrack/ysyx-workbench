@@ -155,7 +155,7 @@ module npc(
         .wen  	(mtvec_wen)   
     );
     assign mtvec_wen = csraddrW==12'h305;
-    assign mtvec_wdata = rddataW;
+    assign mtvec_wdata = ALU_resultW;
     Reg #(.WIDTH(32), .RESET_VAL(0))
         mcause(
         .clk  	(clk   ),
@@ -165,7 +165,7 @@ module npc(
         .wen  	(mcause_wen)   
     );
     assign mcause_wen = ecallW | (csraddrW==12'h342);
-    assign mcause_wdata = ecallW ? src2W : rddataW;
+    assign mcause_wdata = ecallW ? src2W : ALU_resultW;
     Reg #(.WIDTH(32), .RESET_VAL(0))
         mepc(
         .clk  	(clk   ),
@@ -175,7 +175,7 @@ module npc(
         .wen  	(mepc_wen)   
     );
     assign mepc_wen = ecallW | (csraddrW==12'h341);
-    assign mepc_wdata = ecallW ? pcW : rddataW;
+    assign mepc_wdata = ecallW ? pcW : ALU_resultW;
     Reg #(.WIDTH(32), .RESET_VAL(32'h0000_1800))
         mstatus(
         .clk  	(clk   ),
@@ -185,7 +185,7 @@ module npc(
         .wen  	(mstatus_wen)   
     );
     assign mstatus_wen = csraddrW==12'h300;
-    assign mstatus_wdata = 32'h0000_1800;
+    assign mstatus_wdata = ALU_resultW;
     MuxKeyWithDefault #(
         .NR_KEY(4),
         .KEY_LEN(12),

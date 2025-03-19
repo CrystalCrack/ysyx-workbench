@@ -163,7 +163,8 @@ VL_INLINE_OPT void Vnpc___024root___ico_sequent__TOP__0(Vnpc___024root* vlSelf) 
         = ((0x13U == (0x7fU & vlSelf->npc__DOT__instF)) 
            | (0x33U == (0x7fU & vlSelf->npc__DOT__instF)));
     vlSelf->npc__DOT__idu_inst__DOT____Vcellinp__get_ALUsrc2__key 
-        = (((0x33U == (0x7fU & vlSelf->npc__DOT__instF)) 
+        = ((((0x33U == (0x7fU & vlSelf->npc__DOT__instF)) 
+             | (0x63U == (0x7fU & vlSelf->npc__DOT__instF))) 
             << 1U) | (0x73U == (0x7fU & vlSelf->npc__DOT__instF)));
     vlSelf->npc__DOT__src1D = ((0U == (0x1fU & (vlSelf->npc__DOT__instF 
                                                 >> 0xfU)))
@@ -1624,7 +1625,8 @@ VL_INLINE_OPT void Vnpc___024root___nba_sequent__TOP__0(Vnpc___024root* vlSelf) 
         = ((0x13U == (0x7fU & vlSelf->npc__DOT__instF)) 
            | (0x33U == (0x7fU & vlSelf->npc__DOT__instF)));
     vlSelf->npc__DOT__idu_inst__DOT____Vcellinp__get_ALUsrc2__key 
-        = (((0x33U == (0x7fU & vlSelf->npc__DOT__instF)) 
+        = ((((0x33U == (0x7fU & vlSelf->npc__DOT__instF)) 
+             | (0x63U == (0x7fU & vlSelf->npc__DOT__instF))) 
             << 1U) | (0x73U == (0x7fU & vlSelf->npc__DOT__instF)));
     vlSelf->npc__DOT__src1D = ((0U == (0x1fU & (vlSelf->npc__DOT__instF 
                                                 >> 0xfU)))

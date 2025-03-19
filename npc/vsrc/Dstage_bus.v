@@ -57,7 +57,7 @@ module Dstage_bus(
             snpcD <= 32'h0;
         end
         else begin
-            if(m_ready & m_valid) begin
+            if(s_ready & s_valid) begin
                 pcD <= pcF;
                 instD <= instF;
                 snpcD <= snpcF;

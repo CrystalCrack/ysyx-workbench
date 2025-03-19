@@ -15,7 +15,7 @@ module npc(
 
     always @(posedge clk) begin
         rst_d <= rst;
-        validW_d <= validW
+        validW_d <= validW;
     end
     assign start = ~rst & rst_d; // negedge detect
     assign ifetch_en = ~rst & (validW_d | start);

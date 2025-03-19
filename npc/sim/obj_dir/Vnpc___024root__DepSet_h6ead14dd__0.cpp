@@ -44,9 +44,9 @@ VL_INLINE_OPT void Vnpc___024root___nba_sequent__TOP__0(Vnpc___024root* vlSelf) 
     __Vdly__npc__DOT__u_Wstage_bus__DOT__state = 0;
     // Body
     __Vdly__npc__DOT__u_IFU__DOT__state = vlSelf->npc__DOT__u_IFU__DOT__state;
-    __Vdly__npc__DOT__u_Wstage_bus__DOT__state = vlSelf->npc__DOT__u_Wstage_bus__DOT__state;
     __Vdly__npc__DOT__dstagebus_inst__DOT__state = vlSelf->npc__DOT__dstagebus_inst__DOT__state;
     __Vdly__npc__DOT__pcF = vlSelf->npc__DOT__pcF;
+    __Vdly__npc__DOT__u_Wstage_bus__DOT__state = vlSelf->npc__DOT__u_Wstage_bus__DOT__state;
     __Vdly__npc__DOT__u_Xstage_bus__DOT__state = vlSelf->npc__DOT__u_Xstage_bus__DOT__state;
     __Vdly__npc__DOT__u_Mstage_bus__DOT__state = vlSelf->npc__DOT__u_Mstage_bus__DOT__state;
     if ((1U & ((~ ((0x37U == (0x7fU & vlSelf->npc__DOT__instD)) 
@@ -87,22 +87,12 @@ VL_INLINE_OPT void Vnpc___024root___nba_sequent__TOP__0(Vnpc___024root* vlSelf) 
                                                       : 0U))));
     if (vlSelf->rst) {
         vlSelf->npc__DOT__u_RegisterFile__DOT__unnamedblk1__DOT__i = 0x20U;
-        __Vdly__npc__DOT__u_Wstage_bus__DOT__state = 0U;
         __Vdly__npc__DOT__dstagebus_inst__DOT__state = 0U;
         __Vdly__npc__DOT__pcF = 0x80000000U;
+        __Vdly__npc__DOT__u_Wstage_bus__DOT__state = 0U;
         __Vdly__npc__DOT__u_Xstage_bus__DOT__state = 0U;
         __Vdly__npc__DOT__u_Mstage_bus__DOT__state = 0U;
     } else {
-        if (vlSelf->npc__DOT__u_Wstage_bus__DOT__state) {
-            if (vlSelf->npc__DOT__u_Wstage_bus__DOT__state) {
-                __Vdly__npc__DOT__u_Wstage_bus__DOT__state = 0U;
-            }
-            __Vdly__npc__DOT__pcF = vlSelf->npc__DOT__dnpcX;
-        } else {
-            __Vdly__npc__DOT__u_Wstage_bus__DOT__state 
-                = vlSelf->npc__DOT__u_Mstage_bus__DOT__state;
-            __Vdly__npc__DOT__pcF = vlSelf->npc__DOT__pcF;
-        }
         if (vlSelf->npc__DOT__dstagebus_inst__DOT__state) {
             if (vlSelf->npc__DOT__dstagebus_inst__DOT__state) {
                 __Vdly__npc__DOT__dstagebus_inst__DOT__state 
@@ -111,6 +101,16 @@ VL_INLINE_OPT void Vnpc___024root___nba_sequent__TOP__0(Vnpc___024root* vlSelf) 
         } else {
             __Vdly__npc__DOT__dstagebus_inst__DOT__state 
                 = vlSelf->npc__DOT__u_IFU__DOT__state;
+        }
+        if (vlSelf->npc__DOT__u_Wstage_bus__DOT__state) {
+            __Vdly__npc__DOT__pcF = vlSelf->npc__DOT__dnpcX;
+            if (vlSelf->npc__DOT__u_Wstage_bus__DOT__state) {
+                __Vdly__npc__DOT__u_Wstage_bus__DOT__state = 0U;
+            }
+        } else {
+            __Vdly__npc__DOT__pcF = vlSelf->npc__DOT__pcF;
+            __Vdly__npc__DOT__u_Wstage_bus__DOT__state 
+                = vlSelf->npc__DOT__u_Mstage_bus__DOT__state;
         }
         if (vlSelf->npc__DOT__u_Xstage_bus__DOT__state) {
             if (vlSelf->npc__DOT__u_Xstage_bus__DOT__state) {
@@ -1460,7 +1460,7 @@ VL_INLINE_OPT void Vnpc___024root___nba_sequent__TOP__0(Vnpc___024root* vlSelf) 
                                                 + (vlSelf->npc__DOT__ALU_A 
                                                    + 
                                                    (~ vlSelf->npc__DOT__ALU_B)));
-    if (vlSelf->npc__DOT__u_IFU__DOT__valid) {
+    if (vlSelf->npc__DOT__u_Wstage_bus__DOT__state) {
         Vnpc___024root____Vdpiimwrap_npc__DOT__u_IFU__DOT__inst_mem__DOT__pmem_read_TOP(vlSelf->npc__DOT__pcF, vlSelf->__Vfunc_npc__DOT__u_IFU__DOT__inst_mem__DOT__pmem_read__1__Vfuncout);
         vlSelf->npc__DOT__instF = vlSelf->__Vfunc_npc__DOT__u_IFU__DOT__inst_mem__DOT__pmem_read__1__Vfuncout;
     } else {

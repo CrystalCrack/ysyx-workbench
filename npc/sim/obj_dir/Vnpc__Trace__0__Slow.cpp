@@ -702,14 +702,13 @@ VL_ATTR_COLD void Vnpc___024root__trace_init_sub__TOP__0(Vnpc___024root* vlSelf,
     tracep->declBus(c+522,"IDLE", false,-1, 31,0);
     tracep->declBus(c+523,"WAIT_READY", false,-1, 31,0);
     tracep->declBit(c+161,"state", false,-1);
-    tracep->declBit(c+576,"valid", false,-1);
     tracep->pushNamePrefix("inst_mem ");
     tracep->declBus(c+165,"raddr", false,-1, 31,0);
     tracep->declBus(c+522,"waddr", false,-1, 31,0);
     tracep->declBus(c+522,"wdata", false,-1, 31,0);
     tracep->declBus(c+559,"wmask", false,-1, 7,0);
     tracep->declBit(c+566,"wen", false,-1);
-    tracep->declBit(c+576,"valid", false,-1);
+    tracep->declBit(c+273,"valid", false,-1);
     tracep->declBus(c+164,"rdata", false,-1, 31,0);
     tracep->popNamePrefix(2);
     tracep->pushNamePrefix("u_Mstage_bus ");
@@ -1858,5 +1857,4 @@ VL_ATTR_COLD void Vnpc___024root__trace_full_sub_0(Vnpc___024root* vlSelf, Veril
     bufp->fullQData(oldp+572,(0ULL),33);
     bufp->fullIData(oldp+574,(0x24U),32);
     bufp->fullIData(oldp+575,(8U),32);
-    bufp->fullBit(oldp+576,(vlSelf->npc__DOT__u_IFU__DOT__valid));
 }

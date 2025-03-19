@@ -61,7 +61,6 @@ class Vnpc___024root final : public VerilatedModule {
         CData/*2:0*/ npc__DOT__rdregsrcW;
         CData/*4:0*/ npc__DOT__rdW;
         CData/*0:0*/ npc__DOT__u_IFU__DOT__state;
-        CData/*0:0*/ npc__DOT__u_IFU__DOT__valid;
         CData/*0:0*/ npc__DOT__dstagebus_inst__DOT__state;
         CData/*0:0*/ npc__DOT__idu_inst__DOT__ebreak;
         CData/*5:0*/ npc__DOT__idu_inst__DOT____Vcellinp__get_cmptype__key;
@@ -79,9 +78,9 @@ class Vnpc___024root final : public VerilatedModule {
         CData/*0:0*/ npc__DOT__idu_inst__DOT__get_mwmask__DOT__i0__DOT__hit;
         CData/*2:0*/ npc__DOT__idu_inst__DOT__get_mrtype__DOT__i0__DOT__lut_out;
         CData/*0:0*/ npc__DOT__idu_inst__DOT__get_mrtype__DOT__i0__DOT__hit;
+        CData/*3:0*/ npc__DOT__idu_inst__DOT__get_cmptype__DOT__i0__DOT__lut_out;
     };
     struct {
-        CData/*3:0*/ npc__DOT__idu_inst__DOT__get_cmptype__DOT__i0__DOT__lut_out;
         CData/*0:0*/ npc__DOT__idu_inst__DOT__get_cmptype__DOT__i0__DOT__hit;
         CData/*2:0*/ npc__DOT__idu_inst__DOT__get_ALUop__DOT__i0__DOT__lut_out;
         CData/*0:0*/ npc__DOT__idu_inst__DOT__get_ALUop__DOT__i0__DOT__hit;
@@ -145,9 +144,9 @@ class Vnpc___024root final : public VerilatedModule {
         IData/*31:0*/ npc__DOT__csrW;
         IData/*31:0*/ npc__DOT__snpcW;
         IData/*31:0*/ npc__DOT__mdataW;
+        IData/*31:0*/ npc__DOT__rddataW;
     };
     struct {
-        IData/*31:0*/ npc__DOT__rddataW;
         IData/*31:0*/ npc__DOT__u_RegisterFile__DOT__unnamedblk1__DOT__i;
         IData/*31:0*/ npc__DOT__sel_imm__DOT__i0__DOT__lut_out;
         IData/*31:0*/ npc__DOT__sel_csr_read__DOT__i0__DOT__lut_out;

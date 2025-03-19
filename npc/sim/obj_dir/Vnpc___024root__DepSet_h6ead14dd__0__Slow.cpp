@@ -254,7 +254,7 @@ VL_ATTR_COLD void Vnpc___024root___stl_sequent__TOP__0(Vnpc___024root* vlSelf) {
     Vnpc__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vnpc___024root___stl_sequent__TOP__0\n"); );
     // Body
-    if (vlSelf->npc__DOT__u_IFU__DOT__valid) {
+    if (vlSelf->npc__DOT__u_Wstage_bus__DOT__state) {
         Vnpc___024root____Vdpiimwrap_npc__DOT__u_IFU__DOT__inst_mem__DOT__pmem_read_TOP(vlSelf->npc__DOT__pcF, vlSelf->__Vfunc_npc__DOT__u_IFU__DOT__inst_mem__DOT__pmem_read__1__Vfuncout);
         vlSelf->npc__DOT__instF = vlSelf->__Vfunc_npc__DOT__u_IFU__DOT__inst_mem__DOT__pmem_read__1__Vfuncout;
     } else {
@@ -1711,7 +1711,6 @@ VL_ATTR_COLD void Vnpc___024root___ctor_var_reset(Vnpc___024root* vlSelf) {
     vlSelf->npc__DOT__rddataW = 0;
     vlSelf->npc__DOT__csraddrW = 0;
     vlSelf->npc__DOT__u_IFU__DOT__state = 0;
-    vlSelf->npc__DOT__u_IFU__DOT__valid = 0;
     vlSelf->npc__DOT__dstagebus_inst__DOT__state = 0;
     vlSelf->npc__DOT__idu_inst__DOT__ebreak = 0;
     vlSelf->npc__DOT__idu_inst__DOT____Vcellinp__get_itype__key = 0;

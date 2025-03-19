@@ -17,7 +17,7 @@
 #ifndef VL_DPIDECL_get_CSR_
 #define VL_DPIDECL_get_CSR_
 void get_CSR(int* csr_mtvec, int* csr_mcause, int* csr_mepc, int* csr_mstatus) {
-    // DPI export at /home/crystc/ysyx-workbench/npc/vsrc/npc.sv:478:19
+    // DPI export at vsrc/npc.sv:478:19
     return Vnpc::get_CSR(csr_mtvec, csr_mcause, csr_mepc, csr_mstatus);
 }
 #endif
@@ -25,7 +25,7 @@ void get_CSR(int* csr_mtvec, int* csr_mcause, int* csr_mepc, int* csr_mstatus) {
 #ifndef VL_DPIDECL_get_pc_inst_
 #define VL_DPIDECL_get_pc_inst_
 void get_pc_inst(int* cpu_pc, int* cpu_inst) {
-    // DPI export at /home/crystc/ysyx-workbench/npc/vsrc/npc.sv:470:19
+    // DPI export at vsrc/npc.sv:470:19
     return Vnpc::get_pc_inst(cpu_pc, cpu_inst);
 }
 #endif
@@ -33,7 +33,7 @@ void get_pc_inst(int* cpu_pc, int* cpu_inst) {
 #ifndef VL_DPIDECL_get_reg_
 #define VL_DPIDECL_get_reg_
 void get_reg(int addr, int* reg_data) {
-    // DPI export at /home/crystc/ysyx-workbench/npc/vsrc/RegisterFile.v:29:19
+    // DPI export at vsrc/RegisterFile.v:29:19
     return Vnpc::get_reg(addr, reg_data);
 }
 #endif

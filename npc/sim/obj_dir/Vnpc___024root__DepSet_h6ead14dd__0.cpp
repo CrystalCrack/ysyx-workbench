@@ -71,35 +71,15 @@ VL_INLINE_OPT void Vnpc___024root___nba_sequent__TOP__0(Vnpc___024root* vlSelf) 
     CData/*0:0*/ __Vdly__npc__DOT__u_Wstage_bus__DOT__state;
     __Vdly__npc__DOT__u_Wstage_bus__DOT__state = 0;
     // Body
+    if (vlSelf->npc__DOT__idu_inst__DOT__ebreak) {
+        Vnpc___024root____Vdpiimwrap_npc__DOT__ebreak_TOP();
+    }
     __Vdly__npc__DOT__u_IFU__DOT__state = vlSelf->npc__DOT__u_IFU__DOT__state;
     __Vdly__npc__DOT__dstagebus_inst__DOT__state = vlSelf->npc__DOT__dstagebus_inst__DOT__state;
     __Vdly__npc__DOT__pcF = vlSelf->npc__DOT__pcF;
     __Vdly__npc__DOT__u_Wstage_bus__DOT__state = vlSelf->npc__DOT__u_Wstage_bus__DOT__state;
     __Vdly__npc__DOT__u_Xstage_bus__DOT__state = vlSelf->npc__DOT__u_Xstage_bus__DOT__state;
     __Vdly__npc__DOT__u_Mstage_bus__DOT__state = vlSelf->npc__DOT__u_Mstage_bus__DOT__state;
-    if ((1U & ((~ ((0x37U == (0x7fU & vlSelf->npc__DOT__instD)) 
-                   | ((0x17U == (0x7fU & vlSelf->npc__DOT__instD)) 
-                      | ((0x6fU == (0x7fU & vlSelf->npc__DOT__instD)) 
-                         | ((IData)(vlSelf->npc__DOT__jalrD) 
-                            | ((0x63U == (0x7fU & vlSelf->npc__DOT__instD)) 
-                               | ((3U == (0x7fU & vlSelf->npc__DOT__instD)) 
-                                  | ((0x23U == (0x7fU 
-                                                & vlSelf->npc__DOT__instD)) 
-                                     | ((0x13U == (0x7fU 
-                                                   & vlSelf->npc__DOT__instD)) 
-                                        | ((0x33U == 
-                                            (0x7fU 
-                                             & vlSelf->npc__DOT__instD)) 
-                                           | ((IData)(vlSelf->npc__DOT__idu_inst__DOT__ebreak) 
-                                              | ((IData)(vlSelf->npc__DOT__ecallD) 
-                                                 | ((IData)(vlSelf->npc__DOT__mretD) 
-                                                    | (0x73U 
-                                                       == 
-                                                       (0x7fU 
-                                                        & vlSelf->npc__DOT__instD))))))))))))))) 
-               | (IData)(vlSelf->npc__DOT__idu_inst__DOT__ebreak)))) {
-        Vnpc___024root____Vdpiimwrap_npc__DOT__ebreak_TOP();
-    }
     __Vdlyvset__npc__DOT__u_RegisterFile__DOT__rf__v0 = 0U;
     __Vdlyvset__npc__DOT__u_RegisterFile__DOT__rf__v32 = 0U;
     __Vdly__npc__DOT__u_IFU__DOT__state = (1U & ((~ (IData)(vlSelf->rst)) 

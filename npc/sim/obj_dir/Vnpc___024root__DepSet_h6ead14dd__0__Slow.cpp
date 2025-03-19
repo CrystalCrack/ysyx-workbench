@@ -265,9 +265,6 @@ VL_ATTR_COLD void Vnpc___024root___stl_sequent__TOP__0(Vnpc___024root* vlSelf) {
                                              + vlSelf->npc__DOT__pcF))));
     vlSelf->npc__DOT__sel_WB__DOT__i0__DOT__data_list[2U] 
         = ((IData)(4U) + vlSelf->npc__DOT__pcF);
-    vlSelf->npc__DOT__ALU_A = ((0U == (IData)(vlSelf->npc__DOT__ALUsrc1X))
-                                ? vlSelf->npc__DOT__src1D
-                                : vlSelf->npc__DOT__pcF);
     vlSelf->npc__DOT__sel_csr_read__DOT__i0__DOT__data_list[0U] 
         = vlSelf->npc__DOT__mtvec_data;
     vlSelf->npc__DOT__sel_csr_read__DOT__i0__DOT__data_list[1U] 
@@ -423,6 +420,11 @@ VL_ATTR_COLD void Vnpc___024root___stl_sequent__TOP__0(Vnpc___024root* vlSelf) {
     vlSelf->npc__DOT__idu_inst__DOT____VdfgTmp_h099e61d4__0 
         = ((0x13U == (0x7fU & vlSelf->npc__DOT__instF)) 
            | (0x33U == (0x7fU & vlSelf->npc__DOT__instF)));
+    vlSelf->npc__DOT__ALU_A = ((0U == ((0x17U == (0x7fU 
+                                                  & vlSelf->npc__DOT__instF))
+                                        ? 1U : 0U))
+                                ? vlSelf->npc__DOT__src1D
+                                : vlSelf->npc__DOT__pcF);
     vlSelf->npc__DOT__idu_inst__DOT____Vcellinp__get_ALUsrc2__key 
         = (((0x33U == (0x7fU & vlSelf->npc__DOT__instF)) 
             << 1U) | (0x73U == (0x7fU & vlSelf->npc__DOT__instF)));
@@ -1644,7 +1646,6 @@ VL_ATTR_COLD void Vnpc___024root___ctor_var_reset(Vnpc___024root* vlSelf) {
     vlSelf->npc__DOT__mstatus_data = 0;
     vlSelf->npc__DOT__csr_rdata = 0;
     vlSelf->npc__DOT__csrD = 0;
-    vlSelf->npc__DOT__ALUsrc1X = 0;
     vlSelf->npc__DOT__ALU_A = 0;
     vlSelf->npc__DOT__ALU_B = 0;
     vlSelf->npc__DOT__Cout = 0;

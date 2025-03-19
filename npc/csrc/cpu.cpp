@@ -220,7 +220,9 @@ void cpu_exec(uint64_t n){
   switch (state) {
     case RUNNING: state = STOP; break;
 
-    case END: case ABORT:
+    case ABORT:
+      display_error_msg();
+    case END: 
     Log("NPC: %s " ANSI_COLOR_BLUE "at pc = " FMT_WORD,
           (state == ABORT ? ANSI_FMT("ABORT", ANSI_COLOR_RED) :
           (halt_ret == 0 ? ANSI_FMT("HIT GOOD TRAP", ANSI_COLOR_GREEN) :

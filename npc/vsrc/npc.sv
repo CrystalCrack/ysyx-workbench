@@ -10,15 +10,15 @@ module npc(
     /* -------------------------------------------------------------------- */
     wire validF;
     wire start, ifetch_en;
-    reg rst_d1, rst_d2;
+    reg rst_d, validW_d;
     wire [31:0] instF, pcF, snpcF;
 
     always @(posedge clk) begin
-        rst_d1 <= rst;
-        rst_d2 <= rst_d1;
+        rst_d <= rst;
+        validW_d <= validW
     end
-    assign start = ~rst & rst_d1; // negedge detect
-    assign ifetch_en = ~rst & (validW | start);
+    assign start = ~rst & rst_d; // negedge detect
+    assign ifetch_en = ~rst & (validW_d | start);
     PC u_PC(
         .clk(clk),
         .rst(rst),

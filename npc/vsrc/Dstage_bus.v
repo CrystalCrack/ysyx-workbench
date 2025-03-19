@@ -62,11 +62,6 @@ module Dstage_bus(
                 instD <= instF;
                 snpcD <= snpcF;
             end
-            else begin
-                pcD <= pcD;
-                instD <= instD;
-                snpcD <= snpcD;
-            end
         end
     end
 

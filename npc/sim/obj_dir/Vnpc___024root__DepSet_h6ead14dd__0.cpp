@@ -50,8 +50,6 @@ VL_INLINE_OPT void Vnpc___024root___nba_sequent__TOP__0(Vnpc___024root* vlSelf) 
     Vnpc__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vnpc___024root___nba_sequent__TOP__0\n"); );
     // Init
-    IData/*31:0*/ __Vdly__npc__DOT__pcF;
-    __Vdly__npc__DOT__pcF = 0;
     CData/*0:0*/ __Vdly__npc__DOT__dstagebus_inst__DOT__state;
     __Vdly__npc__DOT__dstagebus_inst__DOT__state = 0;
     IData/*31:0*/ __Vdly__npc__DOT__pcD;
@@ -78,11 +76,10 @@ VL_INLINE_OPT void Vnpc___024root___nba_sequent__TOP__0(Vnpc___024root* vlSelf) 
     if (vlSelf->npc__DOT__idu_inst__DOT__ebreak) {
         Vnpc___024root____Vdpiimwrap_npc__DOT__ebreak_TOP();
     }
-    __Vdly__npc__DOT__u_Wstage_bus__DOT__state = vlSelf->npc__DOT__u_Wstage_bus__DOT__state;
-    __Vdly__npc__DOT__pcF = vlSelf->npc__DOT__pcF;
-    __Vdly__npc__DOT__dstagebus_inst__DOT__state = vlSelf->npc__DOT__dstagebus_inst__DOT__state;
     __Vdly__npc__DOT__snpcD = vlSelf->npc__DOT__snpcD;
     __Vdly__npc__DOT__pcD = vlSelf->npc__DOT__pcD;
+    __Vdly__npc__DOT__u_Wstage_bus__DOT__state = vlSelf->npc__DOT__u_Wstage_bus__DOT__state;
+    __Vdly__npc__DOT__dstagebus_inst__DOT__state = vlSelf->npc__DOT__dstagebus_inst__DOT__state;
     __Vdly__npc__DOT__u_Xstage_bus__DOT__state = vlSelf->npc__DOT__u_Xstage_bus__DOT__state;
     __Vdly__npc__DOT__u_Mstage_bus__DOT__state = vlSelf->npc__DOT__u_Mstage_bus__DOT__state;
     __Vdlyvset__npc__DOT__u_RegisterFile__DOT__rf__v0 = 0U;
@@ -103,27 +100,37 @@ VL_INLINE_OPT void Vnpc___024root___nba_sequent__TOP__0(Vnpc___024root* vlSelf) 
     if (vlSelf->rst) {
         vlSelf->npc__DOT__rst_d = 1U;
         vlSelf->npc__DOT__u_RegisterFile__DOT__unnamedblk1__DOT__i = 0x20U;
-        __Vdly__npc__DOT__u_Wstage_bus__DOT__state = 0U;
-        __Vdly__npc__DOT__pcF = 0x80000000U;
-        __Vdly__npc__DOT__dstagebus_inst__DOT__state = 0U;
         __Vdly__npc__DOT__snpcD = 0U;
         __Vdly__npc__DOT__pcD = 0x80000000U;
-        vlSelf->npc__DOT__pcF = __Vdly__npc__DOT__pcF;
+        __Vdly__npc__DOT__u_Wstage_bus__DOT__state = 0U;
+        vlSelf->npc__DOT__pcF = 0x80000000U;
+        __Vdly__npc__DOT__dstagebus_inst__DOT__state = 0U;
         __Vdly__npc__DOT__u_Xstage_bus__DOT__state = 0U;
         __Vdly__npc__DOT__u_Mstage_bus__DOT__state = 0U;
         __Vdlyvset__npc__DOT__u_RegisterFile__DOT__rf__v0 = 1U;
         __Vdly__npc__DOT__instD = 0U;
     } else {
         vlSelf->npc__DOT__rst_d = 0U;
+        if (((~ (IData)(vlSelf->npc__DOT__dstagebus_inst__DOT__state)) 
+             & (IData)(vlSelf->npc__DOT__validF))) {
+            __Vdly__npc__DOT__snpcD = ((IData)(4U) 
+                                       + vlSelf->npc__DOT__pcF);
+            __Vdly__npc__DOT__pcD = vlSelf->npc__DOT__pcF;
+            __Vdly__npc__DOT__instD = vlSelf->npc__DOT__instF;
+        } else {
+            __Vdly__npc__DOT__snpcD = vlSelf->npc__DOT__snpcD;
+            __Vdly__npc__DOT__pcD = vlSelf->npc__DOT__pcD;
+            __Vdly__npc__DOT__instD = vlSelf->npc__DOT__instD;
+        }
         if (vlSelf->npc__DOT__u_Wstage_bus__DOT__state) {
             if (vlSelf->npc__DOT__u_Wstage_bus__DOT__state) {
                 __Vdly__npc__DOT__u_Wstage_bus__DOT__state = 0U;
             }
-            __Vdly__npc__DOT__pcF = vlSelf->npc__DOT__dnpcX;
+            vlSelf->npc__DOT__pcF = vlSelf->npc__DOT__dnpcX;
         } else {
             __Vdly__npc__DOT__u_Wstage_bus__DOT__state 
                 = vlSelf->npc__DOT__u_Mstage_bus__DOT__state;
-            __Vdly__npc__DOT__pcF = vlSelf->npc__DOT__pcF;
+            vlSelf->npc__DOT__pcF = vlSelf->npc__DOT__pcF;
         }
         if (vlSelf->npc__DOT__dstagebus_inst__DOT__state) {
             if (vlSelf->npc__DOT__dstagebus_inst__DOT__state) {
@@ -134,18 +141,6 @@ VL_INLINE_OPT void Vnpc___024root___nba_sequent__TOP__0(Vnpc___024root* vlSelf) 
             __Vdly__npc__DOT__dstagebus_inst__DOT__state 
                 = vlSelf->npc__DOT__validF;
         }
-        if (((~ (IData)(vlSelf->npc__DOT__u_Xstage_bus__DOT__state)) 
-             & (IData)(vlSelf->npc__DOT__dstagebus_inst__DOT__state))) {
-            __Vdly__npc__DOT__snpcD = ((IData)(4U) 
-                                       + vlSelf->npc__DOT__pcF);
-            __Vdly__npc__DOT__pcD = vlSelf->npc__DOT__pcF;
-            __Vdly__npc__DOT__instD = vlSelf->npc__DOT__instF;
-        } else {
-            __Vdly__npc__DOT__snpcD = vlSelf->npc__DOT__snpcD;
-            __Vdly__npc__DOT__pcD = vlSelf->npc__DOT__pcD;
-            __Vdly__npc__DOT__instD = vlSelf->npc__DOT__instD;
-        }
-        vlSelf->npc__DOT__pcF = __Vdly__npc__DOT__pcF;
         if (vlSelf->npc__DOT__u_Xstage_bus__DOT__state) {
             if (vlSelf->npc__DOT__u_Xstage_bus__DOT__state) {
                 __Vdly__npc__DOT__u_Xstage_bus__DOT__state 

@@ -92,7 +92,7 @@ module Mstage_bus(
             rdM <= 5'b0;
         end
         else begin
-            if(s_ready) begin
+            if(s_ready & s_valid) begin
                 mvalidM <= mvalidX;
                 mwenM <= mwenX;
                 mwmaskM <= mwmaskX;

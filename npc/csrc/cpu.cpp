@@ -3,7 +3,7 @@
 #include <sdb.h>
 
 #define MAX_INST_TO_PRINT 10
-#define MAX_TRACE 10000000
+#define MAX_TRACE 100
 int sim_time;
 Vnpc *dut;
 CPU_state state;

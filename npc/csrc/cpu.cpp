@@ -32,7 +32,8 @@ void cpu_init(const char* Vcd_file){
   Verilated::traceEverOn(true);
   dut->trace(m_trace, 10);
   m_trace->open(Vcd_file);
-  reset(10);
+  reset(5);
+
 }
 
 void cpu_deinit() {
@@ -142,6 +143,7 @@ void reset(int n) {
     n--;
   }
   dut->rst = 0;
+  single_cycle();
 }
 
 void reg_display(){

@@ -30,7 +30,6 @@ VM_CLASSES_FAST += \
 
 # Generated module classes, non-fast-path, compile with low/medium optimization
 VM_CLASSES_SLOW += \
-	Vnpc__ConstPool_0 \
 	Vnpc___024root__Slow \
 	Vnpc___024root__DepSet_ha668e1b2__0__Slow \
 	Vnpc___024root__DepSet_h6ead14dd__0__Slow \

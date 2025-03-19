@@ -7,33 +7,6 @@
 
 #include "Vnpc___024root.h"
 
-void Vnpc___024root____Vdpiimwrap_npc__DOT__u_IFU__DOT__inst_mem__DOT__pmem_read_TOP(IData/*31:0*/ raddr, IData/*31:0*/ &pmem_read__Vfuncrtn);
-
-VL_INLINE_OPT void Vnpc___024root___ico_sequent__TOP__0(Vnpc___024root* vlSelf) {
-    if (false && vlSelf) {}  // Prevent unused
-    Vnpc__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
-    VL_DEBUG_IF(VL_DBG_MSGF("+    Vnpc___024root___ico_sequent__TOP__0\n"); );
-    // Body
-    vlSelf->npc__DOT__validF = ((~ (IData)(vlSelf->rst)) 
-                                & (0U == (IData)(vlSelf->npc__DOT__u_IFU__DOT__state)));
-    if (vlSelf->npc__DOT__validF) {
-        Vnpc___024root____Vdpiimwrap_npc__DOT__u_IFU__DOT__inst_mem__DOT__pmem_read_TOP(vlSelf->npc__DOT__pcF, vlSelf->__Vfunc_npc__DOT__u_IFU__DOT__inst_mem__DOT__pmem_read__1__Vfuncout);
-        vlSelf->npc__DOT__instF = vlSelf->__Vfunc_npc__DOT__u_IFU__DOT__inst_mem__DOT__pmem_read__1__Vfuncout;
-    } else {
-        vlSelf->npc__DOT__instF = 0U;
-    }
-}
-
-void Vnpc___024root___eval_ico(Vnpc___024root* vlSelf) {
-    if (false && vlSelf) {}  // Prevent unused
-    Vnpc__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
-    VL_DEBUG_IF(VL_DBG_MSGF("+    Vnpc___024root___eval_ico\n"); );
-    // Body
-    if (vlSelf->__VicoTriggered.at(0U)) {
-        Vnpc___024root___ico_sequent__TOP__0(vlSelf);
-    }
-}
-
 void Vnpc___024root___eval_act(Vnpc___024root* vlSelf) {
     if (false && vlSelf) {}  // Prevent unused
     Vnpc__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
@@ -41,7 +14,7 @@ void Vnpc___024root___eval_act(Vnpc___024root* vlSelf) {
 }
 
 void Vnpc___024root____Vdpiimwrap_npc__DOT__ebreak_TOP();
-extern const VlUnpacked<CData/*1:0*/, 32> Vnpc__ConstPool__TABLE_he4a28a83_0;
+void Vnpc___024root____Vdpiimwrap_npc__DOT__u_IFU__DOT__inst_mem__DOT__pmem_read_TOP(IData/*31:0*/ raddr, IData/*31:0*/ &pmem_read__Vfuncrtn);
 void Vnpc___024root____Vdpiimwrap_npc__DOT__u_IFU__DOT__inst_mem__DOT__pmem_write_TOP(IData/*31:0*/ waddr, IData/*31:0*/ wdata, CData/*7:0*/ wmask);
 
 VL_INLINE_OPT void Vnpc___024root___nba_sequent__TOP__0(Vnpc___024root* vlSelf) {
@@ -49,10 +22,10 @@ VL_INLINE_OPT void Vnpc___024root___nba_sequent__TOP__0(Vnpc___024root* vlSelf) 
     Vnpc__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vnpc___024root___nba_sequent__TOP__0\n"); );
     // Init
-    CData/*4:0*/ __Vtableidx1;
-    __Vtableidx1 = 0;
     IData/*31:0*/ __Vdly__npc__DOT__pcF;
     __Vdly__npc__DOT__pcF = 0;
+    CData/*0:0*/ __Vdly__npc__DOT__u_IFU__DOT__state;
+    __Vdly__npc__DOT__u_IFU__DOT__state = 0;
     CData/*0:0*/ __Vdly__npc__DOT__dstagebus_inst__DOT__state;
     __Vdly__npc__DOT__dstagebus_inst__DOT__state = 0;
     CData/*0:0*/ __Vdlyvset__npc__DOT__u_RegisterFile__DOT__rf__v0;
@@ -70,11 +43,12 @@ VL_INLINE_OPT void Vnpc___024root___nba_sequent__TOP__0(Vnpc___024root* vlSelf) 
     CData/*0:0*/ __Vdly__npc__DOT__u_Wstage_bus__DOT__state;
     __Vdly__npc__DOT__u_Wstage_bus__DOT__state = 0;
     // Body
+    __Vdly__npc__DOT__u_IFU__DOT__state = vlSelf->npc__DOT__u_IFU__DOT__state;
     __Vdly__npc__DOT__u_Wstage_bus__DOT__state = vlSelf->npc__DOT__u_Wstage_bus__DOT__state;
     __Vdly__npc__DOT__dstagebus_inst__DOT__state = vlSelf->npc__DOT__dstagebus_inst__DOT__state;
+    __Vdly__npc__DOT__pcF = vlSelf->npc__DOT__pcF;
     __Vdly__npc__DOT__u_Xstage_bus__DOT__state = vlSelf->npc__DOT__u_Xstage_bus__DOT__state;
     __Vdly__npc__DOT__u_Mstage_bus__DOT__state = vlSelf->npc__DOT__u_Mstage_bus__DOT__state;
-    __Vdly__npc__DOT__pcF = vlSelf->npc__DOT__pcF;
     if ((1U & ((~ ((0x37U == (0x7fU & vlSelf->npc__DOT__instD)) 
                    | ((0x17U == (0x7fU & vlSelf->npc__DOT__instD)) 
                       | ((0x6fU == (0x7fU & vlSelf->npc__DOT__instD)) 
@@ -100,17 +74,22 @@ VL_INLINE_OPT void Vnpc___024root___nba_sequent__TOP__0(Vnpc___024root* vlSelf) 
     }
     __Vdlyvset__npc__DOT__u_RegisterFile__DOT__rf__v0 = 0U;
     __Vdlyvset__npc__DOT__u_RegisterFile__DOT__rf__v32 = 0U;
-    __Vtableidx1 = ((0x10U & ((~ (IData)(vlSelf->npc__DOT__dstagebus_inst__DOT__state)) 
-                              << 4U)) | (((IData)(vlSelf->npc__DOT__validF) 
-                                          << 3U) | 
-                                         (((IData)(vlSelf->npc__DOT__u_IFU__DOT__state) 
-                                           << 1U) | (IData)(vlSelf->rst))));
-    vlSelf->npc__DOT__u_IFU__DOT__state = Vnpc__ConstPool__TABLE_he4a28a83_0
-        [__Vtableidx1];
+    __Vdly__npc__DOT__u_IFU__DOT__state = (1U & ((~ (IData)(vlSelf->rst)) 
+                                                 & ((IData)(vlSelf->npc__DOT__u_IFU__DOT__state)
+                                                     ? 
+                                                    ((IData)(vlSelf->npc__DOT__u_IFU__DOT__state) 
+                                                     & ((IData)(vlSelf->npc__DOT__dstagebus_inst__DOT__state)
+                                                         ? 1U
+                                                         : 0U))
+                                                     : 
+                                                    ((IData)(vlSelf->npc__DOT__u_Wstage_bus__DOT__state)
+                                                      ? 1U
+                                                      : 0U))));
     if (vlSelf->rst) {
         vlSelf->npc__DOT__u_RegisterFile__DOT__unnamedblk1__DOT__i = 0x20U;
         __Vdly__npc__DOT__u_Wstage_bus__DOT__state = 0U;
         __Vdly__npc__DOT__dstagebus_inst__DOT__state = 0U;
+        __Vdly__npc__DOT__pcF = 0x80000000U;
         __Vdly__npc__DOT__u_Xstage_bus__DOT__state = 0U;
         __Vdly__npc__DOT__u_Mstage_bus__DOT__state = 0U;
     } else {
@@ -118,9 +97,11 @@ VL_INLINE_OPT void Vnpc___024root___nba_sequent__TOP__0(Vnpc___024root* vlSelf) 
             if (vlSelf->npc__DOT__u_Wstage_bus__DOT__state) {
                 __Vdly__npc__DOT__u_Wstage_bus__DOT__state = 0U;
             }
+            __Vdly__npc__DOT__pcF = vlSelf->npc__DOT__dnpcX;
         } else {
             __Vdly__npc__DOT__u_Wstage_bus__DOT__state 
                 = vlSelf->npc__DOT__u_Mstage_bus__DOT__state;
+            __Vdly__npc__DOT__pcF = vlSelf->npc__DOT__pcF;
         }
         if (vlSelf->npc__DOT__dstagebus_inst__DOT__state) {
             if (vlSelf->npc__DOT__dstagebus_inst__DOT__state) {
@@ -129,7 +110,7 @@ VL_INLINE_OPT void Vnpc___024root___nba_sequent__TOP__0(Vnpc___024root* vlSelf) 
             }
         } else {
             __Vdly__npc__DOT__dstagebus_inst__DOT__state 
-                = vlSelf->npc__DOT__validF;
+                = vlSelf->npc__DOT__u_IFU__DOT__state;
         }
         if (vlSelf->npc__DOT__u_Xstage_bus__DOT__state) {
             if (vlSelf->npc__DOT__u_Xstage_bus__DOT__state) {
@@ -154,20 +135,12 @@ VL_INLINE_OPT void Vnpc___024root___nba_sequent__TOP__0(Vnpc___024root* vlSelf) 
               1,vlSelf->rst,1,(IData)(vlSelf->npc__DOT__rst_d1),
               1,vlSelf->npc__DOT__rst_d2);
     vlSelf->npc__DOT__rst_d2 = vlSelf->npc__DOT__rst_d1;
-    vlSelf->npc__DOT__validF = ((~ (IData)(vlSelf->rst)) 
-                                & (0U == (IData)(vlSelf->npc__DOT__u_IFU__DOT__state)));
+    vlSelf->npc__DOT__u_IFU__DOT__state = __Vdly__npc__DOT__u_IFU__DOT__state;
     if (vlSelf->rst) {
-        __Vdly__npc__DOT__pcF = 0x80000000U;
         vlSelf->npc__DOT__rst_d1 = 1U;
         __Vdlyvset__npc__DOT__u_RegisterFile__DOT__rf__v0 = 1U;
         vlSelf->npc__DOT__mdataW = 0U;
     } else {
-        __Vdly__npc__DOT__pcF = (((~ (IData)(vlSelf->rst)) 
-                                  & ((IData)(vlSelf->npc__DOT__u_Wstage_bus__DOT__state) 
-                                     | ((~ (IData)(vlSelf->rst)) 
-                                        & (IData)(vlSelf->npc__DOT__rst_d1))))
-                                  ? vlSelf->npc__DOT__dnpcX
-                                  : vlSelf->npc__DOT__pcF);
         vlSelf->npc__DOT__rst_d1 = 0U;
         if ((5U != (IData)(vlSelf->npc__DOT__rdregsrcW))) {
             __Vdlyvval__npc__DOT__u_RegisterFile__DOT__rf__v32 
@@ -1487,7 +1460,7 @@ VL_INLINE_OPT void Vnpc___024root___nba_sequent__TOP__0(Vnpc___024root* vlSelf) 
                                                 + (vlSelf->npc__DOT__ALU_A 
                                                    + 
                                                    (~ vlSelf->npc__DOT__ALU_B)));
-    if (vlSelf->npc__DOT__validF) {
+    if (vlSelf->npc__DOT__u_IFU__DOT__valid) {
         Vnpc___024root____Vdpiimwrap_npc__DOT__u_IFU__DOT__inst_mem__DOT__pmem_read_TOP(vlSelf->npc__DOT__pcF, vlSelf->__Vfunc_npc__DOT__u_IFU__DOT__inst_mem__DOT__pmem_read__1__Vfuncout);
         vlSelf->npc__DOT__instF = vlSelf->__Vfunc_npc__DOT__u_IFU__DOT__inst_mem__DOT__pmem_read__1__Vfuncout;
     } else {
@@ -1772,10 +1745,6 @@ void Vnpc___024root___eval_nba(Vnpc___024root* vlSelf) {
     }
 }
 
-void Vnpc___024root___eval_triggers__ico(Vnpc___024root* vlSelf);
-#ifdef VL_DEBUG
-VL_ATTR_COLD void Vnpc___024root___dump_triggers__ico(Vnpc___024root* vlSelf);
-#endif  // VL_DEBUG
 void Vnpc___024root___eval_triggers__act(Vnpc___024root* vlSelf);
 #ifdef VL_DEBUG
 VL_ATTR_COLD void Vnpc___024root___dump_triggers__act(Vnpc___024root* vlSelf);
@@ -1789,29 +1758,10 @@ void Vnpc___024root___eval(Vnpc___024root* vlSelf) {
     Vnpc__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vnpc___024root___eval\n"); );
     // Init
-    CData/*0:0*/ __VicoContinue;
     VlTriggerVec<1> __VpreTriggered;
     IData/*31:0*/ __VnbaIterCount;
     CData/*0:0*/ __VnbaContinue;
     // Body
-    vlSelf->__VicoIterCount = 0U;
-    __VicoContinue = 1U;
-    while (__VicoContinue) {
-        __VicoContinue = 0U;
-        Vnpc___024root___eval_triggers__ico(vlSelf);
-        if (vlSelf->__VicoTriggered.any()) {
-            __VicoContinue = 1U;
-            if (VL_UNLIKELY((0x64U < vlSelf->__VicoIterCount))) {
-#ifdef VL_DEBUG
-                Vnpc___024root___dump_triggers__ico(vlSelf);
-#endif
-                VL_FATAL_MT("vsrc/npc.sv", 1, "", "Input combinational region did not converge.");
-            }
-            vlSelf->__VicoIterCount = ((IData)(1U) 
-                                       + vlSelf->__VicoIterCount);
-            Vnpc___024root___eval_ico(vlSelf);
-        }
-    }
     __VnbaIterCount = 0U;
     __VnbaContinue = 1U;
     while (__VnbaContinue) {

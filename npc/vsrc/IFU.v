@@ -39,7 +39,7 @@ module IFU(
         .wdata 	(0    ),
         .wmask 	(0    ),
         .wen   	(0    ),
-        .valid 	(valid  ),
+        .valid 	(s_valid  ),
         .rdata 	(inst  )
     );
 endmodule

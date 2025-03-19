@@ -254,6 +254,12 @@ VL_ATTR_COLD void Vnpc___024root___stl_sequent__TOP__0(Vnpc___024root* vlSelf) {
     Vnpc__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vnpc___024root___stl_sequent__TOP__0\n"); );
     // Body
+    if (vlSelf->npc__DOT__u_IFU__DOT__valid) {
+        Vnpc___024root____Vdpiimwrap_npc__DOT__u_IFU__DOT__inst_mem__DOT__pmem_read_TOP(vlSelf->npc__DOT__pcF, vlSelf->__Vfunc_npc__DOT__u_IFU__DOT__inst_mem__DOT__pmem_read__1__Vfuncout);
+        vlSelf->npc__DOT__instF = vlSelf->__Vfunc_npc__DOT__u_IFU__DOT__inst_mem__DOT__pmem_read__1__Vfuncout;
+    } else {
+        vlSelf->npc__DOT__instF = 0U;
+    }
     vlSelf->npc__DOT__sel_csr_read__DOT__i0__DOT__pair_list[0U] 
         = (0x30500000000ULL | (QData)((IData)(vlSelf->npc__DOT__mtvec_data)));
     vlSelf->npc__DOT__sel_csr_read__DOT__i0__DOT__pair_list[1U] 
@@ -408,8 +414,6 @@ VL_ATTR_COLD void Vnpc___024root___stl_sequent__TOP__0(Vnpc___024root* vlSelf) {
     vlSelf->npc__DOT__mrtypeD = ((IData)(vlSelf->npc__DOT__idu_inst__DOT__get_mrtype__DOT__i0__DOT__hit)
                                   ? (IData)(vlSelf->npc__DOT__idu_inst__DOT__get_mrtype__DOT__i0__DOT__lut_out)
                                   : 0U);
-    vlSelf->npc__DOT__validF = ((~ (IData)(vlSelf->rst)) 
-                                & (0U == (IData)(vlSelf->npc__DOT__u_IFU__DOT__state)));
     vlSelf->npc__DOT__idu_inst__DOT____Vcellinp__get_ALUsrc2__key 
         = ((((0x33U == (0x7fU & vlSelf->npc__DOT__instD)) 
              | (0x63U == (0x7fU & vlSelf->npc__DOT__instD))) 
@@ -493,12 +497,6 @@ VL_ATTR_COLD void Vnpc___024root___stl_sequent__TOP__0(Vnpc___024root* vlSelf) {
                                     : ((2U == (IData)(vlSelf->npc__DOT__ALUsrc2X))
                                         ? vlSelf->npc__DOT__csrX
                                         : 0U)));
-    if (vlSelf->npc__DOT__validF) {
-        Vnpc___024root____Vdpiimwrap_npc__DOT__u_IFU__DOT__inst_mem__DOT__pmem_read_TOP(vlSelf->npc__DOT__pcF, vlSelf->__Vfunc_npc__DOT__u_IFU__DOT__inst_mem__DOT__pmem_read__1__Vfuncout);
-        vlSelf->npc__DOT__instF = vlSelf->__Vfunc_npc__DOT__u_IFU__DOT__inst_mem__DOT__pmem_read__1__Vfuncout;
-    } else {
-        vlSelf->npc__DOT__instF = 0U;
-    }
     vlSelf->npc__DOT__idu_inst__DOT__get_ALUsrc2__DOT__i0__DOT__lut_out 
         = ((- (IData)(((IData)(vlSelf->npc__DOT__idu_inst__DOT____Vcellinp__get_ALUsrc2__key) 
                        == vlSelf->npc__DOT__idu_inst__DOT__get_ALUsrc2__DOT__i0__DOT__key_list
@@ -1593,21 +1591,6 @@ VL_ATTR_COLD void Vnpc___024root___eval_stl(Vnpc___024root* vlSelf) {
 }
 
 #ifdef VL_DEBUG
-VL_ATTR_COLD void Vnpc___024root___dump_triggers__ico(Vnpc___024root* vlSelf) {
-    if (false && vlSelf) {}  // Prevent unused
-    Vnpc__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
-    VL_DEBUG_IF(VL_DBG_MSGF("+    Vnpc___024root___dump_triggers__ico\n"); );
-    // Body
-    if ((1U & (~ (IData)(vlSelf->__VicoTriggered.any())))) {
-        VL_DBG_MSGF("         No triggers active\n");
-    }
-    if (vlSelf->__VicoTriggered.at(0U)) {
-        VL_DBG_MSGF("         'ico' region trigger index 0 is active: Internal 'ico' trigger - first iteration\n");
-    }
-}
-#endif  // VL_DEBUG
-
-#ifdef VL_DEBUG
 VL_ATTR_COLD void Vnpc___024root___dump_triggers__act(Vnpc___024root* vlSelf) {
     if (false && vlSelf) {}  // Prevent unused
     Vnpc__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
@@ -1644,7 +1627,6 @@ VL_ATTR_COLD void Vnpc___024root___ctor_var_reset(Vnpc___024root* vlSelf) {
     // Body
     vlSelf->clk = 0;
     vlSelf->rst = 0;
-    vlSelf->npc__DOT__validF = 0;
     vlSelf->npc__DOT__rst_d1 = 0;
     vlSelf->npc__DOT__rst_d2 = 0;
     vlSelf->npc__DOT__instF = 0;
@@ -1729,6 +1711,7 @@ VL_ATTR_COLD void Vnpc___024root___ctor_var_reset(Vnpc___024root* vlSelf) {
     vlSelf->npc__DOT__rddataW = 0;
     vlSelf->npc__DOT__csraddrW = 0;
     vlSelf->npc__DOT__u_IFU__DOT__state = 0;
+    vlSelf->npc__DOT__u_IFU__DOT__valid = 0;
     vlSelf->npc__DOT__dstagebus_inst__DOT__state = 0;
     vlSelf->npc__DOT__idu_inst__DOT__ebreak = 0;
     vlSelf->npc__DOT__idu_inst__DOT____Vcellinp__get_itype__key = 0;

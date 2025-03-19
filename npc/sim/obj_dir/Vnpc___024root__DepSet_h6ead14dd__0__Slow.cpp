@@ -420,14 +420,14 @@ VL_ATTR_COLD void Vnpc___024root___stl_sequent__TOP__0(Vnpc___024root* vlSelf) {
     vlSelf->npc__DOT__idu_inst__DOT____VdfgTmp_h099e61d4__0 
         = ((0x13U == (0x7fU & vlSelf->npc__DOT__instF)) 
            | (0x33U == (0x7fU & vlSelf->npc__DOT__instF)));
-    vlSelf->npc__DOT__ALU_A = ((0U == ((0x17U == (0x7fU 
-                                                  & vlSelf->npc__DOT__instF))
-                                        ? 1U : 0U))
-                                ? vlSelf->npc__DOT__src1D
-                                : vlSelf->npc__DOT__pcF);
     vlSelf->npc__DOT__idu_inst__DOT____Vcellinp__get_ALUsrc2__key 
         = (((0x33U == (0x7fU & vlSelf->npc__DOT__instF)) 
             << 1U) | (0x73U == (0x7fU & vlSelf->npc__DOT__instF)));
+    vlSelf->npc__DOT__src1D = ((0U == (0x1fU & (vlSelf->npc__DOT__instF 
+                                                >> 0xfU)))
+                                ? 0U : vlSelf->npc__DOT__u_RegisterFile__DOT__rf
+                               [(0x1fU & (vlSelf->npc__DOT__instF 
+                                          >> 0xfU))]);
     vlSelf->npc__DOT__sel_imm__DOT__i0__DOT__data_list[0U] 
         = (((- (IData)((vlSelf->npc__DOT__instF >> 0x1fU))) 
             << 0xcU) | ((0x800U & (vlSelf->npc__DOT__instF 
@@ -488,6 +488,11 @@ VL_ATTR_COLD void Vnpc___024root___stl_sequent__TOP__0(Vnpc___024root* vlSelf) {
     vlSelf->npc__DOT__ALUsrc2D = ((IData)(vlSelf->npc__DOT__idu_inst__DOT__get_ALUsrc2__DOT__i0__DOT__hit)
                                    ? (IData)(vlSelf->npc__DOT__idu_inst__DOT__get_ALUsrc2__DOT__i0__DOT__lut_out)
                                    : 1U);
+    vlSelf->npc__DOT__ALU_A = ((0U == ((0x17U == (0x7fU 
+                                                  & vlSelf->npc__DOT__instF))
+                                        ? 1U : 0U))
+                                ? vlSelf->npc__DOT__src1D
+                                : vlSelf->npc__DOT__pcF);
     vlSelf->npc__DOT__jumpD = ((0x6fU == (0x7fU & vlSelf->npc__DOT__instF)) 
                                | (IData)(vlSelf->npc__DOT__jalrD));
     vlSelf->npc__DOT__idu_inst__DOT____Vcellinp__get_cmptype__key 
@@ -899,6 +904,13 @@ VL_ATTR_COLD void Vnpc___024root___stl_sequent__TOP__0(Vnpc___024root* vlSelf) {
     vlSelf->npc__DOT__csraddrD = ((IData)(vlSelf->npc__DOT__write_csr)
                                    ? (vlSelf->npc__DOT__instF 
                                       >> 0x14U) : 0U);
+    vlSelf->npc__DOT__rf_raddr2 = ((IData)(vlSelf->npc__DOT__ecallD)
+                                    ? 0xfU : (0x1fU 
+                                              & (vlSelf->npc__DOT__instF 
+                                                 >> 0x14U)));
+    vlSelf->npc__DOT__src2D = ((0U == (IData)(vlSelf->npc__DOT__rf_raddr2))
+                                ? 0U : vlSelf->npc__DOT__u_RegisterFile__DOT__rf
+                               [vlSelf->npc__DOT__rf_raddr2]);
     vlSelf->npc__DOT__idu_inst__DOT__get_ALUop__DOT__i0__DOT__lut_out 
         = ((- (IData)(((IData)(vlSelf->npc__DOT__idu_inst__DOT____Vcellinp__get_ALUop__key) 
                        == vlSelf->npc__DOT__idu_inst__DOT__get_ALUop__DOT__i0__DOT__key_list
@@ -1077,16 +1089,11 @@ VL_ATTR_COLD void Vnpc___024root___stl_sequent__TOP__0(Vnpc___024root* vlSelf) {
     vlSelf->npc__DOT__csr_rdata = ((IData)(vlSelf->npc__DOT__sel_csr_read__DOT__i0__DOT__hit)
                                     ? vlSelf->npc__DOT__sel_csr_read__DOT__i0__DOT__lut_out
                                     : 0U);
-    if (vlSelf->npc__DOT__ecallD) {
-        vlSelf->npc__DOT__rf_raddr2 = 0xfU;
-        vlSelf->npc__DOT__csrD = vlSelf->npc__DOT__mtvec_data;
-    } else {
-        vlSelf->npc__DOT__rf_raddr2 = (0x1fU & (vlSelf->npc__DOT__instF 
-                                                >> 0x14U));
-        vlSelf->npc__DOT__csrD = ((IData)(vlSelf->npc__DOT__mretD)
+    vlSelf->npc__DOT__csrD = ((IData)(vlSelf->npc__DOT__ecallD)
+                               ? vlSelf->npc__DOT__mtvec_data
+                               : ((IData)(vlSelf->npc__DOT__mretD)
                                    ? vlSelf->npc__DOT__mepc_data
-                                   : vlSelf->npc__DOT__csr_rdata);
-    }
+                                   : vlSelf->npc__DOT__csr_rdata));
     vlSelf->npc__DOT__sel_WB__DOT__i0__DOT__pair_list[0U] 
         = (0x400000000ULL | (QData)((IData)(vlSelf->npc__DOT__csrD)));
     vlSelf->npc__DOT__sel_WB__DOT__i0__DOT__data_list[0U] 

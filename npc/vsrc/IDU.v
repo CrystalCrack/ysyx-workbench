@@ -171,7 +171,7 @@ module IDU(
         .DATA_LEN(2)
     ) get_ALUsrc2 (
         .out(ALUsrc2D),
-        .key({Rarith, csrRelated}),
+        .key({Rarith | branchD, csrRelated}),
         .default_out(2'd1),
         .lut({2'b10, 2'd0,
               2'b01, 2'd2})

@@ -17,7 +17,7 @@ class Vnpc___024root final : public VerilatedModule {
     struct {
         VL_IN8(clk,0,0);
         VL_IN8(rst,0,0);
-        CData/*0:0*/ npc__DOT__ifetch_en;
+        CData/*0:0*/ npc__DOT__validF;
         CData/*0:0*/ npc__DOT__rst_d;
         CData/*0:0*/ npc__DOT__validW_d;
         CData/*2:0*/ npc__DOT__mrtypeD;

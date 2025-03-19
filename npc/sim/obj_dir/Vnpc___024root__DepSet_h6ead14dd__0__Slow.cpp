@@ -408,10 +408,10 @@ VL_ATTR_COLD void Vnpc___024root___stl_sequent__TOP__0(Vnpc___024root* vlSelf) {
     vlSelf->npc__DOT__mrtypeD = ((IData)(vlSelf->npc__DOT__idu_inst__DOT__get_mrtype__DOT__i0__DOT__hit)
                                   ? (IData)(vlSelf->npc__DOT__idu_inst__DOT__get_mrtype__DOT__i0__DOT__lut_out)
                                   : 0U);
-    vlSelf->npc__DOT__ifetch_en = ((~ (IData)(vlSelf->rst)) 
-                                   & ((IData)(vlSelf->npc__DOT__validW_d) 
-                                      | ((~ (IData)(vlSelf->rst)) 
-                                         & (IData)(vlSelf->npc__DOT__rst_d))));
+    vlSelf->npc__DOT__validF = ((~ (IData)(vlSelf->rst)) 
+                                & ((IData)(vlSelf->npc__DOT__validW_d) 
+                                   | ((~ (IData)(vlSelf->rst)) 
+                                      & (IData)(vlSelf->npc__DOT__rst_d))));
     vlSelf->npc__DOT__idu_inst__DOT____Vcellinp__get_ALUsrc2__key 
         = ((((0x33U == (0x7fU & vlSelf->npc__DOT__instD)) 
              | (0x63U == (0x7fU & vlSelf->npc__DOT__instD))) 
@@ -495,7 +495,7 @@ VL_ATTR_COLD void Vnpc___024root___stl_sequent__TOP__0(Vnpc___024root* vlSelf) {
                                     : ((2U == (IData)(vlSelf->npc__DOT__ALUsrc2X))
                                         ? vlSelf->npc__DOT__csrX
                                         : 0U)));
-    if (vlSelf->npc__DOT__ifetch_en) {
+    if (vlSelf->npc__DOT__validF) {
         Vnpc___024root____Vdpiimwrap_npc__DOT__u_IFU__DOT__inst_mem__DOT__pmem_read_TOP(vlSelf->npc__DOT__pcF, vlSelf->__Vfunc_npc__DOT__u_IFU__DOT__inst_mem__DOT__pmem_read__1__Vfuncout);
         vlSelf->npc__DOT__instF = vlSelf->__Vfunc_npc__DOT__u_IFU__DOT__inst_mem__DOT__pmem_read__1__Vfuncout;
     } else {
@@ -1646,7 +1646,7 @@ VL_ATTR_COLD void Vnpc___024root___ctor_var_reset(Vnpc___024root* vlSelf) {
     // Body
     vlSelf->clk = 0;
     vlSelf->rst = 0;
-    vlSelf->npc__DOT__ifetch_en = 0;
+    vlSelf->npc__DOT__validF = 0;
     vlSelf->npc__DOT__rst_d = 0;
     vlSelf->npc__DOT__validW_d = 0;
     vlSelf->npc__DOT__instF = 0;

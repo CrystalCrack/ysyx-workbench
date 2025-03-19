@@ -3,276 +3,482 @@ module npc(
     input rst
 );
 
-    /* IFetch signals */
-    wire [31:0] inst;
-    wire IFU_valid;
-
-    /* Decode signals */
-    wire IDU_ready;
-    wire [4:0] rs1, rs2, rd;
-    wire [31:0] imm;
-    wire [2:0] funct3;
-    wire [6:0] funct7;
-    wire [6:0] opcode;
-    wire [2:0] ALU_op;
-    wire [2:0] rdregsrc;
-    wire [1:0] cmp_type;
-    wire ALUsrc1;
-    wire [1:0] ALUsrc2;
-    wire jump;
-    wire branch;
-
-    /* RegisterFile control signals */
-    wire wen;
-    wire [31:0] rf_wdata;
-    wire [31:0] rf_rdata1;
-    wire [31:0] rf_rdata2;
-    wire [4:0] rf_raddr1;
-    wire [4:0] rf_raddr2;
-    wire [11:0] csr_raddr;
-
-    /* ALU signals */
-    wire [31:0] ALU_result;
-    wire [31:0] ALU_A;
-    wire [31:0] ALU_B;
-    wire ALU_Cin;
-    wire ALU_zero;
-    wire ALU_overflow;
-    wire ALU_Cout;
-    wire [31:0] ALU_result;
-
-    /* compare signals */
-    wire equal;
-    wire signed_less;
-    wire unsigned_less;
-
-    /* ebreak signal */
     wire stop_sim;
 
-    /* PC signals */
-    wire [31:0] pc;
-    wire [31:0] snpc;
-    wire dir_jump;
-    wire branch_judge;
-    assign branch_judge = branch ? (funct3 == 3'b000 ? rf_rdata1==rf_rdata2 :
-                                    funct3 == 3'b001 ? rf_rdata1!=rf_rdata2 :
-                                    funct3 == 3'b101 ? $signed(rf_rdata1)>=$signed(rf_rdata2) :
-                                    funct3 == 3'b111 ? rf_rdata1>=rf_rdata2 :
-                                    funct3 == 3'b100 ? $signed(rf_rdata1)<$signed(rf_rdata2) :
-                                    funct3 == 3'b110 ? rf_rdata1<rf_rdata2 :
-                                                       1'b0)
-                                    : 1'b0;
-    assign dir_jump = jump | (branch_judge);
-    
+    /* -------------------------------------------------------------------- */
+    /*                           Fetch Stage                                */
+    /* -------------------------------------------------------------------- */
+    wire validF;
+    wire start;
+    reg rst_d;
+    wire [31:0] instF, pcF, snpcF;
 
-    /* Memory signals */
-    // reg ivalid;
-    wire [31:0] draddr;
-    wire [31:0] dwaddr;
-    wire [31:0] dwdata;
-    wire [7:0] dwmask;
-    wire [31:0] drdata;
-    wire dvalid;
-    wire dwen;
-    wire [31:0] drdata_ext;
-
-    /* local signals */
-    wire [31:0] cmp_result;
-
+    always @(posedge clk) begin
+        rst_d <= rst;
+    end
+    assign start = ~rst & rst_d; // negedge detect
     PC u_PC(
         .clk(clk),
         .rst(rst),
-        .jump(dir_jump),
-        .ALU_result(ALU_result),
-        .pc(pc),
-        .snpc(snpc)
+        .en(~rst & (validW | start) ),
+        .dnpc(dnpcX),
+        .pc(pcF)
+    );
+    assign snpcF = pcF + 4;
+
+        IFU u_IFU(
+        .clk(clk),
+        .rst(rst),
+        .pc(pcF),
+        .inst(instF),
+        .ready(readyD),
+        .valid(validF)
     );
 
+    /* -------------------------------------------------------------------- */
+    /*                           Decode Stage                               */
+    /* -------------------------------------------------------------------- */
+
+    /* Dstage signals declaration */
+    // bus
+    wire [31:0] instD, pcD, snpcD;
+    wire readyD, validD;
+    // IDU
+    wire [6:0] opcode, funct7;
+    wire [2:0] funct3, mrtypeD, cmp_typeD, ALU_opD, rdregsrcD, inst_type, mrtypeD;
+    wire [1:0] ALUsrc2D;
+    wire [11:0] funct12;
+    wire mvalidD, mwenD, branchD, jumpD, jalrD, ecallD, mretD, write_csr;
+    wire [7:0] mwmaskD;
+    // RegisterFile
+    wire [4:0] rf_raddr1, rf_raddr2, rs1, rs2;
+    wire [31:0] src1D, src2D, rf_rdata1, rf_rdata2;
+    // immediate extend
+    wire [31:0] immD;
+    // csr
+    wire [11:0] csraddrD;
+    wire [31:0] mtvec_data, mcause_data, mepc_data, mstatus_data, csr_rdata, csrD;
+    wire [31:0] mtvec_wdata, mcause_wdata, mepc_wdata, mstatus_wdata;
+    wire mtvec_wen, mcause_wen, mepc_wen, mstatus_wen;
+    // forward
+    wire [4:0] rdD;
+
+    Dstage_bus dstagebus_inst(
+        .clk(clk),
+        .rst(rst),
+
+        .instF(instF),
+        .pcF(pcF),
+        .snpcF(snpcF),
+
+        .instD(instD),
+        .pcD(pcD),
+        .snpcD(snpcD),
+
+        .s_valid(validF),
+        .s_ready(readyD),
+        .m_valid(validD),
+        .m_ready(readyX)
+    );
+
+
+    assign opcode = instD[6:0];
+    assign funct3 = instD[14:12];
+    assign funct7 = instD[31:25];
+    assign funct12 = instD[31:20];
     IDU idu_inst(
-        .inst(inst),
-        .rd(rd),
-        .rs1(rs1),
-        .rs2(rs2),
-        .imm(imm),
+        .opcode(opcode),
         .funct3(funct3),
         .funct7(funct7),
-        .opcode(opcode),
-        .ALU_op(ALU_op),
-        .rdregsrc(rdregsrc),
-        .ALUsrc1(ALUsrc1),
-        .ALUsrc2(ALUsrc2),
-        .jump(jump),
-        .branch(branch),
-        .cmp_type(cmp_type),
-        .dwmask(dwmask),
-        .dwen(dwen),
-        .dvalid(dvalid),
-        .csr_raddr(csr_raddr),
-        .csr_wen({mtvec_wen, mcause_wen, mepc_wen}),
-        .inst_is_ecall(inst_is_ecall),
+        .funct12(funct12),
+
+        .mvalidD(mvalidD),
+        .mwmaskD(mwmaskD),
+        .mwenD(mwenD),
+        .mrtypeD(mrtypeD),
+        .cmp_typeD(cmp_typeD),
+        .branchD(branchD),
+        .jumpD(jumpD),
+        .ALU_opD(ALU_opD),
+        .rdregsrcD(rdregsrcD),
+        .jalrD(jalrD),
+        .ALUsrc2D(ALUsrc2D),
+        .inst_type(inst_type),
+        .ecallD(ecallD),
+        .mretD(mretD),
+        .write_csr(write_csr),
         .stop_sim(stop_sim)
     );
 
-    assign rf_wdata = rdregsrc == 0 ? ALU_result :
-                      rdregsrc == 1 ? drdata_ext :
-                      rdregsrc == 2 ? snpc : 
-                      rdregsrc == 3 ? cmp_result : 
-                      rdregsrc == 5 ? target_rdata : 32'b0;
 
+    assign rs1 = instD[19:15];
+    assign rs2 = instD[24:20];
     assign rf_raddr1 = rs1;
-    assign rf_raddr2 = rs2;
-    assign wen = rdregsrc != 4;
+    assign rf_raddr2 = ecallD ? 5'd15 : rs2;
     RegisterFile#(.ADDR_WIDTH(5),.DATA_WIDTH(32)) u_RegisterFile(
-        .clk    	(clk     ),
-        .rst    	(rst     ),
-        .wdata  	(rf_wdata   ),
-        .waddr  	(rd   ),
-        .wen    	(wen     ),
+        .clk    	(clk),
+        .rst    	(rst),
+        .wdata  	(rddataW),
+        .waddr  	(rdW),
+        .wen    	(~disableW),
         .raddr1 	(rf_raddr1  ),
         .raddr2 	(rf_raddr2  ),
         .rdata1 	(rf_rdata1  ),
         .rdata2 	(rf_rdata2  ),
         .ren    	(1'b1     )
     );
-    
-    assign ALU_A = ALUsrc1 ? pc : rf_rdata1;
-    assign ALU_B = (ALUsrc2==2'd0) ? rf_rdata2 : 
-                   (ALUsrc2==2'd1) ? imm :
-                   target_rdata;
-    ALU u_ALU(
-        .mode(ALU_op),
-        .A(ALU_A),
-        .B(ALU_B),
-        .Cin(ALU_Cin),
-        .zero(ALU_zero),
-        .overflow(ALU_overflow),
-        .Cout(ALU_Cout),
-        .result(ALU_result)
-    );
-    assign equal = ALU_zero;
-    assign signed_less = (~ALU_overflow & ALU_result[31]) | (ALU_overflow & ~ALU_result[31]);
-    assign unsigned_less = ~ALU_Cout;
-    assign cmp_result = cmp_type==0 ? {31'b0, equal} :
-                        cmp_type==1 ? {31'b0, ~equal} :
-                        cmp_type==2 ? {31'b0, signed_less} : {31'b0, unsigned_less};
 
-    IFU u_IFU(
-        .clk(clk),
-        .rst(rst),
-        .pc(pc),
-        .inst(inst),
-        .ready(IDU_ready),
-        .valid(IFU_valid)
-    );
-    assign IDU_ready = 1;
-    
-    // assign ivalid = ~rst;
-    // /* instruction memory */
-    // memory inst_mem(
-    //     .raddr 	(pc  ),
-    //     .waddr 	(0    ),
-    //     .wdata 	(0    ),
-    //     .wmask 	(0    ),
-    //     .wen   	(0    ),
-    //     .valid 	(ivalid  ),
-    //     .rdata 	(inst  )
-    // );
 
-    assign draddr = ALU_result;
-    assign dwaddr = ALU_result;
-    assign dwdata = rf_rdata2;
-    /* data memory */
-    memory data_mem(
-        .raddr 	(draddr  ),
-        .waddr 	(dwaddr  ),
-        .wdata 	(dwdata  ),
-        .wmask 	(dwmask  ),
-        .wen   	(dwen    ),
-        .valid 	(dvalid  ),
-        .rdata 	(drdata  )
-    );
-    assign drdata_ext = funct3 == 3'b000 ? {{24{drdata[7]}}, drdata[7:0]} : //lb
-                        funct3 == 3'b100 ? {24'b0, drdata[7:0]} : //lbu
-                        funct3 == 3'b001 ? {{16{drdata[15]}}, drdata[15:0]} : //lh
-                        funct3 == 3'b101 ? {16'b0, drdata[15:0]} : //lhu
-                                  drdata; //lw
-
-    // CSRs
-    wire mtvec_wen, mcause_wen, mepc_wen, mstatus_wen;
-    wire [31:0] mtvec_wdata, mcause_wdata, mepc_wdata, mstatus_wdata;
-    wire [31:0] mtvec_rdata, mcause_rdata, mepc_rdata, mstatus_rdata, target_rdata;
-    wire inst_is_ecall;
-    
     MuxKeyWithDefault #(
-        .NR_KEY(4),
-        .KEY_LEN(12),
+        .NR_KEY(5),
+        .KEY_LEN(3),
         .DATA_LEN(32)
-        )sel_csr(
-        .out         	(target_rdata),
-        .key         	(csr_raddr),
-        .default_out 	(32'h0000_0000),
-        .lut         	({12'h300, mstatus_rdata,
-                         12'h341, mepc_rdata,
-                         12'h342, mcause_rdata,
-                         12'h305, mtvec_rdata})
+    ) sel_imm (
+        .out(immD),
+        .key(inst_type),
+        .default_out(32'h0000_0000),
+        .lut({3'd0, {{20{instD[31]}}, instD[31:20]},
+              3'd1, {{20{instD[31]}}, instD[31:25], instD[11:7]},
+              3'd3, {instD[31:12], 12'b0},
+              3'd4, {{12{instD[31]}}, instD[19:12], instD[20], instD[30:21], 1'b0},
+              3'd5, {{20{instD[31]}}, instD[7], instD[30:25], instD[11:8], 1'b0}})
     );
+
     
     Reg #(.WIDTH(32), .RESET_VAL(0))
         mtvec(
         .clk  	(clk   ),
         .rst  	(rst   ),
         .din  	(mtvec_wdata   ),
-        .dout 	(mtvec_rdata),  
+        .dout 	(mtvec_data),  
         .wen  	(mtvec_wen)   
     );
-    assign mtvec_wdata = ALU_result;
+    assign mtvec_wen = csraddrW==12'h305;
+    assign mtvec_wdata = rddataW;
     Reg #(.WIDTH(32), .RESET_VAL(0))
         mcause(
         .clk  	(clk   ),
         .rst  	(rst   ),
         .din  	(mcause_wdata   ),
-        .dout 	(mcause_rdata),  
+        .dout 	(mcause_data),  
         .wen  	(mcause_wen)   
     );
-    assign mcause_wdata = inst_is_ecall ? rf_rdata2 : ALU_result;
+    assign mcause_wen = ecallW | (csraddrW==12'h342);
+    assign mcause_wdata = ecallW ? src2W : rddataW;
     Reg #(.WIDTH(32), .RESET_VAL(0))
         mepc(
         .clk  	(clk   ),
         .rst  	(rst   ),
         .din  	(mepc_wdata   ),
-        .dout 	(mepc_rdata),  
+        .dout 	(mepc_data),  
         .wen  	(mepc_wen)   
     );
-    assign mepc_wdata = inst_is_ecall ? pc : ALU_result;
+    assign mepc_wen = ecallW | (csraddrW==12'h341);
+    assign mepc_wdata = ecallW ? pcW : rddataW;
     Reg #(.WIDTH(32), .RESET_VAL(32'h0000_1800))
         mstatus(
         .clk  	(clk   ),
         .rst  	(rst   ),
         .din  	(mstatus_wdata   ),
-        .dout 	(mstatus_rdata),  
+        .dout 	(mstatus_data),  
         .wen  	(mstatus_wen)   
     );
-    assign mstatus_wen = 1'b0;
+    assign mstatus_wen = csraddrW==12'h300;
     assign mstatus_wdata = 32'h0000_1800;
+    MuxKeyWithDefault #(
+        .NR_KEY(4),
+        .KEY_LEN(12),
+        .DATA_LEN(32)
+    )sel_csr_read(
+        .out         	(csr_rdata),
+        .key         	(csraddrD),
+        .default_out 	(32'h0000_0000),
+        .lut         	({12'h300, mstatus_data,
+                         12'h341, mepc_data,
+                         12'h342, mcause_data,
+                         12'h305, mtvec_data})
+    );
+    assign csraddrD = write_csr ? funct12 : 12'h000;
+    assign csrD = ecallD ? mtvec_data :
+                  mretD ? mepc_data : csr_rdata;
+
+
+    assign rdD = instD[11:7];
+
+/* -------------------------------------------------------------------- */
+/*                           Execute Stage                              */
+/* -------------------------------------------------------------------- */
+    // bus
+    wire mvalidX, mwenX, ecallX, mretX, branchX, jumpX, jalrX;
+    wire [1:0] ALUsrc2X;
+    wire [2:0] cmp_typeX, ALU_opX, rdregsrcX, mrtypeX;
+    wire [4:0] rdX;
+    wire [7:0] mwmaskX;
+    wire [11:0] csraddrX;
+    wire [31:0] csrX, immX, snpcX, pcX, src1X, src2X;
+    wire validX, readyX;
+    // ALU
+    wire [31:0] ALU_A, ALU_B, ALU_resultX;
+    wire overflow, zero, Cout;
+    wire uge, ult, eq, neq, slt, sge;
+    // cmp
+    wire cmp_resultX;
+    // pc jump
+    wire [31:0] base_addr, offset, jump_addr, dnpc_, dnpcX;
+    wire judge_jump;
+    
+    Xstage_bus u_Xstage_bus(
+        .clk       	(clk        ),
+        .rst       	(rst        ),
+        .mvalidD   	(mvalidD    ),
+        .mwenD     	(mwenD      ),
+        .mwmaskD   	(mwmaskD    ),
+        .mrtypeD   	(mrtypeD    ),
+        .ecallD    	(ecallD     ),
+        .mretD     	(mretD      ),
+        .cmp_typeD 	(cmp_typeD  ),
+        .branchD   	(branchD    ),
+        .jumpD     	(jumpD      ),
+        .ALU_opD   	(ALU_opD    ),
+        .rdregsrcD 	(rdregsrcD  ),
+        .jalrD     	(jalrD      ),
+        .ALUsrc2D  	(ALUsrc2D   ),
+        .src1D     	(src1D      ),
+        .src2D     	(src2D      ),
+        .immD      	(immD       ),
+        .snpcD     	(snpcD      ),
+        .csraddrD  	(csraddrD   ),
+        .pcD       	(pcD        ),
+        .csrD      	(csrD       ),
+        .rdD       	(rdD        ),
+        .mvalidX   	(mvalidX    ),
+        .mwenX     	(mwenX      ),
+        .mwmaskX   	(mwmaskX    ),
+        .mrtypeX   	(mrtypeX    ),
+        .ecallX    	(ecallX     ),
+        .mretX     	(mretX      ),
+        .cmp_typeX 	(cmp_typeX  ),
+        .branchX   	(branchX    ),
+        .jumpX     	(jumpX      ),
+        .ALU_opX   	(ALU_opX    ),
+        .rdregsrcX 	(rdregsrcX  ),
+        .jalrX     	(jalrX      ),
+        .ALUsrc2X  	(ALUsrc2X   ),
+        .src1X     	(src1X      ),
+        .src2X     	(src2X      ),
+        .immX      	(immX       ),
+        .snpcX     	(snpcX      ),
+        .csraddrX  	(csraddrX   ),
+        .pcX       	(pcX        ),
+        .csrX      	(csrX       ),
+        .rdX       	(rdX        ),
+        .s_valid   	(validD    ),
+        .s_ready   	(readyX    ),
+        .m_ready   	(readyM    ),
+        .m_valid   	(validX    )
+    );
+    
+
+    assign ALU_A = src1X;
+    assign ALU_B = (ALUsrc2X==2'd0) ? src2X : 
+                   (ALUsrc2X==2'd1) ? immX : csrX;
+    ALU u_ALU(
+        .mode(ALU_opX),
+        .A(ALU_A),
+        .B(ALU_B),
+        .Cin(0),
+        .zero(zero),
+        .overflow(overflow),
+        .Cout(Cout),
+        .result(ALU_resultX)
+    );
+    assign uge = Cout;
+    assign ult = ~uge;
+    assign eq = zero;
+    assign neq = ~eq;
+    assign slt = overflow ^ ALU_resultX[31];
+    assign sge = ~slt;
+    MuxKeyWithDefault #(
+        .NR_KEY(6),
+        .KEY_LEN(3),
+        .DATA_LEN(1)
+    ) sel_cmp (
+        .out(cmp_resultX),
+        .key(cmp_typeX),
+        .default_out(1'b0),
+        .lut({3'd0, eq,
+              3'd1, neq,
+              3'd2, slt,
+              3'd3, sge,
+              3'd4, ult,
+              3'd5, uge})
+    );
+
+
+    assign base_addr = jalrX ? src1X : pcX;
+    assign offset = immX;
+    assign jump_addr = base_addr + offset;
+    assign judge_jump = jumpX | (branchX & cmp_resultX);
+    assign dnpc_ = judge_jump ? jump_addr : snpcX;
+    assign dnpcX = (ecallX | mretX) ? csrX : dnpc_;
+
+    
+    /* -------------------------------------------------------------------- */
+    /*                           Memory Stage                               */
+    /* -------------------------------------------------------------------- */
+    // bus
+    wire readyM, validM, cmp_resultM;
+    wire mvalidM, mwenM, ecallM;
+    wire [2:0] rdregsrcM, mrtypeM;
+    wire [4:0] rdM;
+    wire [7:0] mwmaskM;
+    wire [11:0] csraddrM;
+    wire [31:0] dnpcM, pcM, src2M, ALU_resultM, csrM, snpcM;
+    // memory
+    wire [31:0] rdata, mdataM;
+    
+    Mstage_bus u_Mstage_bus(
+        .clk         	(clk          ),
+        .rst         	(rst          ),
+        .mvalidX     	(mvalidX      ),
+        .mwenX       	(mwenX        ),
+        .mwmaskX     	(mwmaskX      ),
+        .mrtypeX     	(mrtypeX      ),
+        .rdregsrcX   	(rdregsrcX    ),
+        .dnpcX       	(dnpcX        ),
+        .snpcX       	(snpcX        ),
+        .pcX         	(pcX          ),
+        .src2X       	(src2X        ),
+        .ALU_resultX 	(ALU_resultX  ),
+        .csraddrX    	(csraddrX     ),
+        .csrX        	(csrX         ),
+        .cmp_resultX 	(cmp_resultX  ),
+        .ecallX      	(ecallX       ),
+        .rdX         	(rdX          ),
+        .mvalidM     	(mvalidM      ),
+        .mwenM       	(mwenM        ),
+        .mwmaskM     	(mwmaskM      ),
+        .mrtypeM     	(mrtypeM      ),
+        .rdregsrcM   	(rdregsrcM    ),
+        .dnpcM       	(dnpcM        ),
+        .snpcM       	(snpcM        ),
+        .pcM         	(pcM          ),
+        .src2M       	(src2M        ),
+        .ALU_resultM 	(ALU_resultM  ),
+        .csraddrM    	(csraddrM     ),
+        .csrM        	(csrM         ),
+        .cmp_resultM 	(cmp_resultM  ),
+        .ecallM      	(ecallM       ),
+        .rdM         	(rdM          ),
+        .s_valid     	(validX       ),
+        .s_ready     	(readyM       ),
+        .m_ready     	(readyW       ),
+        .m_valid     	(validM       )
+    );
+    
+
+    /* data memory */
+    memory data_mem(
+        .raddr 	(ALU_resultM  ),
+        .waddr 	(ALU_resultM  ),
+        .wdata 	(src2M  ),
+        .wmask 	(mwmaskM  ),
+        .wen   	(mwenM    ),
+        .valid 	(mvalidM  ),
+        .rdata 	(rdata  )
+    );
+    MuxKeyWithDefault #(
+        .NR_KEY(5),
+        .KEY_LEN(3),
+        .DATA_LEN(32)
+    ) ext_mdata (
+        .out(mdataM),
+        .key(mrtypeM),
+        .default_out(32'h0000_0000),
+        .lut({3'd0, {{24{rdata[7]}}, rdata[7:0]}, // byte
+              3'd1, {16'b0, rdata[15:0]}, // half word
+              3'd2, rdata, // word
+              3'd3, {24'b0, rdata[7:0]}, // byte unsigned
+              3'd4, {16'b0, rdata[15:0]}}) // half word unsigned
+    );
+
+    /* -------------------------------------------------------------------- */
+    /*                          Write Back Stage                            */
+    /* -------------------------------------------------------------------- */
+    //bus
+    wire readyW, validW;
+    wire ecallW, cmp_resultW, disableW;
+    wire [2:0] rdregsrcW;
+    wire [4:0] rdW;
+    wire [31:0] src2W, pcW, dnpcW, ALU_resultW, csrW, snpcW, mdataW, rddataW;
+    wire [11:0] csraddrW;
+
+    Wstage_bus u_Wstage_bus(
+        .clk         	(clk          ),
+        .rst         	(rst          ),
+        .dnpcM       	(dnpcM        ),
+        .rdregsrcM   	(rdregsrcM    ),
+        .mdataM      	(mdataM       ),
+        .ALU_resultM 	(ALU_resultM  ),
+        .csraddrM    	(csraddrM     ),
+        .snpcM       	(snpcM        ),
+        .pcM         	(pcM          ),
+        .cmp_resultM 	(cmp_resultM  ),
+        .ecallM      	(ecallM       ),
+        .csrM        	(csrM         ),
+        .src2M       	(src2M        ),
+        .rdM         	(rdM          ),
+        .dnpcW       	(dnpcW        ),
+        .rdregsrcW   	(rdregsrcW    ),
+        .mdataW     	(mdataW       ),
+        .ALU_resultW 	(ALU_resultW  ),
+        .csraddrW    	(csraddrW     ),
+        .snpcW       	(snpcW        ),
+        .pcW         	(pcW          ),
+        .cmp_resultW 	(cmp_resultW  ),
+        .ecallW      	(ecallW       ),
+        .csrW        	(csrW         ),
+        .src2W       	(src2W        ),
+        .rdW         	(rdW          ),
+        .s_valid     	(validM       ),
+        .s_ready     	(readyW       ),
+        .m_ready     	(1'b1         ),
+        .m_valid     	(validW       )
+    );
+    MuxKeyWithDefault #(
+        .NR_KEY(5),
+        .KEY_LEN(3),
+        .DATA_LEN(32)
+    ) sel_WB (
+        .out(rddataW),
+        .key(rdregsrcW),
+        .default_out(32'h0000_0000),
+        .lut({3'd0, ALU_resultW,
+              3'd1, mdataW,
+              3'd2, snpcW,
+              3'd3, {31'b0, cmp_resultW},
+              3'd4, csrW})
+    );
+    assign disableW = rdregsrcW == 3'd5;
 
     export "DPI-C" function get_pc_inst;
     function void get_pc_inst();
         output int cpu_pc;
         output int cpu_inst;
-        cpu_pc = pc;
-        cpu_inst = inst;
+        cpu_pc = pcF;
+        cpu_inst = instF;
     endfunction
 
     export "DPI-C" function get_CSR;
     function void get_CSR();
-        output int mtvec_data;
-        output int mcause_data;
-        output int mepc_data;
-        output int mstatus_data;
-        mtvec_data = mtvec_rdata;
-        mcause_data = mcause_rdata;
-        mepc_data = mepc_rdata;
-        mstatus_data = mstatus_rdata;
+        output int csr_mtvec;
+        output int csr_mcause;
+        output int csr_mepc;
+        output int csr_mstatus;
+        csr_mtvec = mtvec_data;
+        csr_mcause = mcause_data;
+        csr_mepc = mepc_data;
+        csr_mstatus = mstatus_data;
     endfunction
 
     import "DPI-C" function void ebreak();

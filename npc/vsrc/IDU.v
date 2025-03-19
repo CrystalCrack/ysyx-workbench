@@ -2,34 +2,181 @@
 
 //instuction Decode Unit
 module IDU(
-    input [31:0] inst,
-    output [4:0] rs1,
-    output [4:0] rs2,
-    output [4:0] rd,
-    output [2:0] funct3,
-    output [6:0] funct7,
-    output [6:0] opcode, 
+    input [6:0] opcode,
+    input [2:0] funct3,
+    input [6:0] funct7,
+    input [11:0] funct12,
 
-    output [31:0] imm,
-    output [2:0] ALU_op,
-    output [2:0] rdregsrc, // 0 for ALU, 1 for mem, 2 for snpc, 3 for compare_result, 4 for disable, 5 for CSR
-    output ALUsrc1, // 0 for regsrc1, 1 for pc
-    output [1:0] ALUsrc2, // 0 for regsrc2, 1 for imm
-    output jump,
-    output branch,
-    output [1:0] cmp_type, // 0 for equal, 1 for unequal, 2 for less signed, 3 for less unsigned
-    output [7:0] dwmask,
-    output dwen,
-    output dvalid,
-    output [11:0] csr_raddr,
-    output [2:0] csr_wen, // mtvec, mcause, mepc
-    output inst_is_ecall,
-
-    output stop_sim,
-
-    input ready,
-    output valid
+    output mvalidD,
+    output [7:0] mwmaskD,
+    output mwenD,
+    output [2:0] mrtypeD, // 0-byte, 1-half, 2-word, 3-byte unsigned, 4-half-unsigned
+    output [2:0] cmp_typeD, // 0-eq, 1-ne, 2-lt, 3-ge, 4-ltu, 5-geu
+    output branchD,
+    output jumpD,
+    output [2:0] ALU_opD,
+    output [2:0] rdregsrcD, // 0 for ALU, 1 for mem, 2 for snpc, 3 for compare_result, 4 for csr , 5 for disable
+    output jalrD,
+    output [1:0] ALUsrc2D, // 0-regsrc2, 1-imm, 2-csr
+    output [2:0] inst_type, // 0-I, 1-S, 2-R, 3-U, 4-J, 5-B, 6-N
+    output ecallD,
+    output mretD,
+    output write_csr,
+    output stop_sim
 );
+
+    // decode
+    wire lui, auipc, jal, load, store, Iarith, Rarith, ebreak, csrRelated, mismatch;
+    assign lui = opcode == 7'b0110111;
+    assign auipc = opcode == 7'b0010111;
+    assign jal = opcode == 7'b1101111;
+    assign jalrD = opcode == 7'b1100111 && funct3 == 3'b000;
+    assign branchD = opcode == 7'b1100011;
+    assign load = opcode == 7'b0000011;
+    assign store = opcode == 7'b0100011;
+    assign Iarith = opcode == 7'b0010011;
+    assign Rarith = opcode == 7'b0110011;
+    assign ebreak = opcode == 7'b1110011 && funct3 == 3'b000 && funct12 == 12'b0000_0000_0001;
+    assign ecallD = opcode == 7'b1110011 && funct3 == 3'b000 && funct12 == 12'b0000_0000_0000;
+    assign mretD = opcode == 7'b1110011 && funct3 == 3'b000 && funct12 == 12'b0011_0000_0010;
+    assign csrRelated = opcode == 7'b1110011;
+    assign mismatch = ~(lui | auipc | jal | jalrD | branchD | load | store | Iarith | Rarith | ebreak | ecallD | mretD | csrRelated);
+
+    assign stop_sim = ebreak | mismatch;
+
+    assign jumpD = jal | jalrD;
+
+    // 0-I, 1-S, 2-R, 3-U, 4-J, 5-B, 6-N
+    MuxKeyWithDefault #(
+        .NR_KEY(9),
+        .KEY_LEN(9),
+        .DATA_LEN(3)
+    ) get_itype (
+        .out(inst_type),
+        .key({lui, auipc, jal, jalrD, branchD, load, store, Iarith, Rarith}),
+        .default_out(3'd6),
+        .lut({9'b100000000, 3'd3,
+              9'b010000000, 3'd3,
+              9'b001000000, 3'd4,
+              9'b000100000, 3'd0,
+              9'b000010000, 3'd5,
+              9'b000001000, 3'd0,
+              9'b000000100, 3'd1,
+              9'b000000010, 3'd0,
+              9'b000000001, 3'd2})
+    );
+
+    assign mvalidD = load | store;
+    assign mwenD = store;
+    MuxKeyWithDefault #(
+        .NR_KEY(3),
+        .KEY_LEN(3),
+        .DATA_LEN(8)
+    ) get_mwmask (
+        .out(mwmaskD),
+        .key(funct3),
+        .default_out(8'b0),
+        .lut({3'b000, 8'b0000_0001,
+              3'b001, 8'b0000_0011,
+              3'b010, 8'b0000_1111})
+    );
+    // 0-byte, 1-half, 2-word, 3-byte unsigned, 4-half-unsigned
+    MuxKeyWithDefault #(
+        .NR_KEY(5),
+        .KEY_LEN(3),
+        .DATA_LEN(3)
+    ) get_mrtype (
+        .out(mrtypeD),
+        .key(funct3),
+        .default_out(3'd0),
+        .lut({3'b000, 3'd0,
+              3'b001, 3'd1,
+              3'b010, 3'd2,
+              3'b100, 3'd3,
+              3'b101, 3'd4})
+    );
+
+    // 0-eq, 1-ne, 2-lt, 3-ge, 4-ltu, 5-geu
+    wire condset;
+    MuxKeyWithDefault #(
+        .NR_KEY(10),
+        .KEY_LEN(6),
+        .DATA_LEN(4)
+    ) get_cmptype (
+        .out({cmp_typeD, condset}),
+        .key({funct3, branchD, Iarith, Rarith}),
+        .default_out(0),
+        .lut({6'b000100, 3'd0, 1'b0,
+              6'b001100, 3'd1, 1'b0,
+              6'b100100, 3'd2, 1'b0,
+              6'b101100, 3'd3, 1'b0,
+              6'b110100, 3'd4, 1'b0,
+              6'b111100, 3'd5, 1'b0,
+              6'b010010, 3'd2, 1'b1,
+              6'b011010, 3'd4, 1'b1,
+              6'b010001, 3'd2, 1'b1,
+              6'b011001, 3'd4, 1'b1})
+    );
+    wire sub, sll, srl, sra, xor_, or_, and_;
+    assign sub = branchD | condset | (Rarith & (funct7 == 7'b0100000) & (funct3 == 3'b000));
+    assign sll = (Iarith | Rarith) & (funct3 == 3'b001) & (funct7 == 7'b0000000);
+    assign srl = (Iarith | Rarith) & (funct3 == 3'b101) & (funct7 == 7'b0000000);
+    assign sra = (Iarith | Rarith) & (funct3 == 3'b101) & (funct7 == 7'b0100000);
+    assign xor_ = (Iarith | Rarith) & (funct3 == 3'b100);
+    assign or_ = (Iarith | Rarith) & (funct3 == 3'b110);
+    assign and_ = (Iarith | Rarith) & (funct3 == 3'b111);
+    MuxKeyWithDefault #(
+        .NR_KEY(7),
+        .KEY_LEN(7),
+        .DATA_LEN(3)
+    ) get_ALUop (
+        .out(ALU_opD),
+        .key({sub, sll, srl, sra, xor_, or_, and_}),
+        .default_out(3'd0),
+        .lut({7'b1000000, 3'b001,
+              7'b0100000, 3'b110,
+              7'b0010000, 3'b111,
+              7'b0001000, 3'b010,
+              7'b0000100, 3'b101,
+              7'b0000010, 3'b100,
+              7'b0000001, 3'b011})
+    );
+
+    // 0 for ALU, 1 for mem, 2 for snpc, 3 for compare_result, 4 for csr , 5 for disable
+    // mem<->load, snpc<->jump, compare_result<->condset, csr<->csrRelated, disable<->branchD|store|ecallD|mretD|ebreak
+    wire is_disable;
+    assign is_disable = branchD | store | ecallD | mretD | ebreak | mismatch;
+    MuxKeyWithDefault #(
+        .NR_KEY(5),
+        .KEY_LEN(5),
+        .DATA_LEN(3)
+    ) get_rdregsrc (
+        .out(rdregsrcD),
+        .key({load, jumpD, condset, csrRelated | ecallD, is_disable}),
+        .default_out(3'd0),
+        .lut({5'b10000, 3'd1,
+              5'b01000, 3'd2,
+              5'b00100, 3'd3,
+              5'b00010, 3'd4,
+              5'b00001, 3'd5})
+    );
+
+    // 0-regsrc2, 1-imm, 2-csr
+    MuxKeyWithDefault #(
+        .NR_KEY(2),
+        .KEY_LEN(2),
+        .DATA_LEN(2)
+    ) get_ALUsrc2 (
+        .out(ALUsrc2D),
+        .key({Rarith, csrRelated}),
+        .default_out(2'd1),
+        .lut({2'b10, 2'd0,
+              2'b01, 2'd2})
+    );
+
+    assign write_csr = csrRelated | ecallD;
+
+    /*
     parameter NUM_OF_INST = 43;
 
     wire [`INST_NAME_LEN-1:0] inst_name;
@@ -502,33 +649,6 @@ module IDU(
                      inst_is_csrrs ? csr_wen_int :
                      inst_is_ecall ? 3'b011 : 3'b000;
 
-
-
-    // MuxKeyWithDefault #(1, 7, 6)gettype(
-    //     .out         	(inst_type          ),
-    //     .key         	(opcode          ),
-    //     .default_out 	(6'b000000  ),
-    //     .lut         	({7'b0010011, 6'b100000})
-    // );
-    
-    // // choose immediate value
-    // MuxKeyWithDefault #(5, 6, 32) getimm(
-    //     .out         	(imm          ),
-    //     .key         	(inst_type          ),
-    //     .default_out 	(32'b0  ),
-    //     .lut         	({6'b100000, immI,
-    //                       6'b001000, immS,
-    //                       6'b000100, immB,
-    //                       6'b000010, immJ,
-    //                       6'b000001, immU})
-    // );
-
-    // // choose ALU mode
-    // MuxKeyWithDefault #(1, 3, 3) getALU_mode(
-    //     .out         	(ALU_op          ),
-    //     .key         	(funct3          ),
-    //     .default_out 	(3'b000  ),
-    //     .lut         	({3'b000, 3'b000})
-    // );
+    */
     
 endmodule

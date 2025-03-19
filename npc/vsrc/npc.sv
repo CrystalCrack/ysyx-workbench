@@ -17,7 +17,7 @@ module npc(
         rst_d1 <= rst;
         rst_d2 <= rst_d1;
     end
-    assign start = ~rst_d1 & rst_d2; // negedge detect
+    assign start = ~rst_d & rst_d1; // negedge detect
     PC u_PC(
         .clk(clk),
         .rst(rst),

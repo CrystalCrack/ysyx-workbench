@@ -22,7 +22,7 @@ void Vnpc___024root__trace_chg_sub_0(Vnpc___024root* vlSelf, VerilatedVcd::Buffe
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vnpc___024root__trace_chg_sub_0\n"); );
     // Init
     uint32_t* const oldp VL_ATTR_UNUSED = bufp->oldp(vlSymsp->__Vm_baseCode + 1);
-    VlWide<6>/*191:0*/ __Vtemp_h879478f5__0;
+    VlWide<6>/*191:0*/ __Vtemp_h02160c61__0;
     VlWide<6>/*191:0*/ __Vtemp_h7ad68f80__0;
     VlWide<3>/*95:0*/ __Vtemp_h9b92af8f__0;
     VlWide<6>/*191:0*/ __Vtemp_h613f4dfe__0;
@@ -335,7 +335,7 @@ void Vnpc___024root__trace_chg_sub_0(Vnpc___024root* vlSelf, VerilatedVcd::Buffe
         bufp->chgIData(oldp+212,(vlSelf->npc__DOT__rdata),32);
         bufp->chgIData(oldp+213,(vlSelf->npc__DOT__mdataM),32);
         bufp->chgBit(oldp+214,((5U == (IData)(vlSelf->npc__DOT__rdregsrcD))));
-        __Vtemp_h879478f5__0[0U] = (IData)((0x400000000ULL 
+        __Vtemp_h02160c61__0[0U] = (IData)((0x400000000ULL 
                                             | (((QData)((IData)(
                                                                 (0xffU 
                                                                  & vlSelf->npc__DOT__rdata))) 
@@ -343,7 +343,7 @@ void Vnpc___024root__trace_chg_sub_0(Vnpc___024root* vlSelf, VerilatedVcd::Buffe
                                                | (QData)((IData)(
                                                                  (0xffffU 
                                                                   & vlSelf->npc__DOT__rdata))))));
-        __Vtemp_h879478f5__0[1U] = (IData)(((0x400000000ULL 
+        __Vtemp_h02160c61__0[1U] = (IData)(((0x400000000ULL 
                                              | (((QData)((IData)(
                                                                  (0xffU 
                                                                   & vlSelf->npc__DOT__rdata))) 
@@ -352,28 +352,40 @@ void Vnpc___024root__trace_chg_sub_0(Vnpc___024root* vlSelf, VerilatedVcd::Buffe
                                                                   (0xffffU 
                                                                    & vlSelf->npc__DOT__rdata))))) 
                                             >> 0x20U));
-        __Vtemp_h879478f5__0[2U] = (0x18U | (vlSelf->npc__DOT__rdata 
+        __Vtemp_h02160c61__0[2U] = (0x18U | (vlSelf->npc__DOT__rdata 
                                              << 6U));
-        __Vtemp_h879478f5__0[3U] = (0x80U | ((0x1fffe00U 
-                                              & (vlSelf->npc__DOT__rdata 
-                                                 << 9U)) 
-                                             | (vlSelf->npc__DOT__rdata 
-                                                >> 0x1aU)));
-        __Vtemp_h879478f5__0[4U] = (0x200U | (0xfffff000U 
+        __Vtemp_h02160c61__0[3U] = (0x80U | ((0xfffffe00U 
                                               & (((- (IData)(
                                                              (1U 
                                                               & (vlSelf->npc__DOT__rdata 
-                                                                 >> 7U)))) 
-                                                  << 0x14U) 
-                                                 | (0xff000U 
+                                                                 >> 0xfU)))) 
+                                                  << 0x19U) 
+                                                 | (0x1fffe00U 
                                                     & (vlSelf->npc__DOT__rdata 
-                                                       << 0xcU)))));
-        __Vtemp_h879478f5__0[5U] = (0xfffU & ((- (IData)(
+                                                       << 9U)))) 
+                                             | (vlSelf->npc__DOT__rdata 
+                                                >> 0x1aU)));
+        __Vtemp_h02160c61__0[4U] = (0x200U | ((0xfffff000U 
+                                               & (((- (IData)(
+                                                              (1U 
+                                                               & (vlSelf->npc__DOT__rdata 
+                                                                  >> 7U)))) 
+                                                   << 0x14U) 
+                                                  | (0xff000U 
+                                                     & (vlSelf->npc__DOT__rdata 
+                                                        << 0xcU)))) 
+                                              | (0x1ffU 
+                                                 & ((- (IData)(
+                                                               (1U 
+                                                                & (vlSelf->npc__DOT__rdata 
+                                                                   >> 0xfU)))) 
+                                                    >> 7U))));
+        __Vtemp_h02160c61__0[5U] = (0xfffU & ((- (IData)(
                                                          (1U 
                                                           & (vlSelf->npc__DOT__rdata 
                                                              >> 7U)))) 
                                               >> 0xcU));
-        bufp->chgWData(oldp+215,(__Vtemp_h879478f5__0),175);
+        bufp->chgWData(oldp+215,(__Vtemp_h02160c61__0),175);
         bufp->chgQData(oldp+221,(vlSelf->npc__DOT__ext_mdata__DOT__i0__DOT__pair_list[0]),35);
         bufp->chgQData(oldp+223,(vlSelf->npc__DOT__ext_mdata__DOT__i0__DOT__pair_list[1]),35);
         bufp->chgQData(oldp+225,(vlSelf->npc__DOT__ext_mdata__DOT__i0__DOT__pair_list[2]),35);

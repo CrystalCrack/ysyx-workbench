@@ -1105,8 +1105,13 @@ VL_INLINE_OPT void Vnpc___024root___ico_sequent__TOP__0(Vnpc___024root* vlSelf) 
     vlSelf->npc__DOT__ext_mdata__DOT__i0__DOT__pair_list[2U] 
         = (0x200000000ULL | (QData)((IData)(vlSelf->npc__DOT__rdata)));
     vlSelf->npc__DOT__ext_mdata__DOT__i0__DOT__pair_list[3U] 
-        = (0x100000000ULL | (QData)((IData)((0xffffU 
-                                             & vlSelf->npc__DOT__rdata))));
+        = (0x100000000ULL | (QData)((IData)((((- (IData)(
+                                                         (1U 
+                                                          & (vlSelf->npc__DOT__rdata 
+                                                             >> 0xfU)))) 
+                                              << 0x10U) 
+                                             | (0xffffU 
+                                                & vlSelf->npc__DOT__rdata)))));
     vlSelf->npc__DOT__ext_mdata__DOT__i0__DOT__pair_list[4U] 
         = (QData)((IData)((((- (IData)((1U & (vlSelf->npc__DOT__rdata 
                                               >> 7U)))) 
@@ -1118,7 +1123,9 @@ VL_INLINE_OPT void Vnpc___024root___ico_sequent__TOP__0(Vnpc___024root* vlSelf) 
     vlSelf->npc__DOT__ext_mdata__DOT__i0__DOT__data_list[2U] 
         = vlSelf->npc__DOT__rdata;
     vlSelf->npc__DOT__ext_mdata__DOT__i0__DOT__data_list[3U] 
-        = (0xffffU & vlSelf->npc__DOT__rdata);
+        = (((- (IData)((1U & (vlSelf->npc__DOT__rdata 
+                              >> 0xfU)))) << 0x10U) 
+           | (0xffffU & vlSelf->npc__DOT__rdata));
     vlSelf->npc__DOT__ext_mdata__DOT__i0__DOT__data_list[4U] 
         = (((- (IData)((1U & (vlSelf->npc__DOT__rdata 
                               >> 7U)))) << 8U) | (0xffU 
@@ -2581,8 +2588,13 @@ VL_INLINE_OPT void Vnpc___024root___nba_sequent__TOP__0(Vnpc___024root* vlSelf) 
     vlSelf->npc__DOT__ext_mdata__DOT__i0__DOT__pair_list[2U] 
         = (0x200000000ULL | (QData)((IData)(vlSelf->npc__DOT__rdata)));
     vlSelf->npc__DOT__ext_mdata__DOT__i0__DOT__pair_list[3U] 
-        = (0x100000000ULL | (QData)((IData)((0xffffU 
-                                             & vlSelf->npc__DOT__rdata))));
+        = (0x100000000ULL | (QData)((IData)((((- (IData)(
+                                                         (1U 
+                                                          & (vlSelf->npc__DOT__rdata 
+                                                             >> 0xfU)))) 
+                                              << 0x10U) 
+                                             | (0xffffU 
+                                                & vlSelf->npc__DOT__rdata)))));
     vlSelf->npc__DOT__ext_mdata__DOT__i0__DOT__pair_list[4U] 
         = (QData)((IData)((((- (IData)((1U & (vlSelf->npc__DOT__rdata 
                                               >> 7U)))) 
@@ -2594,7 +2606,9 @@ VL_INLINE_OPT void Vnpc___024root___nba_sequent__TOP__0(Vnpc___024root* vlSelf) 
     vlSelf->npc__DOT__ext_mdata__DOT__i0__DOT__data_list[2U] 
         = vlSelf->npc__DOT__rdata;
     vlSelf->npc__DOT__ext_mdata__DOT__i0__DOT__data_list[3U] 
-        = (0xffffU & vlSelf->npc__DOT__rdata);
+        = (((- (IData)((1U & (vlSelf->npc__DOT__rdata 
+                              >> 0xfU)))) << 0x10U) 
+           | (0xffffU & vlSelf->npc__DOT__rdata));
     vlSelf->npc__DOT__ext_mdata__DOT__i0__DOT__data_list[4U] 
         = (((- (IData)((1U & (vlSelf->npc__DOT__rdata 
                               >> 7U)))) << 8U) | (0xffU 

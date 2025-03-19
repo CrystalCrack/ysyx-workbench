@@ -62,7 +62,7 @@ static int cmd_si(char *args){
 
 
 static int cmd_q(char *args) {
-  state = QUIT;
+  if(state!=ABORT) state = QUIT;
   return -1;
 }
 static int cmd_help(char *args);

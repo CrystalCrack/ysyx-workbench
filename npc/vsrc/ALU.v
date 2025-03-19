@@ -33,7 +33,6 @@ module ALU(
     assign Cout = mode == 3'b000 ? add_Cout :
                   mode == 3'b001 ? sub_Cout : 1'b0;
 
-    // output declaration of module MuxKeyWithDefault
     wire [32:0] out;
     MuxKeyWithDefault #(8, 3, 33) u_MuxKeyWithDefault(
         .out         	(out          ),

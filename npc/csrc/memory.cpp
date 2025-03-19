@@ -4,6 +4,7 @@
 #include <device.h>
 
 char *img_file = NULL;
+extern CPU_state state;
 
 uint8_t pmem[MSIZE] = {
   // 0x00500093 (addi x1, x0, 5)
@@ -79,8 +80,12 @@ extern "C" int pmem_read(int raddr) {
   }
   #endif
 
-
-  Assert(!memory_out_of_bound(addr), "read address out of bound\n");
+  if(memory_out_of_bound(addr)){
+    printf(ANSI_BOLD ANSI_COLOR_RED "read address out of bound\n" ANSI_COLOR_RESET );
+    state = ABORT;
+    return 0;
+  }
+  
   int ret = *(int *)(pmem + addr - MBASE);
 
   #ifdef CONFIG_MTRACE
@@ -111,7 +116,11 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask) {
   }
   #endif
 
-  Assert(!memory_out_of_bound(addr), "write address out of bound\n");
+  if(memory_out_of_bound(addr)){
+    printf(ANSI_BOLD ANSI_COLOR_RED "write address out of bound\n" ANSI_COLOR_RESET );
+    state = ABORT;
+    return;
+  }
 
   int *p = (int *)(pmem + addr - MBASE);
   int mask = 0;

@@ -3,12 +3,15 @@
 #include <sdb.h>
 
 #define MAX_INST_TO_PRINT 10
+#define MAX_TRACE 10000000
 int sim_time;
 Vnpc *dut;
 CPU_state state;
 VerilatedVcdC *m_trace;
 int halt_ret;
 uint32_t halt_pc;
+uint64_t g_nr_guest_inst = 0;
+static uint64_t g_timer = 0; // unit: us
 static bool g_print_step = false;
 char logbuf[128];
 
@@ -17,6 +20,8 @@ void write_iringbuf(vaddr_t pc, uint32_t inst);
 void ftrace(vaddr_t pc, uint32_t inst);
 /* difftest */
 void difftest_step(vaddr_t pc);
+/* timer */
+uint64_t get_time_internal();
 
 void cpu_init(const char* Vcd_file){
   dut = new Vnpc;
@@ -27,7 +32,8 @@ void cpu_init(const char* Vcd_file){
   Verilated::traceEverOn(true);
   dut->trace(m_trace, 10);
   m_trace->open(Vcd_file);
-  reset(10);
+  reset(5);
+
 }
 
 void cpu_deinit() {
@@ -37,8 +43,8 @@ void cpu_deinit() {
 }
 
 void single_cycle() {
-  dut->clk = 1; dut->eval(); m_trace->dump(sim_time); sim_time++;
-  dut->clk = 0; dut->eval(); m_trace->dump(sim_time); sim_time++;
+  dut->clk = 0; dut->eval(); if(sim_time<MAX_TRACE) m_trace->dump(sim_time); sim_time++;
+  dut->clk = 1; dut->eval(); if(sim_time<MAX_TRACE) m_trace->dump(sim_time); sim_time++;
 }
 
 void stop(int code, uint32_t pc) {
@@ -65,7 +71,19 @@ void Cget_pc_inst(uint32_t* pc, uint32_t* inst){
   get_pc_inst(pc_ptr, inst_ptr);
 }
 
+int Cis_inst_done(){
+  int done;
+  svSetScope(svGetScopeFromName("TOP.npc"));
+  is_inst_done(&done);
+  return done;
+}
+
 static void exec_once() {
+  
+  /* run a cycle */
+  do{
+    single_cycle();
+  }while(!Cis_inst_done());
 
   /* itrace */
   uint32_t pc, instru;
@@ -77,9 +95,6 @@ static void exec_once() {
 
   // write iringbuf
   write_iringbuf(pc, instru);
-  
-  /* run a cycle */
-  single_cycle();
 
 #ifdef CONFIG_ITRACE
   char *p = logbuf;
@@ -120,37 +135,11 @@ static void trace_and_difftest() {
 static void execute(uint64_t n) {
   for (;n > 0; n --) {
     exec_once();
+    g_nr_guest_inst++;
     trace_and_difftest();
     // check watchpoint
     if(state == RUNNING && check_wp()) { state = STOP; }
     if (state != RUNNING) break;
-  }
-}
-
-void cpu_exec(uint64_t n){
-  g_print_step = (n < MAX_INST_TO_PRINT);
-  switch (state) {
-    case END: case ABORT: case QUIT:
-      printf("Program execution has ended. To restart the program, exit and run again.\n");
-      return;
-    default: state = RUNNING;
-  }
-
-  execute(n);
-
-  switch (state) {
-    case RUNNING: state = STOP; break;
-
-    case END: case ABORT:
-    Log("NPC: %s " ANSI_COLOR_BLUE "at pc = " FMT_WORD,
-          (state == ABORT ? ANSI_FMT("ABORT", ANSI_COLOR_RED) :
-          (halt_ret == 0 ? ANSI_FMT("HIT GOOD TRAP", ANSI_COLOR_GREEN) :
-          ANSI_FMT("HIT BAD TRAP", ANSI_COLOR_RED))),
-          halt_pc);
-      // fall through
-    case QUIT: 
-      printf("Execution terminated\n");
-      break;
   }
 }
 
@@ -203,4 +192,46 @@ CPU_reg get_cpu_state(){
   Cget_pc_inst(&_this.pc, NULL);
   Cget_CSR((int*)&_this.mtvec, (int*)&_this.mcause, (int*)&_this.mepc, (int*)&_this.mstatus);
   return _this;
+}
+
+static void statistic() {
+  Log("host time spent = %lu us", g_timer);
+  Log("total guest instructions = %lu", g_nr_guest_inst);
+  if (g_timer > 0) Log("simulation frequency = %lu inst/s", g_nr_guest_inst * 1000000 / g_timer);
+  else Log("Finish running in less than 1 us and can not calculate the simulation frequency");
+}
+
+void cpu_exec(uint64_t n){
+  g_print_step = (n < MAX_INST_TO_PRINT);
+  switch (state) {
+    case END: case ABORT: case QUIT:
+      printf("Program execution has ended. To restart the program, exit and run again.\n");
+      return;
+    default: state = RUNNING;
+  }
+
+  uint64_t timer_start = get_time_internal();
+
+  execute(n);
+
+  uint64_t timer_end = get_time_internal();
+  g_timer += timer_end - timer_start;
+
+  switch (state) {
+    case RUNNING: state = STOP; break;
+
+    case ABORT:
+      display_error_msg();
+    case END: 
+    Log("NPC: %s " ANSI_COLOR_BLUE "at pc = " FMT_WORD,
+          (state == ABORT ? ANSI_FMT("ABORT", ANSI_COLOR_RED) :
+          (halt_ret == 0 ? ANSI_FMT("HIT GOOD TRAP", ANSI_COLOR_GREEN) :
+          ANSI_FMT("HIT BAD TRAP", ANSI_COLOR_RED))),
+          halt_pc);
+      // fall through
+    case QUIT: 
+      statistic();
+      printf("Execution terminated\n");
+      break;
+  }
 }

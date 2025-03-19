@@ -104,6 +104,7 @@ module Xstage_bus(
     //         ALU_opX <= 3'b0;
     //         rdregsrcX <= 3'b0;
     //         jalrX <= 1'b0;
+    //         ALUsrc1X <= 2'b0;
     //         ALUsrc2X <= 2'b0;
     //         src1X <= 32'b0;
     //         src2X <= 32'b0;
@@ -128,6 +129,7 @@ module Xstage_bus(
     //             ALU_opX <= ALU_opD;
     //             rdregsrcX <= rdregsrcD;
     //             jalrX <= jalrD;
+    //             ALUsrc1X <= ALUsrc1D;
     //             ALUsrc2X <= ALUsrc2D;
     //             src1X <= src1D;
     //             src2X <= src2D;
@@ -157,6 +159,7 @@ module Xstage_bus(
         ALU_opX = ALU_opD;
         rdregsrcX = rdregsrcD;
         jalrX = jalrD;
+        ALUsrc1X = ALUsrc1D;
         ALUsrc2X = ALUsrc2D;
         src1X = src1D;
         src2X = src2D;

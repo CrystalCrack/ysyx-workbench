@@ -36,8 +36,9 @@ module npc(
         .rst(rst),
         .pc(pcF),
         .inst(instF),
-        .ready(readyD),
-        .valid(validF)
+        .s_valid(validW),
+        .m_ready(readyD),
+        .m_valid(validF)
     );
 
     /* -------------------------------------------------------------------- */

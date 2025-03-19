@@ -43,7 +43,6 @@ void cpu_deinit() {
 }
 
 void single_cycle() {
-  printf("sim_time: %d\n", sim_time);
   dut->clk = 0; dut->eval(); if(sim_time<MAX_TRACE) m_trace->dump(sim_time); sim_time++;
   dut->clk = 1; dut->eval(); if(sim_time<MAX_TRACE) m_trace->dump(sim_time); sim_time++;
 }
@@ -72,6 +71,13 @@ void Cget_pc_inst(uint32_t* pc, uint32_t* inst){
   get_pc_inst(pc_ptr, inst_ptr);
 }
 
+int Cis_cycle_done(){
+  int done;
+  svSetScope(svGetScopeFromName("TOP.npc"));
+  is_cycle_done(&done);
+  return done;
+}
+
 static void exec_once() {
 
   /* itrace */
@@ -86,9 +92,9 @@ static void exec_once() {
   write_iringbuf(pc, instru);
   
   /* run a cycle */
-  single_cycle();
-  single_cycle();
-  single_cycle();
+  do{
+    single_cycle();
+  }while(!Cis_cycle_done());
 
 #ifdef CONFIG_ITRACE
   char *p = logbuf;

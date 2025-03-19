@@ -43,6 +43,7 @@ void cpu_deinit() {
 }
 
 void single_cycle() {
+  printf(ANSI_COLOR_GREEN "CALL single_cycle\n" ANSI_COLOR_RESET);
   dut->clk = 1; dut->eval(); if(sim_time<MAX_TRACE) m_trace->dump(sim_time); sim_time++;
   dut->clk = 0; dut->eval(); if(sim_time<MAX_TRACE) m_trace->dump(sim_time); sim_time++;
 }

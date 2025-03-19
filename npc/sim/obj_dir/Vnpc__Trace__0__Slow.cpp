@@ -19,6 +19,7 @@ VL_ATTR_COLD void Vnpc___024root__trace_init_sub__TOP__0(Vnpc___024root* vlSelf,
     tracep->declBit(c+160,"stop_sim", false,-1);
     tracep->declBit(c+161,"validF", false,-1);
     tracep->declBit(c+461,"start", false,-1);
+    tracep->declBit(c+462,"ifetch_en", false,-1);
     tracep->declBit(c+399,"rst_d1", false,-1);
     tracep->declBit(c+400,"rst_d2", false,-1);
     tracep->declBus(c+162,"instF", false,-1, 31,0);

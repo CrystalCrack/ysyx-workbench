@@ -85,6 +85,8 @@ static void exec_once() {
   
   /* run a cycle */
   single_cycle();
+  single_cycle();
+  single_cycle();
 
 #ifdef CONFIG_ITRACE
   char *p = logbuf;

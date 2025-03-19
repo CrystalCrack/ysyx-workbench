@@ -18,7 +18,8 @@ class Vnpc___024root final : public VerilatedModule {
         VL_IN8(clk,0,0);
         VL_IN8(rst,0,0);
         CData/*0:0*/ npc__DOT__validF;
-        CData/*0:0*/ npc__DOT__rst_d;
+        CData/*0:0*/ npc__DOT__rst_d1;
+        CData/*0:0*/ npc__DOT__rst_d2;
         CData/*2:0*/ npc__DOT__mrtypeD;
         CData/*2:0*/ npc__DOT__ALU_opD;
         CData/*2:0*/ npc__DOT__rdregsrcD;
@@ -78,9 +79,9 @@ class Vnpc___024root final : public VerilatedModule {
         CData/*0:0*/ npc__DOT__idu_inst__DOT__get_mwmask__DOT__i0__DOT__hit;
         CData/*2:0*/ npc__DOT__idu_inst__DOT__get_mrtype__DOT__i0__DOT__lut_out;
         CData/*0:0*/ npc__DOT__idu_inst__DOT__get_mrtype__DOT__i0__DOT__hit;
-        CData/*3:0*/ npc__DOT__idu_inst__DOT__get_cmptype__DOT__i0__DOT__lut_out;
     };
     struct {
+        CData/*3:0*/ npc__DOT__idu_inst__DOT__get_cmptype__DOT__i0__DOT__lut_out;
         CData/*0:0*/ npc__DOT__idu_inst__DOT__get_cmptype__DOT__i0__DOT__hit;
         CData/*2:0*/ npc__DOT__idu_inst__DOT__get_ALUop__DOT__i0__DOT__lut_out;
         CData/*0:0*/ npc__DOT__idu_inst__DOT__get_ALUop__DOT__i0__DOT__hit;
@@ -144,9 +145,9 @@ class Vnpc___024root final : public VerilatedModule {
         IData/*31:0*/ npc__DOT__csrW;
         IData/*31:0*/ npc__DOT__snpcW;
         IData/*31:0*/ npc__DOT__mdataW;
-        IData/*31:0*/ npc__DOT__rddataW;
     };
     struct {
+        IData/*31:0*/ npc__DOT__rddataW;
         IData/*31:0*/ npc__DOT__u_RegisterFile__DOT__unnamedblk1__DOT__i;
         IData/*31:0*/ npc__DOT__sel_imm__DOT__i0__DOT__lut_out;
         IData/*31:0*/ npc__DOT__sel_csr_read__DOT__i0__DOT__lut_out;

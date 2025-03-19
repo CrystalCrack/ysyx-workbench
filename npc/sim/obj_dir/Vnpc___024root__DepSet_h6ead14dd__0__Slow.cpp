@@ -1645,7 +1645,8 @@ VL_ATTR_COLD void Vnpc___024root___ctor_var_reset(Vnpc___024root* vlSelf) {
     vlSelf->clk = 0;
     vlSelf->rst = 0;
     vlSelf->npc__DOT__validF = 0;
-    vlSelf->npc__DOT__rst_d = 0;
+    vlSelf->npc__DOT__rst_d1 = 0;
+    vlSelf->npc__DOT__rst_d2 = 0;
     vlSelf->npc__DOT__instF = 0;
     vlSelf->npc__DOT__pcF = 0;
     vlSelf->npc__DOT__instD = 0;

@@ -37,8 +37,7 @@ LDFLAGS += -lreadline -ltinfo -ldl -pie
 
 VERILATOR_FLAGS += -I$(abspath ./vsrc/include)
 
-all:
-	@echo "Write this Makefile by your self."
+all: sim
 
 sim-all:$(addprefix Makefile., $(SIM_ALL))
 	@echo "test list [$(words $(SIM_ALL)) item(s)]:" $(SIM_ALL)

@@ -499,7 +499,7 @@ module npc(
     export "DPI-C" function is_inst_done;
     function void is_inst_done();
         output int done;
-        done = {31'b0, validW};
+        done = {31'b0, validW_d};
     endfunction
 
 endmodule

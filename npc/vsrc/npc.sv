@@ -10,13 +10,15 @@ module npc(
     /* -------------------------------------------------------------------- */
     wire validF;
     wire start;
-    reg rst_d;
+    reg rst_d1, rst_d2;
     wire [31:0] instF, pcF, snpcF;
 
     always @(posedge clk) begin
         rst_d <= rst;
+        rst_d1 <= rst;
+        rst_d2 <= rstd1;
     end
-    assign start = ~rst & rst_d; // negedge detect
+    assign start = ~rst_d1 & rst_d2; // negedge detect
     PC u_PC(
         .clk(clk),
         .rst(rst),

@@ -79,11 +79,6 @@ int Cis_inst_done(){
 }
 
 static void exec_once() {
-
-  
-
-  /* ftrace */
-  ftrace(pc, instru);
   
   /* run a cycle */
   do{
@@ -94,6 +89,9 @@ static void exec_once() {
   uint32_t pc, instru;
   Cget_pc_inst(&pc, NULL);
   instru = paddr_read(pc, 4);
+
+  /* ftrace */
+  ftrace(pc, instru);
 
   // write iringbuf
   write_iringbuf(pc, instru);

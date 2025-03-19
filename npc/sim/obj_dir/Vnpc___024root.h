@@ -17,6 +17,7 @@ class Vnpc___024root final : public VerilatedModule {
     struct {
         VL_IN8(clk,0,0);
         VL_IN8(rst,0,0);
+        CData/*0:0*/ npc__DOT__ifetch_en;
         CData/*0:0*/ npc__DOT__rst_d1;
         CData/*0:0*/ npc__DOT__rst_d2;
         CData/*2:0*/ npc__DOT__mrtypeD;
@@ -78,9 +79,9 @@ class Vnpc___024root final : public VerilatedModule {
         CData/*0:0*/ npc__DOT__idu_inst__DOT__get_mwmask__DOT__i0__DOT__hit;
         CData/*2:0*/ npc__DOT__idu_inst__DOT__get_mrtype__DOT__i0__DOT__lut_out;
         CData/*0:0*/ npc__DOT__idu_inst__DOT__get_mrtype__DOT__i0__DOT__hit;
-        CData/*3:0*/ npc__DOT__idu_inst__DOT__get_cmptype__DOT__i0__DOT__lut_out;
     };
     struct {
+        CData/*3:0*/ npc__DOT__idu_inst__DOT__get_cmptype__DOT__i0__DOT__lut_out;
         CData/*0:0*/ npc__DOT__idu_inst__DOT__get_cmptype__DOT__i0__DOT__hit;
         CData/*2:0*/ npc__DOT__idu_inst__DOT__get_ALUop__DOT__i0__DOT__lut_out;
         CData/*0:0*/ npc__DOT__idu_inst__DOT__get_ALUop__DOT__i0__DOT__hit;
@@ -144,9 +145,9 @@ class Vnpc___024root final : public VerilatedModule {
         IData/*31:0*/ npc__DOT__csrW;
         IData/*31:0*/ npc__DOT__snpcW;
         IData/*31:0*/ npc__DOT__mdataW;
-        IData/*31:0*/ npc__DOT__rddataW;
     };
     struct {
+        IData/*31:0*/ npc__DOT__rddataW;
         IData/*31:0*/ npc__DOT__u_RegisterFile__DOT__unnamedblk1__DOT__i;
         IData/*31:0*/ npc__DOT__sel_imm__DOT__i0__DOT__lut_out;
         IData/*31:0*/ npc__DOT__sel_csr_read__DOT__i0__DOT__lut_out;
@@ -163,6 +164,7 @@ class Vnpc___024root final : public VerilatedModule {
         IData/*31:0*/ __Vfunc_npc__DOT__u_IFU__DOT__inst_mem__DOT__pmem_read__1__Vfuncout;
         IData/*31:0*/ __Vfunc_npc__DOT__data_mem__DOT__pmem_read__2__Vfuncout;
         IData/*31:0*/ __VstlIterCount;
+        IData/*31:0*/ __VicoIterCount;
         IData/*31:0*/ __VactIterCount;
         QData/*32:0*/ npc__DOT__u_ALU__DOT__out;
         QData/*32:0*/ npc__DOT__u_ALU__DOT__u_MuxKeyWithDefault__DOT__i0__DOT__lut_out;
@@ -209,6 +211,7 @@ class Vnpc___024root final : public VerilatedModule {
         VlUnpacked<CData/*0:0*/, 2> __Vm_traceActivity;
     };
     VlTriggerVec<1> __VstlTriggered;
+    VlTriggerVec<1> __VicoTriggered;
     VlTriggerVec<1> __VactTriggered;
     VlTriggerVec<1> __VnbaTriggered;
 

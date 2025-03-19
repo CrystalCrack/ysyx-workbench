@@ -45,7 +45,7 @@ module IDU(
     assign csrrs = csrRelated & (funct3 == 3'b010);
     assign mismatch = ~(lui | auipc | jal | jalrD | branchD | load | store | Iarith | Rarith | ebreak | ecallD | mretD | csrRelated);
 
-    assign stop_sim = ebreak | mismatch;
+    assign stop_sim = ebreak;
 
     assign jumpD = jal | jalrD;
 

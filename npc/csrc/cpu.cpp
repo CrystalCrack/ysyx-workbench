@@ -87,14 +87,14 @@ static void exec_once() {
 
   /* ftrace */
   ftrace(pc, instru);
-
-  // write iringbuf
-  write_iringbuf(pc, instru);
   
   /* run a cycle */
   do{
     single_cycle();
   }while(!Cis_inst_done());
+
+  // write iringbuf
+  write_iringbuf(pc, instru);
 
 #ifdef CONFIG_ITRACE
   char *p = logbuf;

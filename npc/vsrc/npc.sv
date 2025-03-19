@@ -14,9 +14,8 @@ module npc(
     wire [31:0] instF, pcF, snpcF;
 
     always @(posedge clk) begin
-        rst_d <= rst;
         rst_d1 <= rst;
-        rst_d2 <= rstd1;
+        rst_d2 <= rst_d1;
     end
     assign start = ~rst_d1 & rst_d2; // negedge detect
     PC u_PC(

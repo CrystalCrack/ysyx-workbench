@@ -31,7 +31,7 @@ module IFU(
         end
     end
 
-    assign m_valid = state==WAIT_READY;
+    assign m_valid = s_valid;
     /* instruction memory */
     memory inst_mem(
         .raddr 	(pc  ),

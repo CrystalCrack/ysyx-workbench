@@ -126,5 +126,5 @@ int main(int argc, char** argv){
 
     deinitialize();
 
-    return 0;
+    return state==ABORT;
 }

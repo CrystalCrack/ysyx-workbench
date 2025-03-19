@@ -44,8 +44,8 @@ void cpu_deinit() {
 
 void single_cycle() {
   printf("sim_time: %d\n", sim_time);
-  dut->clk = 1; dut->eval(); if(sim_time<MAX_TRACE) m_trace->dump(sim_time); sim_time++;
   dut->clk = 0; dut->eval(); if(sim_time<MAX_TRACE) m_trace->dump(sim_time); sim_time++;
+  dut->clk = 1; dut->eval(); if(sim_time<MAX_TRACE) m_trace->dump(sim_time); sim_time++;
 }
 
 void stop(int code, uint32_t pc) {

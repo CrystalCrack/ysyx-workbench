@@ -409,9 +409,9 @@ VL_ATTR_COLD void Vnpc___024root___stl_sequent__TOP__0(Vnpc___024root* vlSelf) {
                                   ? (IData)(vlSelf->npc__DOT__idu_inst__DOT__get_mrtype__DOT__i0__DOT__lut_out)
                                   : 0U);
     vlSelf->npc__DOT__ifetch_en = ((~ (IData)(vlSelf->rst)) 
-                                   & ((IData)(vlSelf->npc__DOT__u_Wstage_bus__DOT__state) 
+                                   & ((IData)(vlSelf->npc__DOT__validW_d) 
                                       | ((~ (IData)(vlSelf->rst)) 
-                                         & (IData)(vlSelf->npc__DOT__rst_d1))));
+                                         & (IData)(vlSelf->npc__DOT__rst_d))));
     vlSelf->npc__DOT__idu_inst__DOT____Vcellinp__get_ALUsrc2__key 
         = ((((0x33U == (0x7fU & vlSelf->npc__DOT__instD)) 
              | (0x63U == (0x7fU & vlSelf->npc__DOT__instD))) 
@@ -1647,8 +1647,8 @@ VL_ATTR_COLD void Vnpc___024root___ctor_var_reset(Vnpc___024root* vlSelf) {
     vlSelf->clk = 0;
     vlSelf->rst = 0;
     vlSelf->npc__DOT__ifetch_en = 0;
-    vlSelf->npc__DOT__rst_d1 = 0;
-    vlSelf->npc__DOT__rst_d2 = 0;
+    vlSelf->npc__DOT__rst_d = 0;
+    vlSelf->npc__DOT__validW_d = 0;
     vlSelf->npc__DOT__instF = 0;
     vlSelf->npc__DOT__pcF = 0;
     vlSelf->npc__DOT__instD = 0;

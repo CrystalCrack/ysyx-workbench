@@ -193,8 +193,8 @@ void Vnpc___024root__trace_chg_sub_0(Vnpc___024root* vlSelf, VerilatedVcd::Buffe
     if (VL_UNLIKELY(vlSelf->__Vm_traceActivity[1U])) {
         bufp->chgBit(oldp+159,(vlSelf->npc__DOT__idu_inst__DOT__ebreak));
         bufp->chgBit(oldp+160,(vlSelf->npc__DOT__u_IFU__DOT__state));
-        bufp->chgBit(oldp+161,(vlSelf->npc__DOT__rst_d1));
-        bufp->chgBit(oldp+162,(vlSelf->npc__DOT__rst_d2));
+        bufp->chgBit(oldp+161,(vlSelf->npc__DOT__rst_d));
+        bufp->chgBit(oldp+162,(vlSelf->npc__DOT__validW_d));
         bufp->chgIData(oldp+163,(vlSelf->npc__DOT__pcF),32);
         bufp->chgIData(oldp+164,(((IData)(4U) + vlSelf->npc__DOT__pcF)),32);
         bufp->chgIData(oldp+165,(vlSelf->npc__DOT__instD),32);
@@ -884,7 +884,7 @@ void Vnpc___024root__trace_chg_sub_0(Vnpc___024root* vlSelf, VerilatedVcd::Buffe
     bufp->chgBit(oldp+515,(vlSelf->clk));
     bufp->chgBit(oldp+516,(vlSelf->rst));
     bufp->chgBit(oldp+517,(((~ (IData)(vlSelf->rst)) 
-                            & (IData)(vlSelf->npc__DOT__rst_d1))));
+                            & (IData)(vlSelf->npc__DOT__rst_d))));
     bufp->chgBit(oldp+518,(vlSelf->npc__DOT__ifetch_en));
     bufp->chgIData(oldp+519,(vlSelf->npc__DOT__instF),32);
 }

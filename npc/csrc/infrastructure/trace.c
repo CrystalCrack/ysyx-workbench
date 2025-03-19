@@ -167,10 +167,11 @@ iringbuf_unit iringbuf[IRNGBUF_LEN];
 uint32_t iringbuf_ptr = 0;
 
 void write_iringbuf(vaddr_t pc, uint32_t inst) {
+  iringbuf_ptr = (iringbuf_ptr + 1) % IRNGBUF_LEN;
   iringbuf[iringbuf_ptr].pc = pc;
   iringbuf[iringbuf_ptr].inst = inst;
   iringbuf[iringbuf_ptr].valid = 1;
-  iringbuf_ptr = (iringbuf_ptr + 1) % IRNGBUF_LEN;
+  
 }
 
 void display_iringbuf() {

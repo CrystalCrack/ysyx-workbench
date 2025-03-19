@@ -20,8 +20,8 @@ VL_ATTR_COLD void Vnpc___024root__trace_init_sub__TOP__0(Vnpc___024root* vlSelf,
     tracep->declBit(c+161,"validF", false,-1);
     tracep->declBit(c+518,"start", false,-1);
     tracep->declBit(c+519,"ifetch_en", false,-1);
-    tracep->declBit(c+162,"rst_d1", false,-1);
-    tracep->declBit(c+163,"rst_d2", false,-1);
+    tracep->declBit(c+162,"rst_d", false,-1);
+    tracep->declBit(c+163,"validW_d", false,-1);
     tracep->declBus(c+520,"instF", false,-1, 31,0);
     tracep->declBus(c+164,"pcF", false,-1, 31,0);
     tracep->declBus(c+165,"snpcF", false,-1, 31,0);
@@ -1080,8 +1080,8 @@ VL_ATTR_COLD void Vnpc___024root__trace_full_sub_0(Vnpc___024root* vlSelf, Veril
     bufp->fullCData(oldp+159,(vlSelf->npc__DOT__u_ALU__DOT__u_MuxKeyWithDefault__DOT__i0__DOT__key_list[7]),3);
     bufp->fullBit(oldp+160,(vlSelf->npc__DOT__idu_inst__DOT__ebreak));
     bufp->fullBit(oldp+161,(vlSelf->npc__DOT__u_IFU__DOT__state));
-    bufp->fullBit(oldp+162,(vlSelf->npc__DOT__rst_d1));
-    bufp->fullBit(oldp+163,(vlSelf->npc__DOT__rst_d2));
+    bufp->fullBit(oldp+162,(vlSelf->npc__DOT__rst_d));
+    bufp->fullBit(oldp+163,(vlSelf->npc__DOT__validW_d));
     bufp->fullIData(oldp+164,(vlSelf->npc__DOT__pcF),32);
     bufp->fullIData(oldp+165,(((IData)(4U) + vlSelf->npc__DOT__pcF)),32);
     bufp->fullIData(oldp+166,(vlSelf->npc__DOT__instD),32);
@@ -1761,7 +1761,7 @@ VL_ATTR_COLD void Vnpc___024root__trace_full_sub_0(Vnpc___024root* vlSelf, Veril
     bufp->fullBit(oldp+516,(vlSelf->clk));
     bufp->fullBit(oldp+517,(vlSelf->rst));
     bufp->fullBit(oldp+518,(((~ (IData)(vlSelf->rst)) 
-                             & (IData)(vlSelf->npc__DOT__rst_d1))));
+                             & (IData)(vlSelf->npc__DOT__rst_d))));
     bufp->fullBit(oldp+519,(vlSelf->npc__DOT__ifetch_en));
     bufp->fullIData(oldp+520,(vlSelf->npc__DOT__instF),32);
     bufp->fullIData(oldp+521,(0U),32);

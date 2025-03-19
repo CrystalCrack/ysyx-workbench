@@ -400,7 +400,7 @@ module npc(
         .key(mrtypeM),
         .default_out(32'h0000_0000),
         .lut({3'd0, {{24{rdata[7]}}, rdata[7:0]}, // byte
-              3'd1, {16{rdata[15]}, rdata[15:0]}, // half word
+              3'd1, {{16{rdata[15]}}, rdata[15:0]}, // half word
               3'd2, rdata, // word
               3'd3, {24'b0, rdata[7:0]}, // byte unsigned
               3'd4, {16'b0, rdata[15:0]}}) // half word unsigned

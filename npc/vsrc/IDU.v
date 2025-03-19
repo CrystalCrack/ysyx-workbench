@@ -17,6 +17,7 @@ module IDU(
     output [2:0] ALU_opD,
     output [2:0] rdregsrcD, // 0 for ALU, 1 for mem, 2 for snpc, 3 for compare_result, 4 for csr , 5 for disable
     output jalrD,
+    output [2:0] ALUsrc1D, // 0-regsrc1, 1-pc, 2-csr
     output [1:0] ALUsrc2D, // 0-regsrc2, 1-imm, 2-csr
     output [2:0] inst_type, // 0-I, 1-S, 2-R, 3-U, 4-J, 5-B, 6-N
     output ecallD,
@@ -160,6 +161,8 @@ module IDU(
               5'b00010, 3'd4,
               5'b00001, 3'd5})
     );
+
+    assign ALUsrc1D = auipc ? 2'd1 : 2'd0;
 
     // 0-regsrc2, 1-imm, 2-csr
     MuxKeyWithDefault #(

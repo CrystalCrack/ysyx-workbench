@@ -46,7 +46,7 @@ module npc(
     // IDU
     wire [6:0] opcode, funct7;
     wire [2:0] funct3, mrtypeD, cmp_typeD, ALU_opD, rdregsrcD, inst_type, mrtypeD;
-    wire [1:0] ALUsrc2D;
+    wire [1:0] ALUsrc1D, ALUsrc2D;
     wire [11:0] funct12;
     wire mvalidD, mwenD, branchD, jumpD, jalrD, ecallD, mretD, write_csr;
     wire [7:0] mwmaskD;
@@ -102,6 +102,7 @@ module npc(
         .ALU_opD(ALU_opD),
         .rdregsrcD(rdregsrcD),
         .jalrD(jalrD),
+        .ALUsrc1D(ALUsrc1D),
         .ALUsrc2D(ALUsrc2D),
         .inst_type(inst_type),
         .ecallD(ecallD),
@@ -210,7 +211,7 @@ module npc(
 /* -------------------------------------------------------------------- */
     // bus
     wire mvalidX, mwenX, ecallX, mretX, branchX, jumpX, jalrX;
-    wire [1:0] ALUsrc2X;
+    wire [1:0] ALUsrc1X, ALUsrc2X;
     wire [2:0] cmp_typeX, ALU_opX, rdregsrcX, mrtypeX;
     wire [4:0] rdX;
     wire [7:0] mwmaskX;
@@ -242,6 +243,7 @@ module npc(
         .ALU_opD   	(ALU_opD    ),
         .rdregsrcD 	(rdregsrcD  ),
         .jalrD     	(jalrD      ),
+        .ALUsrc1D  	(ALUsrc1D   ),
         .ALUsrc2D  	(ALUsrc2D   ),
         .src1D     	(src1D      ),
         .src2D     	(src2D      ),
@@ -263,6 +265,7 @@ module npc(
         .ALU_opX   	(ALU_opX    ),
         .rdregsrcX 	(rdregsrcX  ),
         .jalrX     	(jalrX      ),
+        .ALUsrc1X  	(ALUsrc1X   ),
         .ALUsrc2X  	(ALUsrc2X   ),
         .src1X     	(src1X      ),
         .src2X     	(src2X      ),
@@ -279,7 +282,7 @@ module npc(
     );
     
 
-    assign ALU_A = src1X;
+    assign ALU_A = (ALUsrc1X==2'd0) ? src1X : pcX;
     assign ALU_B = (ALUsrc2X==2'd0) ? src2X : 
                    (ALUsrc2X==2'd1) ? immX : csrX;
     ALU u_ALU(

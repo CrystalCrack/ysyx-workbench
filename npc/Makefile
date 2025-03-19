@@ -20,7 +20,7 @@ $(SRC_AUTO_BIND): $(NXDC_FILES)
 	python3 $(NVBOARD_HOME)/scripts/auto_pin_bind.py $^ $@
 
 # Project source
-VSRCS=$(shell find $(abspath ./vsrc) -name "*.v" -or -name "*.sv")
+VSRCS=$(wildcard ./vsrc/*.v) $(wildcard ./vsrc/*.sv)
 SIM_ALL ?= $(notdir $(shell find $(abspath ./csrc) -name "*.c" -or -name "*.cc" -or -name "*.cpp"))
 SIM_CSRCS = $(shell find $(abspath ./csrc) -name "*.c" -or -name "*.cc" -or -name "*.cpp")
 CSRCS= $(SIM_CSRCS) $(SRC_AUTO_BIND)
@@ -34,6 +34,8 @@ LOCAL_ARGS += -d $(NEMU_HOME)/build/riscv32-nemu-interpreter-so
 INCFLAGS = $(addprefix -I, $(INC_PATH))
 CXXFLAGS += $(INCFLAGS) -DTOP_NAME="\"V$(TOPNAME)\""
 LDFLAGS += -lreadline -ltinfo -ldl -pie
+
+VERILATOR_FLAGS += -I$(abspath ./vsrc/include)
 
 all:
 	@echo "Write this Makefile by your self."

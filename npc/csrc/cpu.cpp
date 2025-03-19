@@ -3,6 +3,7 @@
 #include <sdb.h>
 
 #define MAX_INST_TO_PRINT 10
+#define MAX_TRACE 10000000
 int sim_time;
 Vnpc *dut;
 CPU_state state;
@@ -41,8 +42,8 @@ void cpu_deinit() {
 }
 
 void single_cycle() {
-  dut->clk = 1; dut->eval(); m_trace->dump(sim_time); sim_time++;
-  dut->clk = 0; dut->eval(); m_trace->dump(sim_time); sim_time++;
+  dut->clk = 1; dut->eval(); if(sim_time<MAX_TRACE) m_trace->dump(sim_time); sim_time++;
+  dut->clk = 0; dut->eval(); if(sim_time<MAX_TRACE) m_trace->dump(sim_time); sim_time++;
 }
 
 void stop(int code, uint32_t pc) {

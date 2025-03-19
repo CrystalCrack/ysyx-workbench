@@ -1,3 +1,4 @@
+`include "config.vh"
 module Mstage_bus(
     input clk,
     input rst,
@@ -39,77 +40,78 @@ module Mstage_bus(
     input m_ready,
     output m_valid
 );
-    // localparam IDLE = 0;
-    // localparam WAIT_READY = 1;
+`ifndef SINGLE_CYCLE
+    localparam IDLE = 0;
+    localparam WAIT_READY = 1;
 
-    // reg state;
-    // always @(posedge clk) begin
-    //     if(rst) begin
-    //         state <= IDLE;
-    //     end
-    //     else begin
-    //         case (state)
-    //             IDLE: begin
-    //                 if(s_valid) begin
-    //                     state <= WAIT_READY;
-    //                 end
-    //                 else begin
-    //                     state <= IDLE;
-    //                 end
-    //             end
-    //             WAIT_READY: begin
-    //                 if(m_ready) begin
-    //                     state <= IDLE;
-    //                 end
-    //                 else begin
-    //                     state <= WAIT_READY;
-    //                 end
-    //             end
-    //         endcase
-    //     end
-    // end
-    // assign s_ready = state == IDLE;
-    // assign m_valid = state == WAIT_READY;
+    reg state;
+    always @(posedge clk) begin
+        if(rst) begin
+            state <= IDLE;
+        end
+        else begin
+            case (state)
+                IDLE: begin
+                    if(s_valid) begin
+                        state <= WAIT_READY;
+                    end
+                    else begin
+                        state <= IDLE;
+                    end
+                end
+                WAIT_READY: begin
+                    if(m_ready) begin
+                        state <= IDLE;
+                    end
+                    else begin
+                        state <= WAIT_READY;
+                    end
+                end
+            endcase
+        end
+    end
+    assign s_ready = state == IDLE;
+    assign m_valid = state == WAIT_READY;
 
-    // always @(posedge clk) begin
-    //     if(rst) begin
-    //         mvalidM <= 1'b0;
-    //         mwenM <= 1'b0;
-    //         mwmaskM <= 8'h0;
-    //         mrtypeM <= 3'b0;
-    //         rdregsrcM <= 3'b0;
-    //         dnpcM <= 32'h0;
-    //         snpcM <= 32'h0;
-    //         pcM <= 32'h0;
-    //         src2M <= 32'h0;
-    //         ALU_resultM <= 32'h0;
-    //         csraddrM <= 12'h0;
-    //         csrM <= 32'h0;
-    //         cmp_resultM <= 1'b0;
-    //         ecallM <= 1'b0;
-    //         rdM <= 5'b0;
-    //     end
-    //     else begin
-    //         if(s_ready) begin
-    //             mvalidM <= mvalidX;
-    //             mwenM <= mwenX;
-    //             mwmaskM <= mwmaskX;
-    //             mrtypeM <= mrtypeX;
-    //             rdregsrcM <= rdregsrcX;
-    //             dnpcM <= dnpcX;
-    //             snpcM <= snpcX;
-    //             pcM <= pcX;
-    //             src2M <= src2X;
-    //             ALU_resultM <= ALU_resultX;
-    //             csraddrM <= csraddrX;
-    //             csrM <= csrX;
-    //             cmp_resultM <= cmp_resultX;
-    //             ecallM <= ecallX;
-    //             rdM <= rdX;
-    //         end
-    //     end
-    // end
-
+    always @(posedge clk) begin
+        if(rst) begin
+            mvalidM <= 1'b0;
+            mwenM <= 1'b0;
+            mwmaskM <= 8'h0;
+            mrtypeM <= 3'b0;
+            rdregsrcM <= 3'b0;
+            dnpcM <= 32'h0;
+            snpcM <= 32'h0;
+            pcM <= 32'h0;
+            src2M <= 32'h0;
+            ALU_resultM <= 32'h0;
+            csraddrM <= 12'h0;
+            csrM <= 32'h0;
+            cmp_resultM <= 1'b0;
+            ecallM <= 1'b0;
+            rdM <= 5'b0;
+        end
+        else begin
+            if(s_ready) begin
+                mvalidM <= mvalidX;
+                mwenM <= mwenX;
+                mwmaskM <= mwmaskX;
+                mrtypeM <= mrtypeX;
+                rdregsrcM <= rdregsrcX;
+                dnpcM <= dnpcX;
+                snpcM <= snpcX;
+                pcM <= pcX;
+                src2M <= src2X;
+                ALU_resultM <= ALU_resultX;
+                csraddrM <= csraddrX;
+                csrM <= csrX;
+                cmp_resultM <= cmp_resultX;
+                ecallM <= ecallX;
+                rdM <= rdX;
+            end
+        end
+    end
+`else
     // single sycle: always ready
     assign s_ready = 1;
     assign m_valid = 1;
@@ -130,5 +132,5 @@ module Mstage_bus(
         ecallM = ecallX;
         rdM = rdX;
     end
-
+`endif
 endmodule

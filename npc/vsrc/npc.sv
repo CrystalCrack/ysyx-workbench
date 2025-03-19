@@ -25,7 +25,7 @@ module npc(
     PC u_PC(
         .clk(clk),
         .rst(rst),
-        .en(ifetch_en),
+        .en(validW),
         .dnpc(dnpcX),
         .pc(pcF)
     );

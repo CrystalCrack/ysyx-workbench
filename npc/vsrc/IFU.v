@@ -4,21 +4,22 @@ module IFU(
     input wire [31:0] pc,
     output wire [31:0] inst,
 
-    input wire ready,
-    output wire valid
+    input wire s_valid,
+    input wire m_ready,
+    output wire m_valid
 );
 
 
-    localparam [1:0] IDLE = 2'b00;
-    localparam [1:0] WAIT_READY = 2'b01;
-    reg [1:0] state;
+    localparam  IDLE = 0;
+    localparam  WAIT_READY = 1;
+    reg state;
     always @(posedge clk) begin
         if (rst) begin
             state <= IDLE;
         end else begin
             case (state)
                 IDLE: begin
-                    state <= valid ? (ready ? IDLE : WAIT_READY) : IDLE;
+                    state <= s_valid ? WAIT_READY : IDLE;
                 end
                 WAIT_READY: begin
                     state <= ready ? IDLE : WAIT_READY;
@@ -30,7 +31,7 @@ module IFU(
         end
     end
 
-    assign valid = (~rst) & (state == IDLE);
+    assign m_valid = state==WAIT_READY;
     /* instruction memory */
     memory inst_mem(
         .raddr 	(pc  ),

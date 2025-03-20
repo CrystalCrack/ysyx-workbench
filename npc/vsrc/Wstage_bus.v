@@ -35,10 +35,11 @@ module Wstage_bus(
     output m_valid
 );
 `ifdef CONFIG_WSTAGE_BUF
-    localparam IDLE = 0;
-    localparam WAIT_READY = 1;
+    localparam [1:0] IDLE = 0;
+    localparam [1:0] READING_MEM = 1;
+    localparam [1:0] WAIT_READY = 2;
 
-    reg state;
+    reg [1:0] state;
     always @(posedge clk) begin
         if(rst) begin
             state <= IDLE;
@@ -46,20 +47,13 @@ module Wstage_bus(
         else begin
             case (state)
                 IDLE: begin
-                    if(s_valid) begin
-                        state <= WAIT_READY;
-                    end
-                    else begin
-                        state <= IDLE;
-                    end
+                    state <= s_valid ? READING_MEM : IDLE;
+                end
+                READING_MEM: begin
+                    state <= WAIT_READY;
                 end
                 WAIT_READY: begin
-                    if(m_ready) begin
-                        state <= IDLE;
-                    end
-                    else begin
-                        state <= WAIT_READY;
-                    end
+                    state <= m_ready ? IDLE : WAIT_READY;
                 end
             endcase
         end
@@ -83,7 +77,7 @@ module Wstage_bus(
             src2W <= 32'h0;
         end
         else begin
-            if(s_ready & s_valid) begin
+            if(state == READING_MEM) begin
                 dnpcW <= dnpcM;
                 rdregsrcW <= rdregsrcM;
                 mdataW <= mdataM;

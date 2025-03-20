@@ -8,7 +8,7 @@ module npc(
     /* -------------------------------------------------------------------- */
     /*                           Fetch Stage                                */
     /* -------------------------------------------------------------------- */
-    wire validF;
+    wire validF, readyF;
     wire start, ifetch_en;
     reg rst_d, validW_d;
     wire [31:0] instF, pcF, snpcF;
@@ -34,7 +34,7 @@ module npc(
         
         .araddr(pcF),
         .arvalid(ifetch_en),
-        .arready(),
+        .arready(readyF),
 
         .rdata(instF),
         .rresp(),
@@ -456,7 +456,7 @@ module npc(
         .rdW         	(rdW          ),
         .s_valid     	(validM       ),
         .s_ready     	(readyW       ),
-        .m_ready     	(1'b1         ),
+        .m_ready     	(readyF         ),
         .m_valid     	(validW       )
     );
     MuxKeyWithDefault #(

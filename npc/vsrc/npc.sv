@@ -479,8 +479,8 @@ module npc(
     function void get_pc_inst();
         output int cpu_pc;
         output int cpu_inst;
-        cpu_pc = pcF;
-        cpu_inst = instF;
+        cpu_pc = pcW;
+        cpu_inst = instW;
     endfunction
 
     export "DPI-C" function get_CSR;

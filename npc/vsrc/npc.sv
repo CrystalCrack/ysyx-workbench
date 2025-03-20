@@ -397,7 +397,7 @@ module npc(
         .valid 	(mvalidM  ),
         .rdata 	(rdata  )
     );
-    wire validM_d;
+    reg validM_d;
     always @ (posedge clk) begin
         validM_d <= validM;
     end

@@ -343,7 +343,7 @@ module npc(
     wire [11:0] csraddrM;
     wire [31:0] dnpcM, pcM, src2M, ALU_resultM, csrM, snpcM;
     // memory
-    wire [31:0] rdata, mdataM;
+    wire [31:0] mdataM;
     
     Mstage_bus u_Mstage_bus(
         .clk         	(clk          ),
@@ -379,47 +379,29 @@ module npc(
         .ecallM      	(ecallM       ),
         .rdM         	(rdM          ),
         .s_valid     	(validX       ),
-        .s_ready     	(readyM       ),
+        .s_ready     	(validM & readyW       ),
         .m_ready     	(readyW       ),
-        .m_valid     	(validM       )
+        .m_valid     	(       )
     );
     
-
-    /* data memory */
-    SRAM data_mem(
-        .clk    (clk  ),
-        .rst    (rst  ),
-        .raddr 	(ALU_resultM  ),
-        .waddr 	(ALU_resultM    ),
-        .wdata 	(src2M    ),
-        .wmask 	(mwmaskM    ),
-        .wen   	(mwenM    ),
-        .valid 	(mvalidM  ),
-        .rdata 	(rdata  )
+    
+    LSU u_LSU(
+        .clk         	(clk          ),
+        .rst         	(rst          ),
+        .ALU_resultX 	(ALU_resultX  ),
+        .src2X       	(src2X        ),
+        .mwmaskX     	(mwmaskX      ),
+        .mwenX       	(mwenX        ),
+        .mvalidX     	(mvalidX      ),
+        .mrtypeX     	(mrtypeX      ),
+        .mdataM      	(mdataM       ),
+        .s_valid     	(validX      ),
+        .s_ready     	(validM      ),
+        .m_ready     	(readyW      ),
+        .m_valid     	(validM      )
     );
-    // memory data_mem(
-    //     .raddr 	(ALU_resultM  ),
-    //     .waddr 	(ALU_resultM  ),
-    //     .wdata 	(src2M  ),
-    //     .wmask 	(mwmaskM  ),
-    //     .wen   	(mwenM    ),
-    //     .valid 	(mvalidM  ),
-    //     .rdata 	(rdata  )
-    // );
-    MuxKeyWithDefault #(
-        .NR_KEY(5),
-        .KEY_LEN(3),
-        .DATA_LEN(32)
-    ) ext_mdata (
-        .out(mdataM),
-        .key(mrtypeM),
-        .default_out(32'h0000_0000),
-        .lut({3'd0, {{24{rdata[7]}}, rdata[7:0]}, // byte
-              3'd1, {{16{rdata[15]}}, rdata[15:0]}, // half word
-              3'd2, rdata, // word
-              3'd3, {24'b0, rdata[7:0]}, // byte unsigned
-              3'd4, {16'b0, rdata[15:0]}}) // half word unsigned
-    );
+    
+    
 
     /* -------------------------------------------------------------------- */
     /*                          Write Back Stage                            */

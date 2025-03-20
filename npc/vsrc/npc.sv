@@ -341,6 +341,7 @@ module npc(
     // bus
     wire readyM, validM, cmp_resultM;
     wire mvalidM, mwenM, ecallM;
+    wire Mbus_valid, Mbus_ready;
     wire [2:0] rdregsrcM, mrtypeM;
     wire [4:0] rdM;
     wire [7:0] mwmaskM;
@@ -383,25 +384,25 @@ module npc(
         .ecallM      	(ecallM       ),
         .rdM         	(rdM          ),
         .s_valid     	(validX       ),
-        .s_ready     	(       ),
+        .s_ready     	(Mbus_ready       ),
         .m_ready     	(validM & readyW       ),
-        .m_valid     	(       )
+        .m_valid     	(Mbus_valid       )
     );
-    wire LSU_rvalid, LSU_wready;
+    wire LSU_rvalid, LSU_arready, LSU_awready, LSU_wready;
     LSU u_LSU(
         .clk     	(clk      ),
         .rst     	(rst      ),
         .araddr  	(ALU_resultX   ),
         .mrtypeM 	(mrtypeM  ),
         .arvalid 	(mvalidX  ),
-        .arready 	(readyM  ),
+        .arready 	(LSU_arready ),
         .rdata   	(mdataM   ),
         .rresp   	(    ),
         .rvalid  	(LSU_rvalid   ),
         .rready  	(readyW   ),
         .awaddr  	(ALU_resultX   ),
         .awvalid 	(mwenX  ),
-        .awready 	(  ),
+        .awready 	(LSU_awready  ),
         .wdata   	(src2X    ),
         .wstrb   	(mwmaskX[3:0]    ),
         .wvalid  	(mwenX   ),
@@ -410,7 +411,8 @@ module npc(
         .bvalid  	(   ),
         .bready  	(1   )
     );
-    assign validM = ((~mwenM) & LSU_rvalid) | (mwenM & LSU_wready) | (~mvalidM);
+    assign readyM = LSU_arready & LSU_awready & LSU_wready & Mbus_ready;
+    assign validM = (Mbus_valid & (~mvalidM)) |((~mwenM) & LSU_rvalid) | (mwenM & LSU_wready);
     
     
 

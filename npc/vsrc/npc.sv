@@ -395,7 +395,7 @@ module npc(
         .wmask 	(mwmaskM    ),
         .wen   	(mwenM    ),
         .valid 	(mvalidM  ),
-        .rdata 	(inst  )
+        .rdata 	(rdata  )
     );
     // memory data_mem(
     //     .raddr 	(ALU_resultM  ),

@@ -9,7 +9,7 @@ module IFU(
     output [31:0] rdata,
     output rresp,
     output rvalid,
-    input rready,
+    input rready
 
 );
     

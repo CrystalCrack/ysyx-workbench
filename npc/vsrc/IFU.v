@@ -1,8 +1,9 @@
 module IFU(
-    input wire clk,
-    input wire rst,
-    input wire [31:0] pc,
-    output wire [31:0] inst,
+    input clk,
+    input rst,
+    
+    input [31:0] pc,
+    output reg [31:0] inst,
 
     input wire s_valid,
     input wire m_ready,

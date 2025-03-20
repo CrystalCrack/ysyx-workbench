@@ -39,7 +39,7 @@ module npc(
         .rdata(instF),
         .rresp(),
         .rvalid(validF),
-        .rready(ifetch_en)
+        .rready(readyD)
     );
 
     /* -------------------------------------------------------------------- */

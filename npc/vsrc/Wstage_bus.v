@@ -77,7 +77,7 @@ module Wstage_bus(
             src2W <= 32'h0;
         end
         else begin
-            if(state == READING_MEM) begin
+            if(s_ready & s_valid) begin
                 dnpcW <= dnpcM;
                 rdregsrcW <= rdregsrcM;
                 mdataW <= mdataM;

@@ -386,15 +386,26 @@ module npc(
     
 
     /* data memory */
-    memory data_mem(
+    SRAM data_mem(
+        .clk    (clk  ),
+        .rst    (rst  ),
         .raddr 	(ALU_resultM  ),
-        .waddr 	(ALU_resultM  ),
-        .wdata 	(src2M  ),
-        .wmask 	(mwmaskM  ),
+        .waddr 	(ALU_resultM    ),
+        .wdata 	(src2M    ),
+        .wmask 	(mwmaskM    ),
         .wen   	(mwenM    ),
         .valid 	(mvalidM  ),
-        .rdata 	(rdata  )
+        .rdata 	(inst  )
     );
+    // memory data_mem(
+    //     .raddr 	(ALU_resultM  ),
+    //     .waddr 	(ALU_resultM  ),
+    //     .wdata 	(src2M  ),
+    //     .wmask 	(mwmaskM  ),
+    //     .wen   	(mwenM    ),
+    //     .valid 	(mvalidM  ),
+    //     .rdata 	(rdata  )
+    // );
     MuxKeyWithDefault #(
         .NR_KEY(5),
         .KEY_LEN(3),

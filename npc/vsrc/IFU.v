@@ -10,9 +10,10 @@ module IFU(
 );
 
 
-    localparam  IDLE = 0;
-    localparam  WAIT_READY = 1;
-    reg state;
+    localparam [1:0] IDLE = 0;
+    localparam [1:0] READING_MEM = 1;
+    localparam [1:0] WAIT_READY = 2;
+    reg [1:0] state;
     always @(posedge clk) begin
         if (rst) begin
             state <= IDLE;
@@ -21,6 +22,9 @@ module IFU(
                 IDLE: begin
                     state <= s_valid ? WAIT_READY : IDLE;
                 end
+                // READING_MEM: begin // sram fetch need a cycle
+                //     state <= WAIT_READY;
+                // end
                 WAIT_READY: begin
                     state <= m_ready ? IDLE : WAIT_READY;
                 end
@@ -31,9 +35,11 @@ module IFU(
         end
     end
 
-    assign m_valid = s_valid;
+    assign m_valid = state == WAIT_READY;
     /* instruction memory */
-    memory inst_mem(
+    SRAM inst_mem(
+        .clk    (clk  ),
+        .rst    (rst  ),
         .raddr 	(pc  ),
         .waddr 	(0    ),
         .wdata 	(0    ),

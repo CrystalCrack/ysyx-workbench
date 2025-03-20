@@ -2,64 +2,55 @@ module LSU(
     input clk,
     input rst,
 
-    input [31:0] ALU_resultX,
-    input [31:0] src2X,
-    input [7:0] mwmaskX,
-    input mwenX,
-    input mvalidX,
+    input [31:0] araddr,
     input [2:0] mrtypeM,
+    input arvalid,
+    output arready,
 
-    output reg [31:0] mdataM,
+    output [31:0] rdata,
+    output rresp,
+    output rvalid,
+    input rready,
 
-    input s_valid,
-    output s_ready,
-    input m_ready,
-    output m_valid
+    input [31:0] awaddr,
+    input awvalid,
+    output awready,
+
+    input [31:0] wdata,
+    input [3:0] wstrb,
+    input wvalid,
+    output wready,
+
+    output bresp,
+    output bvalid,
+    input bready
+
 );
-    wire [31:0] rdata, rdata_sel;
+    wire [31:0] rdata_sel;
     reg [2:0] mrtype;
-
-
-    localparam [1:0] IDLE = 0;
-    localparam [1:0] READING_MEM = 1;
-    localparam [1:0] WAIT_READY = 2;
-    reg [1:0] state;
-
-    always @(posedge clk) begin
-        if (rst) begin
-            state <= IDLE;
-        end else begin
-            case (state)
-                IDLE: begin
-                    state <= s_valid ? READING_MEM : IDLE;
-                end
-                READING_MEM: begin
-                    state <= WAIT_READY;
-                end
-                WAIT_READY: begin
-                    state <= m_ready ? IDLE : WAIT_READY;
-                end
-                default: begin
-                    state <= IDLE;
-                end
-            endcase 
-        end
-    end
-
-    assign s_ready = state == IDLE;
-    assign m_valid = state == WAIT_READY;
-
-    SRAM data_mem(
-        .clk    (clk  ),
-        .rst    (rst  ),
-        .raddr 	(ALU_resultX  ),
-        .waddr 	(ALU_resultX    ),
-        .wdata 	(src2X    ),
-        .wmask 	(mwmaskX    ),
-        .wen   	(mwenX    ),
-        .valid 	(mvalidX & s_valid  ),
-        .rdata 	(rdata  )
+    
+    SRAM data_ram(
+        .clk     	(clk      ),
+        .rst     	(rst      ),
+        .araddr  	(araddr   ),
+        .arvalid 	(arvalid  ),
+        .arready 	(arready  ),
+        .rdata   	(rdata    ),
+        .rresp   	(rresp    ),
+        .rvalid  	(rvalid   ),
+        .rready  	(rready   ),
+        .awaddr  	(awaddr   ),
+        .awvalid 	(awvalid  ),
+        .awready 	(awready  ),
+        .wdata   	(wdata    ),
+        .wstrb   	(wstrb    ),
+        .wvalid  	(wvalid   ),
+        .wready  	(wready   ),
+        .bresp   	(bresp    ),
+        .bvalid  	(bvalid   ),
+        .bready  	(bready   )
     );
+    
 
     MuxKeyWithDefault #(
         .NR_KEY(5),
@@ -76,13 +67,4 @@ module LSU(
               3'd4, {16'b0, rdata[15:0]}}) // half word unsigned
     );
 
-    always @(posedge clk) begin
-        if (rst) begin
-            mdataM <= 32'h0;
-        end else begin
-            if (state == READING_MEM) begin
-                mdataM <= rdata_sel;
-            end
-        end
-    end
 endmodule

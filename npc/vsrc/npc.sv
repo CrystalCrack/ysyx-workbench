@@ -31,11 +31,15 @@ module npc(
     IFU u_IFU(
         .clk(clk),
         .rst(rst),
-        .pc(pcF),
-        .inst(instF),
-        .s_valid(ifetch_en),
-        .m_ready(readyD),
-        .m_valid(validF)
+        
+        .araddr(pcF),
+        .arvalid(ifetch_en),
+        .arready(),
+
+        .rdata(instF),
+        .rresp(),
+        .rvalid(validF),
+        .rready(ifetch_en)
     );
 
     /* -------------------------------------------------------------------- */
@@ -382,6 +386,29 @@ module npc(
         .s_ready     	(       ),
         .m_ready     	(validM & readyW       ),
         .m_valid     	(       )
+    );
+    
+    LSU u_LSU(
+        .clk     	(clk      ),
+        .rst     	(rst      ),
+        .araddr  	(ALU_resultX   ),
+        .mrtypeM 	(mrtypeM  ),
+        .arvalid 	(mvalidX  ),
+        .arready 	(  ),
+        .rdata   	(mdataM   ),
+        .rresp   	(    ),
+        .rvalid  	(validM   ),
+        .rready  	(readyM   ),
+        .awaddr  	(ALU_resultX   ),
+        .awvalid 	(mwenX  ),
+        .awready 	(  ),
+        .wdata   	(src2X    ),
+        .wstrb   	(mwmaskX[3:0]    ),
+        .wvalid  	(mwenX   ),
+        .wready  	(   ),
+        .bresp   	(    ),
+        .bvalid  	(   ),
+        .bready  	(1   )
     );
     
     

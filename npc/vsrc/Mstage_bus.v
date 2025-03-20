@@ -40,7 +40,7 @@ module Mstage_bus(
     input m_ready,
     output m_valid
 );
-`ifndef SINGLE_CYCLE
+`ifndef CONFIG_MSTAGE_BUF
     localparam IDLE = 0;
     localparam WAIT_READY = 1;
 

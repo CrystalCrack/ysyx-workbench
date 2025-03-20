@@ -34,7 +34,7 @@ module Wstage_bus(
     input m_ready,
     output m_valid
 );
-`ifndef SINGLE_CYCLE
+`ifndef CONFIG_WSTAGE_BUF
     localparam IDLE = 0;
     localparam WAIT_READY = 1;
 

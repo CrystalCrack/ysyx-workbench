@@ -34,7 +34,7 @@ module npc(
         
         .araddr(pcF),
         .arvalid(ifetch_en),
-        .arready(readyF),
+        .arready(),
 
         .rdata(instF),
         .rresp(),

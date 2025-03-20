@@ -397,6 +397,10 @@ module npc(
         .valid 	(mvalidM  ),
         .rdata 	(rdata  )
     );
+    wire validM_d;
+    always @ (posedge clk) begin
+        validM_d <= validM;
+    end
     // memory data_mem(
     //     .raddr 	(ALU_resultM  ),
     //     .waddr 	(ALU_resultM  ),
@@ -459,7 +463,7 @@ module npc(
         .csrW        	(csrW         ),
         .src2W       	(src2W        ),
         .rdW         	(rdW          ),
-        .s_valid     	(validM       ),
+        .s_valid     	(validM_d       ),
         .s_ready     	(readyW       ),
         .m_ready     	(1'b1         ),
         .m_valid     	(validW       )

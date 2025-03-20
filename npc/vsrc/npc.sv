@@ -410,7 +410,7 @@ module npc(
         .bvalid  	(   ),
         .bready  	(1   )
     );
-    assign validM = ((~mwenM) & LSU_rvalid) | (mwenM & LSU_wready);
+    assign validM = ((~mwenM) & LSU_rvalid) | (mwenM & LSU_wready) | (~mvalidM);
     
     
 

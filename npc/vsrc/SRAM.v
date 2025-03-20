@@ -32,8 +32,6 @@ module SRAM(
     localparam [1:0] READING_MEM = 1;
     localparam [1:0] WAIT_READY = 2;
 
-    assign arready = 1;
-
     reg [1:0] read_state;
     always @(posedge clk) begin
         if(rst) begin
@@ -70,6 +68,7 @@ module SRAM(
         end
     end
     assign rvalid = read_state == WAIT_READY;
+    assign arready = read_state == IDLE;
 
     assign awready = 1;
     assign wready = 1;

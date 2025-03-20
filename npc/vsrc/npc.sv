@@ -34,7 +34,7 @@ module npc(
         
         .araddr(pcF),
         .arvalid(ifetch_en),
-        .arready(),
+        .arready(readyF),
 
         .rdata(instF),
         .rresp(),
@@ -387,29 +387,30 @@ module npc(
         .m_ready     	(validM & readyW       ),
         .m_valid     	(       )
     );
-    
+    wire LSU_rvalid, LSU_wready;
     LSU u_LSU(
         .clk     	(clk      ),
         .rst     	(rst      ),
         .araddr  	(ALU_resultX   ),
         .mrtypeM 	(mrtypeM  ),
         .arvalid 	(mvalidX  ),
-        .arready 	(  ),
+        .arready 	(readyM  ),
         .rdata   	(mdataM   ),
         .rresp   	(    ),
-        .rvalid  	(validM   ),
-        .rready  	(readyM   ),
+        .rvalid  	(LSU_rvalid   ),
+        .rready  	(readyW   ),
         .awaddr  	(ALU_resultX   ),
         .awvalid 	(mwenX  ),
         .awready 	(  ),
         .wdata   	(src2X    ),
         .wstrb   	(mwmaskX[3:0]    ),
         .wvalid  	(mwenX   ),
-        .wready  	(   ),
+        .wready  	(LSU_wready   ),
         .bresp   	(    ),
         .bvalid  	(   ),
         .bready  	(1   )
     );
+    assign validM = ((~mwenM) & LSU_rvalid) | (mwenM & LSU_wready);
     
     
 

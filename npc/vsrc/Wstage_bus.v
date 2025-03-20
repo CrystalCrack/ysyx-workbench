@@ -47,10 +47,7 @@ module Wstage_bus(
         else begin
             case (state)
                 IDLE: begin
-                    state <= s_valid ? READING_MEM : IDLE;
-                end
-                READING_MEM: begin
-                    state <= WAIT_READY;
+                    state <= s_valid ? WAIT_READY : IDLE;
                 end
                 WAIT_READY: begin
                     state <= m_ready ? IDLE : WAIT_READY;

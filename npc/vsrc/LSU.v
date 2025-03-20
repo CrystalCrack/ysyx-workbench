@@ -26,7 +26,7 @@ module LSU(
     input bready
 
 );
-    wire [31:0] rdata_sel;
+    wire [31:0] rdata_int;
     reg [2:0] mrtype;
     
     SRAM data_ram(
@@ -35,7 +35,7 @@ module LSU(
         .araddr  	(araddr   ),
         .arvalid 	(arvalid  ),
         .arready 	(arready  ),
-        .rdata   	(rdata    ),
+        .rdata   	(rdata_int    ),
         .rresp   	(rresp    ),
         .rvalid  	(rvalid   ),
         .rready  	(rready   ),
@@ -57,14 +57,14 @@ module LSU(
         .KEY_LEN(3),
         .DATA_LEN(32)
     ) ext_mdata (
-        .out(rdata_sel),
+        .out(rdata),
         .key(mrtypeM),
         .default_out(32'h0000_0000),
-        .lut({3'd0, {{24{rdata[7]}}, rdata[7:0]}, // byte
-              3'd1, {{16{rdata[15]}}, rdata[15:0]}, // half word
-              3'd2, rdata, // word
-              3'd3, {24'b0, rdata[7:0]}, // byte unsigned
-              3'd4, {16'b0, rdata[15:0]}}) // half word unsigned
+        .lut({3'd0, {{24{rdata_int[7]}}, rdata_int[7:0]}, // byte
+              3'd1, {{16{rdata_int[15]}}, rdata_int[15:0]}, // half word
+              3'd2, rdata_int, // word
+              3'd3, {24'b0, rdata_int[7:0]}, // byte unsigned
+              3'd4, {16'b0, rdata_int[15:0]}}) // half word unsigned
     );
 
 endmodule

@@ -412,23 +412,6 @@ module npc(
     );
     
     
-    LSU u_LSU(
-        .clk         	(clk          ),
-        .rst         	(rst          ),
-        .ALU_resultX 	(ALU_resultX  ),
-        .src2X       	(src2X        ),
-        .mwmaskX     	(mwmaskX      ),
-        .mwenX       	(mwenX        ),
-        .mvalidX     	(mvalidX      ),
-        .mrtypeM     	(mrtypeM      ),
-        .mdataM      	(mdataM       ),
-        .s_valid     	(validX      ),
-        .s_ready     	(readyM      ),
-        .m_ready     	(readyW      ),
-        .m_valid     	(validM      )
-    );
-    
-    
 
     /* -------------------------------------------------------------------- */
     /*                          Write Back Stage                            */

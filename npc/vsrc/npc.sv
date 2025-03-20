@@ -23,7 +23,7 @@ module npc(
         .clk(clk),
         .rst(rst),
         .en(validW),
-        .dnpc(dnpcX),
+        .dnpc(dnpcW),
         .pc(pcF)
     );
     assign snpcF = pcF + 4;

@@ -7,7 +7,7 @@ module LSU(
     input [7:0] mwmaskX,
     input mwenX,
     input mvalidX,
-    input [2:0] mrtypeX,
+    input [2:0] mrtypeM,
 
     output reg [31:0] mdataM,
 
@@ -17,6 +17,7 @@ module LSU(
     output m_valid
 );
     wire [31:0] rdata, rdata_sel;
+    reg [2:0] mrtype;
 
 
     localparam [1:0] IDLE = 0;
@@ -66,7 +67,7 @@ module LSU(
         .DATA_LEN(32)
     ) ext_mdata (
         .out(rdata_sel),
-        .key(mrtypeX),
+        .key(mrtypeM),
         .default_out(32'h0000_0000),
         .lut({3'd0, {{24{rdata[7]}}, rdata[7:0]}, // byte
               3'd1, {{16{rdata[15]}}, rdata[15:0]}, // half word

@@ -393,7 +393,7 @@ module npc(
         .mwmaskX     	(mwmaskX      ),
         .mwenX       	(mwenX        ),
         .mvalidX     	(mvalidX      ),
-        .mrtypeX     	(mrtypeX      ),
+        .mrtypeM     	(mrtypeM      ),
         .mdataM      	(mdataM       ),
         .s_valid     	(validX      ),
         .s_ready     	(readyM      ),

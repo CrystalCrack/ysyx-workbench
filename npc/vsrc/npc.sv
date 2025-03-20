@@ -18,7 +18,7 @@ module npc(
         validW_d <= validW;
     end
     assign start = ~rst & rst_d; // negedge detect
-    assign newpc = (validW&validX) ? validW_d : validW; // if validW and validX are synchronous, delay to wait pcF update
+    assign newpc = (validW==validX) ? validW_d : validW; // if validW and validX are synchronous, delay to wait pcF update
     assign ifetch_en = ~rst & (newpc | start);
     PC u_PC(
         .clk(clk),

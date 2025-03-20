@@ -396,7 +396,7 @@ module npc(
         .mrtypeX     	(mrtypeX      ),
         .mdataM      	(mdataM       ),
         .s_valid     	(validX      ),
-        .s_ready     	(validM      ),
+        .s_ready     	(readyM      ),
         .m_ready     	(readyW      ),
         .m_valid     	(validM      )
     );

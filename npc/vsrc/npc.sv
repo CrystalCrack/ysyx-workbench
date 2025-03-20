@@ -412,7 +412,7 @@ module npc(
         .bready  	(1   )
     );
     assign readyM = LSU_arready & LSU_awready & LSU_wready & Mbus_ready;
-    assign validM = Mbus_valid & ((~mvalidM)) | ((~mwenM) & LSU_rvalid) | (mwenM & LSU_wready);
+    assign validM = Mbus_valid & ((~mvalidM) | ((~mwenM) & LSU_rvalid) | (mwenM & LSU_wready));
     
     
 

@@ -30,7 +30,7 @@ module LSU(
         end else begin
             case (state)
                 IDLE: begin
-                    state <= s_valid ? WAIT_READY : IDLE;
+                    state <= s_valid ? READING_MEM : IDLE;
                 end
                 READING_MEM: begin
                     state <= WAIT_READY;

@@ -129,7 +129,7 @@ module npc(
         .rst    	(rst),
         .wdata  	(rddataW),
         .waddr  	(rdW),
-        .wen    	(~disableW),
+        .wen    	(~disableW & validW),
         .raddr1 	(rf_raddr1  ),
         .raddr2 	(rf_raddr2  ),
         .rdata1 	(src1D  ),

@@ -22,8 +22,8 @@ module npc(
     PC u_PC(
         .clk(clk),
         .rst(rst),
-        .en(validW),
-        .dnpc(dnpcW),
+        .en(validX),
+        .dnpc(dnpcX),
         .pc(pcF)
     );
     assign snpcF = pcF + 4;

@@ -55,6 +55,9 @@ module Wstage_bus(
                 WAIT_READY: begin
                     state <= m_ready ? IDLE : WAIT_READY;
                 end
+                default: begin
+                    state <= IDLE;
+                end
             endcase
         end
     end

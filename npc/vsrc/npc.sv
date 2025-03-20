@@ -9,7 +9,7 @@ module npc(
     /*                           Fetch Stage                                */
     /* -------------------------------------------------------------------- */
     wire validF, readyF;
-    wire start, ifetch_en;
+    wire start, newpc, ifetch_en;
     reg rst_d, validW_d;
     wire [31:0] instF, pcF, snpcF;
 
@@ -18,6 +18,7 @@ module npc(
         validW_d <= validW;
     end
     assign start = ~rst & rst_d; // negedge detect
+    assign newpc = (validW&validX) ? validW_d : validW; // if validW and validX are synchronous, delay to wait pcF update
     assign ifetch_en = ~rst & (validW | start);
     PC u_PC(
         .clk(clk),

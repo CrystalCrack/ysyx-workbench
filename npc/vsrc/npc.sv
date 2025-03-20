@@ -479,7 +479,7 @@ module npc(
     function void get_pc_inst();
         output int cpu_pc;
         output int cpu_inst;
-        cpu_pc = pcW;
+        cpu_pc = pcF;
         cpu_inst = instF;
     endfunction
 

@@ -502,10 +502,16 @@ module npc(
         end
     end
 
+    wire FW_handshake;
+    reg FW_handshake_d;
+    always @(posedge clk) begin
+        FW_handshake_d <= FW_handshake;
+    end
+    assign FW_handshake = validW&readyF;
     export "DPI-C" function is_inst_done;
     function void is_inst_done();
         output int done;
-        done = {31'b0, validW & readyF};
+        done = {31'b0, FW_handshake_d};
     endfunction
 
 endmodule

@@ -18,7 +18,7 @@ module npc(
         validW_d <= validW;
     end
     assign start = ~rst & rst_d; // negedge detect
-    assign ifetch_en = ~rst & (validW | start);
+    assign ifetch_en = ~rst & (validW_d | start);
     PC u_PC(
         .clk(clk),
         .rst(rst),

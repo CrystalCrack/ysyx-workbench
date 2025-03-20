@@ -1,4 +1,4 @@
-`include "./include/config.vh"
+`include "config.vh"
 module Wstage_bus(
     input clk,
     input rst,

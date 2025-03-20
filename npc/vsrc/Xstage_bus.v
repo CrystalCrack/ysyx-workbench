@@ -1,3 +1,4 @@
+`include "config.vh"
 module Xstage_bus(
     input clk,
     input rst,

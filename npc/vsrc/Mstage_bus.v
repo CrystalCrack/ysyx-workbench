@@ -1,4 +1,4 @@
-`include "config.vh"
+`include "./include/config.vh"
 module Mstage_bus(
     input clk,
     input rst,
@@ -112,9 +112,9 @@ module Mstage_bus(
         end
     end
 `else
-    // single sycle: always ready
-    assign s_ready = 1;
-    assign m_valid = 1;
+    
+    assign s_ready = m_ready;
+    assign m_valid = s_valid;
     always @(*) begin
         mvalidM = mvalidX;
         mwenM = mwenX;

@@ -1,4 +1,3 @@
-`include "config.vh"
 module Xstage_bus(
     input clk,
     input rst,
@@ -140,9 +139,8 @@ module Xstage_bus(
         end
     end
 `else
-    // single cycle: always ready
-    assign s_ready = 1;
-    assign m_valid = 1;
+    assign s_ready = m_ready;
+    assign m_valid = s_valid;
     always @(*) begin
         pcX = pcD;
         immX = immD;

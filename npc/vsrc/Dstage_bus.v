@@ -1,4 +1,4 @@
-`include "config.vh"
+`include "./include/config.vh"
 
 module Dstage_bus(
     input clk,
@@ -68,8 +68,8 @@ module Dstage_bus(
 `else
 
     // single sycle: always ready
-    assign s_ready = 1;
-    assign m_valid = 1;
+    assign s_ready = m_ready;
+    assign m_valid = s_valid;
     always @(*) begin
         pcD = pcF;
         instD = instF;

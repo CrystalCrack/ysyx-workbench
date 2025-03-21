@@ -13,6 +13,23 @@ module npc(
     reg rst_d, validW_d;
     wire [31:0] instF, pcF, snpcF;
 
+
+    // detect validX rising edge to only update pcF once
+    reg validX_d;
+    wire update_pc;
+    always @(posedge clk) begin
+        validX_d <= validX;
+    end
+    assign update_pc = validX & ~validX_d;
+    PC u_PC(
+        .clk(clk),
+        .rst(rst),
+        .en(update_pc),
+        .dnpc(dnpcX),
+        .pc(pcF)
+    );
+    assign snpcF = pcF + 4;
+
     always @(posedge clk) begin
         rst_d <= rst;
         validW_d <= validW;
@@ -20,15 +37,6 @@ module npc(
     assign start = ~rst & rst_d; // negedge detect
     assign newpc = (validW==validX) ? validW_d : validW; // if validW and validX are synchronous, delay to wait pcF update
     assign ifetch_en = ~rst & (newpc | start);
-    PC u_PC(
-        .clk(clk),
-        .rst(rst),
-        .en(validX),
-        .dnpc(dnpcX),
-        .pc(pcF)
-    );
-    assign snpcF = pcF + 4;
-
     IFU u_IFU(
         .clk(clk),
         .rst(rst),

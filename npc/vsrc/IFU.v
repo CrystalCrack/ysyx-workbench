@@ -12,17 +12,43 @@ module IFU(
     input rready
 
 );
+    // add random delay to valid and ready
+    reg [7:0] delay;
+    reg [7:0] count;
+    
+    LFSR u_LFSR(
+        .clk  	(clk   ),
+        .rst  	(rst   ),
+        .lfsr 	(delay  )
+    );
+    
+    reg arvalid_i, rready_i;
+    always @(posedge clk) begin
+        if(count >= delay) begin
+            count <= 0;
+        end
+        else begin
+            count <= count + 1;
+        end
+    end
+
+    always @(posedge clk) begin
+        if(count >= delay) begin
+            arvalid_i <= arvalid;
+            rready_i <= rready;
+        end
+    end
     
     SRAM u_SRAM(
         .clk     	(clk      ),
         .rst     	(rst      ),
         .araddr  	(araddr   ),
-        .arvalid 	(arvalid  ),
+        .arvalid 	(arvalid_i  ),
         .arready 	(arready  ),
         .rdata   	(rdata    ),
         .rresp   	(rresp    ),
         .rvalid  	(rvalid   ),
-        .rready  	(rready   ),
+        .rready  	(rready_i   ),
         .awaddr  	(0   ),
         .awvalid 	(0  ),
         .awready 	(  ),

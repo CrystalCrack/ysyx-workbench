@@ -29,26 +29,56 @@ module LSU(
     wire [31:0] rdata_int;
     reg [2:0] mrtype;
     
+    // add random delay to valid and ready
+    reg [7:0] delay;
+    reg [7:0] count;
+    
+    LFSR u_LFSR(
+        .clk  	(clk   ),
+        .rst  	(rst   ),
+        .lfsr 	(delay  )
+    );
+    
+    reg arvalid_i, rready_i, awvalid_i, wvalid_i, bready_i;
+    always @(posedge clk) begin
+        if(count >= delay) begin
+            count <= 0;
+        end
+        else begin
+            count <= count + 1;
+        end
+    end
+
+    always @(posedge clk) begin
+        if(count >= delay) begin
+            arvalid_i <= arvalid;
+            rready_i <= rready;
+            awready_i <= awready;
+            wvalid_i <= wvalid;
+            bready_i <= bready;
+        end
+    end
+
     SRAM data_ram(
         .clk     	(clk      ),
         .rst     	(rst      ),
         .araddr  	(araddr   ),
-        .arvalid 	(arvalid  ),
+        .arvalid 	(arvalid_i  ),
         .arready 	(arready  ),
         .rdata   	(rdata_int    ),
         .rresp   	(rresp    ),
         .rvalid  	(rvalid   ),
-        .rready  	(rready   ),
+        .rready  	(rready_i   ),
         .awaddr  	(awaddr   ),
-        .awvalid 	(awvalid  ),
+        .awvalid 	(awvalid_i  ),
         .awready 	(awready  ),
         .wdata   	(wdata    ),
         .wstrb   	(wstrb    ),
-        .wvalid  	(wvalid   ),
+        .wvalid  	(wvalid_i   ),
         .wready  	(wready   ),
         .bresp   	(bresp    ),
         .bvalid  	(bvalid   ),
-        .bready  	(bready   )
+        .bready  	(bready_i   )
     );
     
 

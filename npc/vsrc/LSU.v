@@ -28,27 +28,68 @@ module LSU(
 );
     wire [31:0] rdata_int;
     reg [2:0] mrtype;
+
+    wire arvalid_i, rready_i, awvalid_i, wvalid_i, bready_i;
+    delay #(
+        .N(3)
+    ) u_delay1(
+        .clk(clk),
+        .din(arvalid),
+        .dout(arvalid_i)
+    );
+
+    delay #(
+        .N(6)
+    ) u_delay2(
+        .clk(clk),
+        .din(rready),
+        .dout(rready_i)
+    );
+
+    delay #(
+        .N(8)
+    ) u_delay3(
+        .clk(clk),
+        .din(awvalid),
+        .dout(awvalid_i)
+    );
+
+    delay #(
+        .N(9)
+    ) u_delay4(
+        .clk(clk),
+        .din(wvalid),
+        .dout(wvalid_i)
+    );
+
+    delay #(
+        .N(11)
+    ) u_delay5(
+        .clk(clk),
+        .din(bready),
+        .dout(bready_i)
+    );
     
     SRAM data_ram(
         .clk     	(clk      ),
         .rst     	(rst      ),
         .araddr  	(araddr   ),
-        .arvalid 	(arvalid  ),
+        .arvalid 	(arvalid_i  ),
         .arready 	(arready  ),
         .rdata   	(rdata_int    ),
         .rresp   	(rresp    ),
         .rvalid  	(rvalid   ),
-        .rready  	(rready   ),
+        .rready  	(rready_i   ),
         .awaddr  	(awaddr   ),
-        .awvalid 	(awvalid  ),
+        .awvalid 	(awvalid_i  ),
         .awready 	(awready  ),
         .wdata   	(wdata    ),
         .wstrb   	(wstrb    ),
-        .wvalid  	(wvalid   ),
+        .wvalid  	(wvalid_i   ),
         .wready  	(wready   ),
         .bresp   	(bresp    ),
         .bvalid  	(bvalid   ),
-        .bready  	(bready   )
+        .bready  	(bready_i   )
     );
     
 

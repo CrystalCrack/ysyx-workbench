@@ -34,7 +34,7 @@ module SRAM(
 
     reg [1:0] read_state;
 
-    localparam [7:0] readdelay = 20;
+    localparam [7:0] readdelay = 0;
     reg [7:0] readcount;
 
     always@(posedge clk) begin
@@ -52,7 +52,7 @@ module SRAM(
         else begin
             case (read_state)
                 IDLE: begin
-                    read_state <= arvalid ? READING_MEM : IDLE;
+                    read_state <= arvalid ? (readdelay == 0  ? WAIT_READY : READING_MEM) : IDLE;
                 end
                 READING_MEM: begin
                     read_state <= readcount == (readdelay - 1) ? WAIT_READY : READING_MEM;

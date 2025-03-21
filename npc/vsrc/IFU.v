@@ -12,17 +12,33 @@ module IFU(
     input rready
 
 );
+    wire arvalid_i, rready_i;
+    delay #(
+        .N(1)
+    ) u_delay1(
+        .clk(clk),
+        .signal(arvalid),
+        .delayed_signal(arvalid_i)
+    );
+
+    delay #(
+        .N(1)
+    ) u_delay2(
+        .clk(clk),
+        .signal(rready),
+        .delayed_signal(rready_i)
+    );
     
     SRAM u_SRAM(
         .clk     	(clk      ),
         .rst     	(rst      ),
         .araddr  	(araddr   ),
-        .arvalid 	(arvalid  ),
+        .arvalid 	(arvalid_i  ),
         .arready 	(arready  ),
         .rdata   	(rdata    ),
         .rresp   	(rresp    ),
         .rvalid  	(rvalid   ),
-        .rready  	(rready   ),
+        .rready  	(rready_i   ),
         .awaddr  	(0   ),
         .awvalid 	(0  ),
         .awready 	(  ),

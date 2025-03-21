@@ -1,24 +1,24 @@
-module delay #(parameter N=1) (
-    input clk,
-    
-    input signal,
-    output delayed_signal
+module delay #(
+    parameter N = 1  
+)(
+    input  wire clk, 
+    input  wire din, 
+    output wire dout 
 );
 
-    reg [N-1:0] delay_reg;
-    genvar i;
-    generate
-        for (i = 0; i < N; i = i + 1) begin : delay_loop
-            always @(posedge clk) begin
-                if (i == 0) begin
-                    delay_reg[i] <= signal;
-                end else begin
-                    delay_reg[i] <= delay_reg[i-1];
-                end
+generate
+    if (N == 0) begin: NO_DELAY
+        assign dout = din;
+    end else begin: GEN_DELAY
+        reg [N:0] shift_reg;
+        always @(posedge clk) begin
+            shift_reg[0] <= din;
+            for (int i = 1; i <= N; i = i + 1) begin
+                shift_reg[i] <= shift_reg[i-1];
             end
         end
-    endgenerate
-
-    assign delayed_signal = delay_reg[N-1];
+        assign dout = shift_reg[N];
+    end
+endgenerate
 
 endmodule

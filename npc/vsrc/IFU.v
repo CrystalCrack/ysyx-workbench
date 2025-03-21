@@ -14,19 +14,19 @@ module IFU(
 );
     wire arvalid_i, rready_i;
     delay #(
-        .N(1)
+        .N(5)
     ) u_delay1(
         .clk(clk),
-        .signal(arvalid),
-        .delayed_signal(arvalid_i)
+        .din(arvalid),
+        .dout(arvalid_i)
     );
 
     delay #(
-        .N(1)
+        .N(5)
     ) u_delay2(
         .clk(clk),
-        .signal(rready),
-        .delayed_signal(rready_i)
+        .din(rready),
+        .dout(rready_i)
     );
     
     SRAM u_SRAM(

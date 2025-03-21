@@ -14,7 +14,7 @@ module IFU(
 );
     wire arvalid_i, rready_i;
     delay #(
-        .N(5)
+        .N(10)
     ) u_delay1(
         .clk(clk),
         .din(arvalid),

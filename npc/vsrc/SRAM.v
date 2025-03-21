@@ -34,7 +34,7 @@ module SRAM(
 
     reg [1:0] read_state;
 
-    localparam [7:0] readdelay = 10;
+    localparam [7:0] readdelay = 20;
     reg [7:0] readcount;
 
     always@(posedge clk) begin

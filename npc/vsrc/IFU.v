@@ -98,7 +98,7 @@ module IFU(
         // Read Address
         .araddr  (latched_araddr),
         .arvalid (arvalid_delayed),
-        .arready (arready),
+        .arready (),
         // Read Data
         .rdata   (rdata),
         .rresp   (rresp),

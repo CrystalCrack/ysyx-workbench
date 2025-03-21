@@ -53,7 +53,7 @@ module LSU(
         if(count >= delay) begin
             arvalid_i <= arvalid;
             rready_i <= rready;
-            awready_i <= awready;
+            awvalid_i <= awvalid;
             wvalid_i <= wvalid;
             bready_i <= bready;
         end

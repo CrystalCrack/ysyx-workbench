@@ -35,7 +35,7 @@ module SRAM(
     reg [1:0] read_state;
 
     // output declaration of module LFSR
-    reg [7:0] readdelay;
+    wire [7:0] readdelay;
     reg [7:0] readcount;
     
     LFSR u_LFSR(
@@ -62,7 +62,7 @@ module SRAM(
                     read_state <= arvalid ? (readdelay == 0  ? WAIT_READY : READING_MEM) : IDLE;
                 end
                 READING_MEM: begin
-                    read_state <= readcount == (readdelay - 1) ? WAIT_READY : READING_MEM;
+                    read_state <= readcount > (readdelay - 1) ? WAIT_READY : READING_MEM;
                 end
                 WAIT_READY: begin
                     read_state <= rready ? IDLE : WAIT_READY;

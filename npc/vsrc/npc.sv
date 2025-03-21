@@ -14,7 +14,7 @@ module npc(
     wire [31:0] instF, pcF, snpcF;
 
 
-    // detect validX rising edge to only update pcF once
+    // detect validX rising edge to update pcF only once
     reg validX_d;
     wire update_pc;
     always @(posedge clk) begin
@@ -421,7 +421,7 @@ module npc(
         .bready  	(1   )
     );
     assign readyM = LSU_arready & LSU_awready & LSU_wready & Mbus_ready;
-    assign validM = Mbus_valid & ((~mvalidM) | ((~mwenM) & LSU_rvalid) | (mwenM & LSU_wready));
+    assign validM = Mbus_valid & ((~mvalidX) | ((~mwenX) & LSU_rvalid) | (mwenX & LSU_wready));
     
     
 

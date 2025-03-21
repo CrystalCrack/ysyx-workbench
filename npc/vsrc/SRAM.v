@@ -52,7 +52,7 @@ module SRAM(
         else begin
             case (read_state)
                 IDLE: begin
-                    read_state <= arvalid ? READING_MEM : IDLE;
+                    read_state <= arvalid ? WAIT_READY : IDLE;
                 end
                 READING_MEM: begin
                     read_state <= readcount == (readdelay - 1) ? WAIT_READY : READING_MEM;

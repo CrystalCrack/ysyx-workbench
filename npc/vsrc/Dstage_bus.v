@@ -17,7 +17,7 @@ module Dstage_bus(
     input m_ready,
     output m_valid
 );
-`ifndef SINGLE_CYCLE
+`ifdef CONFIG_DSTAGE_BUF
     localparam IDLE = 0;
     localparam WAIT_READY = 1;
 
@@ -67,9 +67,8 @@ module Dstage_bus(
 
 `else
 
-    // single sycle: always ready
-    assign s_ready = 1;
-    assign m_valid = 1;
+    assign s_ready = m_ready;
+    assign m_valid = s_valid;
     always @(*) begin
         pcD = pcF;
         instD = instF;

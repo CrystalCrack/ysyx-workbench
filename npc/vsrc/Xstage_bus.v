@@ -54,7 +54,7 @@ module Xstage_bus(
     input m_ready,
     output m_valid
 );
-`ifndef SINGLE_CYCLE
+`ifdef CONFIG_XSTAGE_BUF
     localparam IDLE = 0;
     localparam WAIT_READY = 1;
 
@@ -140,9 +140,8 @@ module Xstage_bus(
         end
     end
 `else
-    // single cycle: always ready
-    assign s_ready = 1;
-    assign m_valid = 1;
+    assign s_ready = m_ready;
+    assign m_valid = s_valid;
     always @(*) begin
         pcX = pcD;
         immX = immD;

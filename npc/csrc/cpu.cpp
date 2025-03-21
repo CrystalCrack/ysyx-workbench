@@ -3,7 +3,7 @@
 #include <sdb.h>
 
 #define MAX_INST_TO_PRINT 10
-#define MAX_TRACE 10000000
+#define MAX_TRACE 100000
 int sim_time;
 Vnpc *dut;
 CPU_state state;
@@ -79,16 +79,17 @@ int Cis_inst_done(){
 }
 
 static void exec_once() {
+  /* itrace */
+  uint32_t pc, instru;
+  Cget_pc_inst(&pc, NULL);
+  instru = paddr_read(pc, 4);
   
   /* run a cycle */
   do{
     single_cycle();
   }while(!Cis_inst_done());
 
-  /* itrace */
-  uint32_t pc, instru;
-  Cget_pc_inst(&pc, NULL);
-  instru = paddr_read(pc, 4);
+
 
   /* ftrace */
   ftrace(pc, instru);

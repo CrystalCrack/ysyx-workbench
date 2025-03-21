@@ -34,11 +34,12 @@ module Wstage_bus(
     input m_ready,
     output m_valid
 );
-`ifndef SINGLE_CYCLE
-    localparam IDLE = 0;
-    localparam WAIT_READY = 1;
+`ifdef CONFIG_WSTAGE_BUF
+    localparam [1:0] IDLE = 0;
+    localparam [1:0] READING_MEM = 1;
+    localparam [1:0] WAIT_READY = 2;
 
-    reg state;
+    reg [1:0] state;
     always @(posedge clk) begin
         if(rst) begin
             state <= IDLE;
@@ -46,20 +47,13 @@ module Wstage_bus(
         else begin
             case (state)
                 IDLE: begin
-                    if(s_valid) begin
-                        state <= WAIT_READY;
-                    end
-                    else begin
-                        state <= IDLE;
-                    end
+                    state <= s_valid ? WAIT_READY : IDLE;
                 end
                 WAIT_READY: begin
-                    if(m_ready) begin
-                        state <= IDLE;
-                    end
-                    else begin
-                        state <= WAIT_READY;
-                    end
+                    state <= m_ready ? IDLE : WAIT_READY;
+                end
+                default: begin
+                    state <= IDLE;
                 end
             endcase
         end
@@ -100,9 +94,8 @@ module Wstage_bus(
         end
     end
 `else
-    // single sycle: always ready
-    assign s_ready = 1;
-    assign m_valid = 1;
+    assign s_ready = m_ready;
+    assign m_valid = s_valid;
     always @(*) begin
         dnpcW = dnpcM;
         rdregsrcW = rdregsrcM;

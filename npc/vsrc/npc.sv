@@ -8,34 +8,47 @@ module npc(
     /* -------------------------------------------------------------------- */
     /*                           Fetch Stage                                */
     /* -------------------------------------------------------------------- */
-    wire validF;
-    wire start, ifetch_en;
+    wire validF, readyF;
+    wire start, newpc, ifetch_en;
     reg rst_d, validW_d;
     wire [31:0] instF, pcF, snpcF;
+
+
+    // detect validX rising edge to update pcF only once
+    reg validX_d;
+    wire update_pc;
+    always @(posedge clk) begin
+        validX_d <= validX;
+    end
+    assign update_pc = validX & ~validX_d;
+    PC u_PC(
+        .clk(clk),
+        .rst(rst),
+        .en(update_pc),
+        .dnpc(dnpcX),
+        .pc(pcF)
+    );
+    assign snpcF = pcF + 4;
 
     always @(posedge clk) begin
         rst_d <= rst;
         validW_d <= validW;
     end
     assign start = ~rst & rst_d; // negedge detect
-    assign ifetch_en = ~rst & (validW_d | start);
-    PC u_PC(
-        .clk(clk),
-        .rst(rst),
-        .en(validW),
-        .dnpc(dnpcX),
-        .pc(pcF)
-    );
-    assign snpcF = pcF + 4;
-
+    assign newpc = (validW==validX) ? validW_d : validW; // if validW and validX are synchronous, delay to wait pcF update
+    assign ifetch_en = ~rst & (newpc | start);
     IFU u_IFU(
         .clk(clk),
         .rst(rst),
-        .pc(pcF),
-        .inst(instF),
-        .s_valid(ifetch_en),
-        .m_ready(readyD),
-        .m_valid(validF)
+        
+        .araddr(pcF),
+        .arvalid(ifetch_en),
+        .arready(readyF),
+
+        .rdata(instF),
+        .rresp(),
+        .rvalid(validF),
+        .rready(readyD)
     );
 
     /* -------------------------------------------------------------------- */
@@ -124,7 +137,7 @@ module npc(
         .rst    	(rst),
         .wdata  	(rddataW),
         .waddr  	(rdW),
-        .wen    	(~disableW),
+        .wen    	(~disableW & validW),
         .raddr1 	(rf_raddr1  ),
         .raddr2 	(rf_raddr2  ),
         .rdata1 	(src1D  ),
@@ -337,13 +350,14 @@ module npc(
     // bus
     wire readyM, validM, cmp_resultM;
     wire mvalidM, mwenM, ecallM;
+    wire Mbus_valid, Mbus_ready;
     wire [2:0] rdregsrcM, mrtypeM;
     wire [4:0] rdM;
     wire [7:0] mwmaskM;
     wire [11:0] csraddrM;
     wire [31:0] dnpcM, pcM, src2M, ALU_resultM, csrM, snpcM;
     // memory
-    wire [31:0] rdata, mdataM;
+    wire [31:0] mdataM;
     
     Mstage_bus u_Mstage_bus(
         .clk         	(clk          ),
@@ -379,36 +393,37 @@ module npc(
         .ecallM      	(ecallM       ),
         .rdM         	(rdM          ),
         .s_valid     	(validX       ),
-        .s_ready     	(readyM       ),
-        .m_ready     	(readyW       ),
-        .m_valid     	(validM       )
+        .s_ready     	(Mbus_ready       ),
+        .m_ready     	(readyW & validM       ),
+        .m_valid     	(Mbus_valid       )
     );
+    wire LSU_rvalid, LSU_arready, LSU_awready, LSU_wready;
+    LSU u_LSU(
+        .clk     	(clk      ),
+        .rst     	(rst      ),
+        .araddr  	(ALU_resultX   ),
+        .mrtypeM 	(mrtypeM  ),
+        .arvalid 	(mvalidX & validX  ),
+        .arready 	(LSU_arready ),
+        .rdata   	(mdataM   ),
+        .rresp   	(    ),
+        .rvalid  	(LSU_rvalid   ),
+        .rready  	(readyW   ),
+        .awaddr  	(ALU_resultX   ),
+        .awvalid 	(mwenX & validX  ),
+        .awready 	(LSU_awready  ),
+        .wdata   	(src2X    ),
+        .wstrb   	(mwmaskX[3:0]    ),
+        .wvalid  	(mwenX & validX   ),
+        .wready  	(LSU_wready   ),
+        .bresp   	(    ),
+        .bvalid  	(   ),
+        .bready  	(1   )
+    );
+    assign readyM = LSU_arready & LSU_awready & LSU_wready & Mbus_ready;
+    assign validM = Mbus_valid & ((~mvalidX) | ((~mwenX) & LSU_rvalid) | (mwenX & LSU_wready));
     
-
-    /* data memory */
-    memory data_mem(
-        .raddr 	(ALU_resultM  ),
-        .waddr 	(ALU_resultM  ),
-        .wdata 	(src2M  ),
-        .wmask 	(mwmaskM  ),
-        .wen   	(mwenM    ),
-        .valid 	(mvalidM  ),
-        .rdata 	(rdata  )
-    );
-    MuxKeyWithDefault #(
-        .NR_KEY(5),
-        .KEY_LEN(3),
-        .DATA_LEN(32)
-    ) ext_mdata (
-        .out(mdataM),
-        .key(mrtypeM),
-        .default_out(32'h0000_0000),
-        .lut({3'd0, {{24{rdata[7]}}, rdata[7:0]}, // byte
-              3'd1, {{16{rdata[15]}}, rdata[15:0]}, // half word
-              3'd2, rdata, // word
-              3'd3, {24'b0, rdata[7:0]}, // byte unsigned
-              3'd4, {16'b0, rdata[15:0]}}) // half word unsigned
-    );
+    
 
     /* -------------------------------------------------------------------- */
     /*                          Write Back Stage                            */
@@ -450,7 +465,7 @@ module npc(
         .rdW         	(rdW          ),
         .s_valid     	(validM       ),
         .s_ready     	(readyW       ),
-        .m_ready     	(1'b1         ),
+        .m_ready     	(readyF         ),
         .m_valid     	(validW       )
     );
     MuxKeyWithDefault #(
@@ -496,10 +511,16 @@ module npc(
         end
     end
 
+    wire FW_handshake;
+    reg FW_handshake_d;
+    always @(posedge clk) begin
+        FW_handshake_d <= FW_handshake;
+    end
+    assign FW_handshake = validW&readyF;
     export "DPI-C" function is_inst_done;
     function void is_inst_done();
         output int done;
-        done = {31'b0, validW_d};
+        done = {31'b0, FW_handshake_d};
     endfunction
 
 endmodule

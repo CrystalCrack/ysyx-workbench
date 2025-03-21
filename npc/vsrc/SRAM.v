@@ -34,8 +34,15 @@ module SRAM(
 
     reg [1:0] read_state;
 
-    localparam [7:0] readdelay = 0;
+    // output declaration of module LFSR
+    reg [7:0] readdelay;
     reg [7:0] readcount;
+    
+    LFSR u_LFSR(
+        .clk  	(clk   ),
+        .rst  	(rst   ),
+        .lfsr 	(readdelay  )
+    );
 
     always@(posedge clk) begin
         if(read_state == READING_MEM) begin

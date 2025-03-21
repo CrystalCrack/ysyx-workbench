@@ -386,7 +386,7 @@ module npc(
         .rdM         	(rdM          ),
         .s_valid     	(validX       ),
         .s_ready     	(Mbus_ready       ),
-        .m_ready     	(readyW       ),
+        .m_ready     	(readyW & validM       ),
         .m_valid     	(Mbus_valid       )
     );
     wire LSU_rvalid, LSU_arready, LSU_awready, LSU_wready;

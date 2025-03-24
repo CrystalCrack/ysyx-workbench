@@ -10,11 +10,13 @@
 // ----------------------------------------------------------------------------------------
 
 #undef EXPR_DEBUG
-// #undef CONFIG_ITRACE
-// #undef CONFIG_DIFFTEST
+#undef CONFIG_ITRACE
+#undef CONFIG_DIFFTEST
 #undef CONFIG_MTRACE
 #undef CONFIG_DTRACE
 // #undef CONFIG_DEVICE
 
 
 
+#define MAX_TRACE 10000
+#define MAX_INST_TO_PRINT 10

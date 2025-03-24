@@ -4,15 +4,15 @@ module npc(
 );
 
     wire stop_sim;
+    assign stop_sim = instD==32'h00100073; // ebreak
 
     /* -------------------------------------------------------------------- */
     /*                           Fetch Stage                                */
     /* -------------------------------------------------------------------- */
     wire validF, readyF;
-    wire start, newpc, ifetch_en;
-    reg rst_d, validW_d;
+    wire start, newpc;
     wire [31:0] instF, pcF, snpcF;
-
+    axi4_lite_interface #(32, 32) Isram_if();
 
     // detect validX rising edge to update pcF only once
     reg validX_d;
@@ -30,25 +30,19 @@ module npc(
     );
     assign snpcF = pcF + 4;
 
-    always @(posedge clk) begin
-        rst_d <= rst;
-        validW_d <= validW;
-    end
-    assign start = ~rst & rst_d; // negedge detect
-    assign newpc = (validW==validX) ? validW_d : validW; // if validW and validX are synchronous, delay to wait pcF update
-    assign ifetch_en = ~rst & (newpc | start);
     IFU u_IFU(
         .clk(clk),
         .rst(rst),
         
-        .araddr(pcF),
-        .arvalid(ifetch_en),
-        .arready(readyF),
+        .pcF(pcF),
+        .validW(validW),
+        .readyF(readyF),
+        .instF(instF),
+        .validF(validF),
+        .readyD(readyD),
 
-        .rdata(instF),
-        .rresp(),
-        .rvalid(validF),
-        .rready(readyD)
+        .sram(Isram_if.master)
+
     );
 
     /* -------------------------------------------------------------------- */
@@ -123,8 +117,7 @@ module npc(
         .inst_type(inst_type),
         .ecallD(ecallD),
         .mretD(mretD),
-        .write_csr(write_csr),
-        .stop_sim(stop_sim)
+        .write_csr(write_csr)
     );
 
 
@@ -356,8 +349,10 @@ module npc(
     wire [7:0] mwmaskM;
     wire [11:0] csraddrM;
     wire [31:0] dnpcM, pcM, src2M, ALU_resultM, csrM, snpcM;
-    // memory
+    // LSU
     wire [31:0] mdataM;
+    axi4_lite_interface #(32, 32) Dsram_if();
+    wire LSU_ready, LSU_valid;
     
     Mstage_bus u_Mstage_bus(
         .clk         	(clk          ),
@@ -392,36 +387,33 @@ module npc(
         .cmp_resultM 	(cmp_resultM  ),
         .ecallM      	(ecallM       ),
         .rdM         	(rdM          ),
-        .s_valid     	(validX       ),
+        .s_valid     	(validX & LSU_ready       ), // when LSU ready, mbus can store data.
         .s_ready     	(Mbus_ready       ),
         .m_ready     	(readyW & validM       ),
         .m_valid     	(Mbus_valid       )
     );
-    wire LSU_rvalid, LSU_arready, LSU_awready, LSU_wready;
     LSU u_LSU(
         .clk     	(clk      ),
         .rst     	(rst      ),
-        .araddr  	(ALU_resultX   ),
-        .mrtypeM 	(mrtypeM  ),
-        .arvalid 	(mvalidX & validX  ),
-        .arready 	(LSU_arready ),
-        .rdata   	(mdataM   ),
-        .rresp   	(    ),
-        .rvalid  	(LSU_rvalid   ),
-        .rready  	(readyW   ),
-        .awaddr  	(ALU_resultX   ),
-        .awvalid 	(mwenX & validX  ),
-        .awready 	(LSU_awready  ),
-        .wdata   	(src2X    ),
-        .wstrb   	(mwmaskX[3:0]    ),
-        .wvalid  	(mwenX & validX   ),
-        .wready  	(LSU_wready   ),
-        .bresp   	(    ),
-        .bvalid  	(   ),
-        .bready  	(1   )
+        .ALU_resultX(ALU_resultX),
+        .src2X   	(src2X    ),
+        .mwmaskX 	(mwmaskX[3:0]  ),
+        .mrtypeX 	(mrtypeX  ),
+        .mvalidX 	(mvalidX  ),
+        .validX  	(validX   ),
+        .mwenX   	(mwenX    ),
+        .readyW  	(readyW   ),
+        .Mbus_ready (Mbus_ready),
+        .LSU_valid  (LSU_valid),
+        .LSU_ready  (LSU_ready),
+        .mdataM  	(mdataM   ),
+
+        .sram(Dsram_if.master)
     );
-    assign readyM = LSU_arready & LSU_awready & LSU_wready & Mbus_ready;
-    assign validM = Mbus_valid & ((~mvalidX) | ((~mwenX) & LSU_rvalid) | (mwenX & LSU_wready));
+
+
+    assign readyM = LSU_ready & Mbus_ready;
+    assign validM = LSU_valid & Mbus_valid;
     
     
 
@@ -483,6 +475,53 @@ module npc(
               3'd4, csrW})
     );
     assign disableW = rdregsrcW == 3'd5;
+
+
+
+    //-------------------------------------------------------------
+    //           Peripheral, SRAM and Interconnect
+    //-------------------------------------------------------------
+
+    axi4_lite_interface #(32, 32) arbiter_if();
+    axi4_lite_interface #(32, 32) sram_if();
+    axi4_lite_interface #(32, 32) uart_if();
+    axi4_lite_interface #(32, 32) clint_if();
+    
+    axi4_lite_arbiter u_axi4_lite_arbiter(
+        .clk        	(clk         ),
+        .rst        	(rst         ),
+        .m0             (Isram_if.slave),
+        .m1             (Dsram_if.slave),
+        .s              (arbiter_if.master)
+    );
+    
+    xbar u_xbar(
+        .clk     	(clk      ),
+        .rst     	(rst      ),
+        .master     (arbiter_if.slave),
+        .mem        (sram_if.master),
+        .uart       (uart_if.master),
+        .clint      (clint_if.master)
+    );
+    
+    axi4_lite_uart u_axi4_lite_uart(
+        .clk     	(clk      ),
+        .rst     	(rst      ),
+        .uart       (uart_if.slave)
+    );
+    
+    SRAM u_SRAM(
+        .clk     	(clk      ),
+        .rst     	(rst      ),
+        .sram    	(sram_if.slave)
+    );
+
+    axi4_lite_clint u_axi4_lite_clint(
+        .clk     	(clk      ),
+        .rst     	(rst      ),
+        .clint    	(clint_if.slave)
+    );
+    
 
     export "DPI-C" function get_pc_inst;
     function void get_pc_inst();

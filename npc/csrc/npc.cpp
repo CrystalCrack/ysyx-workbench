@@ -114,6 +114,7 @@ void deinitialize(){
 
 void display_error_msg(){
     display_iringbuf();
+    reg_display();
     cpu_deinit();
     is_deinit = 1;
 }

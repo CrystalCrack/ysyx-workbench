@@ -59,7 +59,7 @@ void display_error_msg();
 
 #define Log(format, ...) \
   do { \
-    printf(ANSI_COLOR_BLUE format "\n" ANSI_COLOR_RESET, ## __VA_ARGS__); \
+    printf(ANSI_BOLD ANSI_COLOR_BLUE format "\n" ANSI_COLOR_RESET, ## __VA_ARGS__); \
   } while (0)
 
 #define panic(format, ...) \

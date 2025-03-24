@@ -92,8 +92,8 @@ static bool make_token(char *e) {
         char *substr_start = e + position;
         int substr_len = pmatch.rm_eo;
 
-        Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
-            i, rules[i].regex, position, substr_len, substr_len, substr_start);
+        // Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
+        //     i, rules[i].regex, position, substr_len, substr_len, substr_start);
 
         position += substr_len;
 
@@ -113,7 +113,7 @@ static bool make_token(char *e) {
         /* record the token */
         tokens[nr_token].type = rules[i].token_type;
         if(substr_len >= MAX_TOKEN){
-          Log("Token too long: %.*s. Cut to %.*s\n", substr_len, substr_start, MAX_TOKEN-1, substr_start);
+          // Log("Token too long: %.*s. Cut to %.*s\n", substr_len, substr_start, MAX_TOKEN-1, substr_start);
           //cut
           substr_len = MAX_TOKEN-1;
         }

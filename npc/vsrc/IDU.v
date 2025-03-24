@@ -22,8 +22,7 @@ module IDU(
     output [2:0] inst_type, // 0-I, 1-S, 2-R, 3-U, 4-J, 5-B, 6-N
     output ecallD,
     output mretD,
-    output write_csr,
-    output stop_sim
+    output write_csr
 );
 
     // decode
@@ -37,7 +36,6 @@ module IDU(
     assign store = opcode == 7'b0100011;
     assign Iarith = opcode == 7'b0010011;
     assign Rarith = opcode == 7'b0110011;
-    assign ebreak = opcode == 7'b1110011 && funct3 == 3'b000 && funct12 == 12'b0000_0000_0001;
     assign ecallD = opcode == 7'b1110011 && funct3 == 3'b000 && funct12 == 12'b0000_0000_0000;
     assign mretD = opcode == 7'b1110011 && funct3 == 3'b000 && funct12 == 12'b0011_0000_0010;
     assign csrRelated = opcode == 7'b1110011;
@@ -45,7 +43,6 @@ module IDU(
     assign csrrs = csrRelated & (funct3 == 3'b010);
     assign mismatch = ~(lui | auipc | jal | jalrD | branchD | load | store | Iarith | Rarith | ebreak | ecallD | mretD | csrRelated);
 
-    assign stop_sim = ebreak;
 
     assign jumpD = jal | jalrD;
 

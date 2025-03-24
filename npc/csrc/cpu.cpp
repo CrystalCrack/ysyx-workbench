@@ -2,8 +2,6 @@
 #include <memory.h>
 #include <sdb.h>
 
-#define MAX_INST_TO_PRINT 10
-#define MAX_TRACE 100000
 int sim_time;
 Vnpc *dut;
 CPU_state state;
@@ -11,6 +9,7 @@ VerilatedVcdC *m_trace;
 int halt_ret;
 uint32_t halt_pc;
 uint64_t g_nr_guest_inst = 0;
+uint64_t g_nr_cycles = 0;
 static uint64_t g_timer = 0; // unit: us
 static bool g_print_step = false;
 char logbuf[128];
@@ -87,6 +86,7 @@ static void exec_once() {
   /* run a cycle */
   do{
     single_cycle();
+    g_nr_cycles++;
   }while(!Cis_inst_done());
 
 
@@ -198,6 +198,7 @@ CPU_reg get_cpu_state(){
 static void statistic() {
   Log("host time spent = %lu us", g_timer);
   Log("total guest instructions = %lu", g_nr_guest_inst);
+  Log("total cycles = %lu", g_nr_cycles);
   if (g_timer > 0) Log("simulation frequency = %lu inst/s", g_nr_guest_inst * 1000000 / g_timer);
   else Log("Finish running in less than 1 us and can not calculate the simulation frequency");
 }
@@ -229,6 +230,9 @@ void cpu_exec(uint64_t n){
           (halt_ret == 0 ? ANSI_FMT("HIT GOOD TRAP", ANSI_COLOR_GREEN) :
           ANSI_FMT("HIT BAD TRAP", ANSI_COLOR_RED))),
           halt_pc);
+      if(halt_ret != 0) {
+        display_error_msg();
+      }
       // fall through
     case QUIT: 
       statistic();

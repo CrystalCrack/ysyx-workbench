@@ -39,6 +39,9 @@ uint32_t mmio_read(paddr_t addr) {
 }
 
 void mmio_write(paddr_t addr, uint32_t data) {
+    #ifdef CONFIG_DIFFTEST
+    difftest_skip_ref();
+    #endif
     // prevent repeat write
     static int last_simtime;
     if (sim_time-last_simtime < 3) {

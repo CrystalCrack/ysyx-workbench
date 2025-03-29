@@ -1,6 +1,67 @@
-module npc(
-    input clk,
-    input rst
+module ysyx_25020057(
+    input clock,
+    input reset,
+    input io_interrupt,
+
+    input io_master_awready,
+    output io_master_awvalid,
+    output [31:0] io_master_awaddr,
+    output [3:0] io_master_awid,
+    output [7:0] io_master_awlen,
+    output [2:0] io_master_awsize,
+    output [1:0] io_master_awburst,
+    input io_master_wready,
+    output io_master_wvalid,
+    output [31:0] io_master_wdata,
+    output [3:0] io_master_wstrb,
+    output io_master_wlast,
+    output io_master_bready,
+    input io_master_bvalid,
+    input [1:0] io_master_bresp,
+    input [3:0] io_master_bid,
+    input io_master_arready,
+    output io_master_arvalid,
+    output [31:0] io_master_araddr,
+    output [3:0] io_master_arid,
+    output [7:0] io_master_arlen,
+    output [2:0] io_master_arsize,
+    output [1:0] io_master_arburst,
+    output io_master_rready,
+    input io_master_rvalid,
+    input [1:0] io_master_rresp,
+    input [31:0] io_master_rdata,
+    input io_master_rlast,
+    input [3:0] io_master_rid,
+
+    output io_slave_awready,
+    input io_slave_awvalid,
+    input [31:0] io_slave_awaddr,
+    input [3:0] io_slave_awid,
+    input [7:0] io_slave_awlen,
+    input [2:0] io_slave_awsize,
+    input [1:0] io_slave_awburst,
+    output io_slave_wready,
+    input io_slave_wvalid,
+    input [31:0] io_slave_wdata,
+    input [3:0] io_slave_wstrb,
+    input io_slave_wlast,
+    input io_slave_bready,
+    output io_slave_bvalid,
+    output [1:0] io_slave_bresp,
+    output [3:0] io_slave_bid,
+    output io_slave_arready,
+    input io_slave_arvalid,
+    input [31:0] io_slave_araddr,
+    input [3:0] io_slave_arid,
+    input [7:0] io_slave_arlen,
+    input [2:0] io_slave_arsize,
+    input [1:0] io_slave_arburst,
+    input io_slave_rready,
+    output io_slave_rvalid,
+    output [1:0] io_slave_rresp,
+    output [31:0] io_slave_rdata,
+    output io_slave_rlast,
+    output [3:0] io_slave_rid
 );
 
     wire stop_sim;
@@ -10,29 +71,32 @@ module npc(
     /*                           Fetch Stage                                */
     /* -------------------------------------------------------------------- */
     wire validF, readyF;
-    wire start, newpc;
+    wire newpc;
     wire [31:0] instF, pcF, snpcF;
-    axi4_lite_interface #(32, 32) Isram_if();
+    axi4_interface #(32, 32) Isram_if();
 
     // detect validX rising edge to update pcF only once
     reg validX_d;
     wire update_pc;
-    always @(posedge clk) begin
+    always @(posedge clock) begin
         validX_d <= validX;
     end
     assign update_pc = validX & ~validX_d;
     PC u_PC(
-        .clk(clk),
-        .rst(rst),
+        .clk(clock),
+        .rst(reset),
         .en(update_pc),
         .dnpc(dnpcX),
         .pc(pcF)
     );
+
+
+    
     assign snpcF = pcF + 4;
 
     IFU u_IFU(
-        .clk(clk),
-        .rst(rst),
+        .clk(clock),
+        .rst(reset),
         
         .pcF(pcF),
         .validW(validW),
@@ -74,8 +138,8 @@ module npc(
     wire [4:0] rdD;
 
     Dstage_bus dstagebus_inst(
-        .clk(clk),
-        .rst(rst),
+        .clk(clock),
+        .rst(reset),
 
         .instF(instF),
         .pcF(pcF),
@@ -126,8 +190,8 @@ module npc(
     assign rf_raddr1 = rs1;
     assign rf_raddr2 = ecallD ? 5'd15 : rs2;
     RegisterFile#(.ADDR_WIDTH(5),.DATA_WIDTH(32)) u_RegisterFile(
-        .clk    	(clk),
-        .rst    	(rst),
+        .clk    	(clock),
+        .rst    	(reset),
         .wdata  	(rddataW),
         .waddr  	(rdW),
         .wen    	(~disableW & validW),
@@ -157,8 +221,8 @@ module npc(
     
     Reg #(.WIDTH(32), .RESET_VAL(0))
         mtvec(
-        .clk  	(clk   ),
-        .rst  	(rst   ),
+        .clk  	(clock   ),
+        .rst  	(reset   ),
         .din  	(mtvec_wdata   ),
         .dout 	(mtvec_data),  
         .wen  	(mtvec_wen)   
@@ -167,8 +231,8 @@ module npc(
     assign mtvec_wdata = ALU_resultW;
     Reg #(.WIDTH(32), .RESET_VAL(0))
         mcause(
-        .clk  	(clk   ),
-        .rst  	(rst   ),
+        .clk  	(clock   ),
+        .rst  	(reset   ),
         .din  	(mcause_wdata   ),
         .dout 	(mcause_data),  
         .wen  	(mcause_wen)   
@@ -177,8 +241,8 @@ module npc(
     assign mcause_wdata = ecallW ? src2W : ALU_resultW;
     Reg #(.WIDTH(32), .RESET_VAL(0))
         mepc(
-        .clk  	(clk   ),
-        .rst  	(rst   ),
+        .clk  	(clock   ),
+        .rst  	(reset   ),
         .din  	(mepc_wdata   ),
         .dout 	(mepc_data),  
         .wen  	(mepc_wen)   
@@ -187,8 +251,8 @@ module npc(
     assign mepc_wdata = ecallW ? pcW : ALU_resultW;
     Reg #(.WIDTH(32), .RESET_VAL(32'h0000_1800))
         mstatus(
-        .clk  	(clk   ),
-        .rst  	(rst   ),
+        .clk  	(clock   ),
+        .rst  	(reset   ),
         .din  	(mstatus_wdata   ),
         .dout 	(mstatus_data),  
         .wen  	(mstatus_wen)   
@@ -238,8 +302,8 @@ module npc(
     wire judge_jump;
     
     Xstage_bus u_Xstage_bus(
-        .clk       	(clk        ),
-        .rst       	(rst        ),
+        .clk       	(clock        ),
+        .rst       	(reset        ),
         .mvalidD   	(mvalidD    ),
         .mwenD     	(mwenD      ),
         .mwmaskD   	(mwmaskD    ),
@@ -351,12 +415,12 @@ module npc(
     wire [31:0] dnpcM, pcM, src2M, ALU_resultM, csrM, snpcM;
     // LSU
     wire [31:0] mdataM;
-    axi4_lite_interface #(32, 32) Dsram_if();
+    axi4_interface #(32, 32) Dsram_if();
     wire LSU_ready, LSU_valid;
     
     Mstage_bus u_Mstage_bus(
-        .clk         	(clk          ),
-        .rst         	(rst          ),
+        .clk         	(clock          ),
+        .rst         	(reset          ),
         .mvalidX     	(mvalidX      ),
         .mwenX       	(mwenX        ),
         .mwmaskX     	(mwmaskX      ),
@@ -393,8 +457,8 @@ module npc(
         .m_valid     	(Mbus_valid       )
     );
     LSU u_LSU(
-        .clk     	(clk      ),
-        .rst     	(rst      ),
+        .clk     	(clock      ),
+        .rst     	(reset      ),
         .ALU_resultX(ALU_resultX),
         .src2X   	(src2X    ),
         .mwmaskX 	(mwmaskX[3:0]  ),
@@ -429,8 +493,8 @@ module npc(
     wire [11:0] csraddrW;
 
     Wstage_bus u_Wstage_bus(
-        .clk         	(clk          ),
-        .rst         	(rst          ),
+        .clk         	(clock          ),
+        .rst         	(reset          ),
         .dnpcM       	(dnpcM        ),
         .rdregsrcM   	(rdregsrcM    ),
         .mdataM      	(mdataM       ),
@@ -482,45 +546,120 @@ module npc(
     //           Peripheral, SRAM and Interconnect
     //-------------------------------------------------------------
 
-    axi4_lite_interface #(32, 32) arbiter_if();
-    axi4_lite_interface #(32, 32) sram_if();
-    axi4_lite_interface #(32, 32) uart_if();
-    axi4_lite_interface #(32, 32) clint_if();
+    axi4_interface #(32, 32) arbiter_if();
+    axi4_interface #(32, 32) soc_if();
+    axi4_interface #(32, 32) clint_if();
     
-    axi4_lite_arbiter u_axi4_lite_arbiter(
-        .clk        	(clk         ),
-        .rst        	(rst         ),
+    axi4_arbiter u_axi4_arbiter(
+        .clk        	(clock         ),
+        .rst        	(reset         ),
         .m0             (Isram_if.slave),
         .m1             (Dsram_if.slave),
         .s              (arbiter_if.master)
     );
     
     xbar u_xbar(
-        .clk     	(clk      ),
-        .rst     	(rst      ),
+        .clk     	(clock      ),
+        .rst     	(reset      ),
         .master     (arbiter_if.slave),
-        .mem        (sram_if.master),
-        .uart       (uart_if.master),
+        .soc        (soc_if.master),
         .clint      (clint_if.master)
     );
     
-    axi4_lite_uart u_axi4_lite_uart(
-        .clk     	(clk      ),
-        .rst     	(rst      ),
-        .uart       (uart_if.slave)
-    );
+    // axi4_uart u_axi4_uart(
+    //     .clk     	(clock      ),
+    //     .rst     	(reset      ),
+    //     .uart       (uart_if.slave)
+    // );
     
-    SRAM u_SRAM(
-        .clk     	(clk      ),
-        .rst     	(rst      ),
-        .sram    	(sram_if.slave)
-    );
+    // SRAM u_SRAM(
+    //     .clk     	(clock      ),
+    //     .rst     	(reset      ),
+    //     .sram    	(sram_if.slave)
+    // );
 
-    axi4_lite_clint u_axi4_lite_clint(
-        .clk     	(clk      ),
-        .rst     	(rst      ),
+    axi4_clint u_axi4_clint(
+        .clk     	(clock      ),
+        .rst     	(reset      ),
         .clint    	(clint_if.slave)
     );
+
+    axi4_interface #(32, 32) npc_if();
+    assign npc_if.awready = 0;
+    assign npc_if.wready = 0;
+    assign npc_if.bvalid = 0;
+    assign npc_if.bresp = 0;
+    assign npc_if.bid = 0;
+    assign npc_if.arready = 0;
+    assign npc_if.rvalid = 0;
+    assign npc_if.rresp = 0;
+    assign npc_if.rdata = 0;
+    assign npc_if.rlast = 0;
+    assign npc_if.rid = 0;
+    
+    axi4_adapter u_axi4_adapter(
+        .master_awready 	(io_master_awready  ),
+        .master_awvalid 	(io_master_awvalid  ),
+        .master_awaddr  	(io_master_awaddr   ),
+        .master_awid    	(io_master_awid     ),
+        .master_awlen   	(io_master_awlen    ),
+        .master_awsize  	(io_master_awsize   ),
+        .master_awburst 	(io_master_awburst  ),
+        .master_wready  	(io_master_wready   ),
+        .master_wvalid  	(io_master_wvalid   ),
+        .master_wdata   	(io_master_wdata    ),
+        .master_wstrb   	(io_master_wstrb    ),
+        .master_wlast   	(io_master_wlast    ),
+        .master_bready  	(io_master_bready   ),
+        .master_bvalid  	(io_master_bvalid   ),
+        .master_bresp   	(io_master_bresp    ),
+        .master_bid     	(io_master_bid      ),
+        .master_arready 	(io_master_arready  ),
+        .master_arvalid 	(io_master_arvalid  ),
+        .master_araddr  	(io_master_araddr   ),
+        .master_arid    	(io_master_arid     ),
+        .master_arlen   	(io_master_arlen    ),
+        .master_arsize  	(io_master_arsize   ),
+        .master_arburst 	(io_master_arburst  ),
+        .master_rready  	(io_master_rready   ),
+        .master_rvalid 	(io_master_rvalid  ),
+        .master_rresp   	(io_master_rresp    ),
+        .master_rdata   	(io_master_rdata    ),
+        .master_rlast   	(io_master_rlast    ),
+        .master_rid     	(io_master_rid      ),
+        .slave_awready  	(io_slave_awready   ),
+        .slave_awvalid  	(io_slave_awvalid   ),
+        .slave_awaddr   	(io_slave_awaddr    ),
+        .slave_awid     	(io_slave_awid      ),
+        .slave_awlen    	(io_slave_awlen     ),
+        .slave_awsize   	(io_slave_awsize    ),
+        .slave_awburst  	(io_slave_awburst   ),
+        .slave_wready   	(io_slave_wready    ),
+        .slave_wvalid   	(io_slave_wvalid    ),
+        .slave_wdata    	(io_slave_wdata     ),
+        .slave_wstrb    	(io_slave_wstrb     ),
+        .slave_wlast    	(io_slave_wlast     ),
+        .slave_bready   	(io_slave_bready    ),
+        .slave_bvalid   	(io_slave_bvalid    ),
+        .slave_bresp    	(io_slave_bresp     ),
+        .slave_bid      	(io_slave_bid       ),
+        .slave_arready  	(io_slave_arready   ),
+        .slave_arvalid  	(io_slave_arvalid   ),
+        .slave_araddr   	(io_slave_araddr    ),
+        .slave_arid     	(io_slave_arid      ),
+        .slave_arlen    	(io_slave_arlen     ),
+        .slave_arsize   	(io_slave_arsize    ),
+        .slave_arburst  	(io_slave_arburst   ),
+        .slave_rready   	(io_slave_rready    ),
+        .slave_rvalid   	(io_slave_rvalid    ),
+        .slave_rresp    	(io_slave_rresp     ),
+        .slave_rdata    	(io_slave_rdata     ),
+        .slave_rlast    	(io_slave_rlast     ),
+        .slave_rid      	(io_slave_rid       ),
+        .master         	(soc_if.slave          ),
+        .slave          	(npc_if.master           )
+    );
+    
     
 
     export "DPI-C" function get_pc_inst;
@@ -544,7 +683,7 @@ module npc(
     endfunction
 
     import "DPI-C" function void ebreak();
-    always @ (posedge clk) begin
+    always @ (posedge clock) begin
         if(stop_sim) begin
             ebreak();
         end
@@ -552,7 +691,7 @@ module npc(
 
     wire FW_handshake;
     reg FW_handshake_d;
-    always @(posedge clk) begin
+    always @(posedge clock) begin
         FW_handshake_d <= FW_handshake;
     end
     assign FW_handshake = validW&readyF;

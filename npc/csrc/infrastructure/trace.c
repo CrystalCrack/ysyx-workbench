@@ -32,13 +32,13 @@ void init_trace(const char* elf_file){
     }
 
     int fd = open(elf_file, O_RDONLY);
-    Assert(fd >= 0 , "Can not open '%s'", elf_file);
+    Assert(fd >= 0 , "Can not open '%s'\n", elf_file);
     struct stat st;
     int ret = fstat(fd, &st);
-    Assert(ret >= 0, "Can not fstat '%s'", elf_file);
+    Assert(ret >= 0, "Can not fstat '%s'\n", elf_file);
     void *data = mmap(NULL, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
-    Assert(data != MAP_FAILED, "Can not mmap '%s'", elf_file);
-    Assert(memcmp(data, ELFMAG, SELFMAG) == 0, "'%s' is not an ELF file", elf_file);
+    Assert(data != MAP_FAILED, "Can not mmap '%s'\n", elf_file);
+    Assert(memcmp(data, ELFMAG, SELFMAG) == 0, "'%s' is not an ELF file\n", elf_file);
     close(fd);
     
     Elf32_Ehdr *ehdr = (Elf32_Ehdr *)data; // get the elf header

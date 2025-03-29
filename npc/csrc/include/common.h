@@ -9,9 +9,10 @@
 #include <readline/history.h>
 #include <verilated.h>
 #include <verilated_vcd_c.h>
-#include "Vnpc.h"
-#include "Vnpc___024root.h"
-#include "Vnpc__Dpi.h"
+#include <svdpi.h>
+#include "VysyxSoCFull.h"
+#include "VysyxSoCFull___024root.h"
+#include "VysyxSoCFull__Dpi.h"
 
 #define ANSI_BOLD          "\x1b[1m"
 #define ANSI_DIM           "\x1b[2m"

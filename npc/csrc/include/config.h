@@ -18,5 +18,5 @@
 
 
 
-#define MAX_TRACE 10000
+#define MAX_TRACE 1000000
 #define MAX_INST_TO_PRINT 10

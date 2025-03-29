@@ -1,20 +1,19 @@
 `define VERSION_1
-module axi4_lite_arbiter (
+module axi4_arbiter (
     input             clk,
     input             rst,
 
-    axi4_lite_interface.slave m0,
-    axi4_lite_interface.slave m1,
-    axi4_lite_interface.master s
+    axi4_interface.slave m0,
+    axi4_interface.slave m1,
+    axi4_interface.master s
 );
 
 `ifdef VERSION_1
-typedef enum logic [1:0] {
+typedef enum logic {
     IDLE,
-    M0_GRANT,
-    M1_GRANT
-} arb_state_t;
-arb_state_t read_state, write_state;
+    WAIT_RVALID
+} read_state_t;
+read_state_t read_state;
 
 logic current_read_master, current_write_master; // determines priority
 
@@ -30,114 +29,139 @@ always @(posedge clk) begin
                 if (current_read_master) begin
                     // in this case, m0 has higher priority
                     if (m0.arvalid) begin
-                        read_state <= M0_GRANT;
+                        read_state <= WAIT_RVALID;
                         current_read_master <= 0;
                     end else if (m1.arvalid) begin
-                        read_state <= M1_GRANT;
+                        read_state <= WAIT_RVALID;
                         current_read_master <= 1;
                     end
                 end else begin
                     // in this case, m1 has higher priority
                     if (m1.arvalid) begin
-                        read_state <= M1_GRANT;
+                        read_state <= WAIT_RVALID;
                         current_read_master <= 1;
                     end else if (m0.arvalid) begin
-                        read_state <= M0_GRANT;
+                        read_state <= WAIT_RVALID;
                         current_read_master <= 0;
                     end
                 end
             end
-            M0_GRANT: begin
-                if (s.rvalid & m0.rready) begin
-                    read_state <= IDLE;
+            WAIT_RVALID: begin
+                if (s.rvalid) begin
+                    if (current_read_master & m1.rready) begin
+                        read_state <= IDLE;
+                    end
+                    else if (~current_read_master & m0.rready) begin
+                        read_state <= IDLE;
+                    end
                 end
-            end
-            M1_GRANT: begin
-                if (s.rvalid & m1.rready) begin
-                    read_state <= IDLE;
-                end
-            end
-            default: begin
-                read_state <= IDLE;
-                current_read_master <= 0;
             end
         endcase
     end
 end
+wire read_sel_m0, read_sel_m1;
+assign read_sel_m0 = (read_state != IDLE) & (~current_read_master);
+assign read_sel_m1 = (read_state != IDLE) & current_read_master;
 
-assign s.araddr = {32{read_state == M0_GRANT}} & m0.araddr | {32{read_state == M1_GRANT}} & m1.araddr;
-assign s.arvalid = {read_state == M0_GRANT} & m0.arvalid | {read_state == M1_GRANT} & m1.arvalid;
-assign m0.arready = {read_state == M0_GRANT} & s.arready;
-assign m1.arready = {read_state == M1_GRANT} & s.arready;
-assign m0.rvalid = {read_state == M0_GRANT} & s.rvalid;
-assign m1.rvalid = {read_state == M1_GRANT} & s.rvalid;
-assign m0.rdata = {32{read_state == M0_GRANT}} & s.rdata;
-assign m1.rdata = {32{read_state == M1_GRANT}} & s.rdata;
-assign m0.rresp = {2{read_state == M0_GRANT}} & s.rresp;
-assign m1.rresp = {2{read_state == M1_GRANT}} & s.rresp;
-assign s.rready = {read_state == M0_GRANT} & m0.rready | {read_state == M1_GRANT} & m1.rready;
+assign s.araddr = {32{read_sel_m0}} & m0.araddr | {32{read_sel_m1}} & m1.araddr;
+assign s.arvalid = {read_sel_m0} & m0.arvalid | {read_sel_m1} & m1.arvalid;
+assign s.rready = {read_sel_m0} & m0.rready | {read_sel_m1} & m1.rready;
+assign s.arid = {4{read_sel_m0}} & m0.arid | {4{read_sel_m1}} & m1.arid;
+assign s.arlen = {8{read_sel_m0}} & m0.arlen | {8{read_sel_m1}} & m1.arlen;
+assign s.arsize = {3{read_sel_m0}} & m0.arsize | {3{read_sel_m1}} & m1.arsize;
+assign s.arburst = {2{read_sel_m0}} & m0.arburst | {2{read_sel_m1}} & m1.arburst;
+assign m0.arready = {read_sel_m0} & s.arready;
+assign m1.arready = {read_sel_m1} & s.arready;
+assign m0.rvalid = {read_sel_m0} & s.rvalid;
+assign m1.rvalid = {read_sel_m1} & s.rvalid;
+assign m0.rdata = {32{read_sel_m0}} & s.rdata;
+assign m1.rdata = {32{read_sel_m1}} & s.rdata;
+assign m0.rresp = {2{read_sel_m0}} & s.rresp;
+assign m1.rresp = {2{read_sel_m1}} & s.rresp;
+assign m0.rlast = {1{read_sel_m0}} & s.rlast;
+assign m1.rlast = {1{read_sel_m1}} & s.rlast;
+assign m0.rid = {4{read_sel_m0}} & s.rid;
+assign m1.rid = {4{read_sel_m1}} & s.rid;
+
+typedef enum logic [1:0] {
+    IDLE_,
+    WAIT_READY,
+    WAIT_BVALID
+} write_state_t;
+write_state_t write_state;
 
 // Writing State Machine
 always @(posedge clk) begin
     if (rst) begin
-        write_state <= IDLE;
+        write_state <= IDLE_;
         current_write_master <= 0;
     end
     else begin
         case (write_state)
-            IDLE: begin
+            IDLE_: begin
                 if (current_write_master) begin
                     // in this case, m0 has higher priority
                     if (m0.awvalid & m0.wvalid) begin
-                        write_state <= M0_GRANT;
+                        write_state <= WAIT_READY;
                         current_write_master <= 0;
                     end else if (m1.awvalid & m1.wvalid) begin
-                        write_state <= M1_GRANT;
+                        write_state <= WAIT_READY;
                         current_write_master <= 1;
                     end
                 end else begin
                     // in this case, m1 has higher priority
                     if (m1.awvalid & m1.wvalid) begin
-                        write_state <= M1_GRANT;
+                        write_state <= WAIT_READY;
                         current_write_master <= 1;
                     end else if (m0.awvalid & m0.wvalid) begin
-                        write_state <= M0_GRANT;
+                        write_state <= WAIT_READY;
                         current_write_master <= 0;
                     end
                 end
             end
-            M0_GRANT: begin
-                if (s.awready & s.wready) begin
-                    write_state <= IDLE;
+            WAIT_READY: begin
+                if(s.awready & s.wready) begin
+                    write_state <= WAIT_BVALID;
                 end
             end
-            M1_GRANT: begin
-                if (s.awready & s.wready) begin
-                    write_state <= IDLE;
+            WAIT_BVALID: begin
+                if (s.bvalid) begin
+                    write_state <= IDLE_;
                 end
             end
             default: begin
-                write_state <= IDLE;
+                write_state <= IDLE_;
                 current_write_master <= 0;
             end
         endcase
     end
 end
 
-assign s.awaddr = {32{write_state == M0_GRANT}} & m0.awaddr | {32{write_state == M1_GRANT}} & m1.awaddr;
-assign s.awvalid = {write_state == M0_GRANT} & m0.awvalid | {write_state == M1_GRANT} & m1.awvalid;
-assign m0.awready = {write_state == M0_GRANT} & s.awready;
-assign m1.awready = {write_state == M1_GRANT} & s.awready;
-assign s.wdata = {32{write_state == M0_GRANT}} & m0.wdata | {32{write_state == M1_GRANT}} & m1.wdata;
-assign s.wstrb = {4{write_state == M0_GRANT}} & m0.wstrb | {4{write_state == M1_GRANT}} & m1.wstrb;
-assign s.wvalid = {write_state == M0_GRANT} & m0.wvalid | {write_state == M1_GRANT} & m1.wvalid;
-assign m0.wready = {write_state == M0_GRANT} & s.wready;
-assign m1.wready = {write_state == M1_GRANT} & s.wready;
-assign m0.bresp = {2{write_state == M0_GRANT}} & s.bresp;
-assign m1.bresp = {2{write_state == M1_GRANT}} & s.bresp;
-assign m0.bvalid = {write_state == M0_GRANT} & s.bvalid;
-assign m1.bvalid = {write_state == M1_GRANT} & s.bvalid;
-assign s.bready = {write_state == M0_GRANT} & m0.bready | {write_state == M1_GRANT} & m1.bready;
+wire m0_sel, m1_sel;
+assign m0_sel = (write_state != IDLE_) & (~current_write_master);
+assign m1_sel = (write_state != IDLE_) & current_write_master;
+
+assign s.awaddr = {32{m0_sel}} & m0.awaddr | {32{m1_sel}} & m1.awaddr;
+assign s.awvalid = {m0_sel} & m0.awvalid | {m1_sel} & m1.awvalid;
+assign m0.awready = {m0_sel} & s.awready;
+assign m1.awready = {m1_sel} & s.awready;
+assign s.wdata = {32{m0_sel}} & m0.wdata | {32{m1_sel}} & m1.wdata;
+assign s.wstrb = {4{m0_sel}} & m0.wstrb | {4{m1_sel}} & m1.wstrb;
+assign s.wvalid = {m0_sel} & m0.wvalid | {m1_sel} & m1.wvalid;
+assign m0.wready = {m0_sel} & s.wready;
+assign m1.wready = {m1_sel} & s.wready;
+assign m0.bresp = {2{m0_sel}} & s.bresp;
+assign m1.bresp = {2{m1_sel}} & s.bresp;
+assign m0.bvalid = {m0_sel} & s.bvalid;
+assign m1.bvalid = {m1_sel} & s.bvalid;
+assign s.bready = {m0_sel} & m0.bready | {m1_sel} & m1.bready;
+assign s.awid = {4{m0_sel}} & m0.awid | {4{m1_sel}} & m1.awid;
+assign s.awlen = {8{m0_sel}} & m0.awlen | {8{m1_sel}} & m1.awlen;
+assign s.awsize = {3{m0_sel}} & m0.awsize | {3{m1_sel}} & m1.awsize;
+assign s.awburst = {2{m0_sel}} & m0.awburst | {2{m1_sel}} & m1.awburst;
+assign s.wlast = {1{m0_sel}} & m0.wlast | {1{m1_sel}} & m1.wlast;
+assign m0.bid = {4{m0_sel}} & s.bid;
+assign m1.bid = {4{m1_sel}} & s.bid;
 
 `elsif VERSION_2
 

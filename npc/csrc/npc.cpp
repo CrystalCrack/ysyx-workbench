@@ -5,7 +5,7 @@
 #define MAX_SIM_TIME 100
 
 extern int sim_time;
-extern Vnpc *dut;
+extern VysyxSoCFull *dut;
 extern CPU_state state;
 extern VerilatedVcdC *m_trace;
 extern char *img_file;
@@ -25,6 +25,8 @@ void init_disasm();
 void init_difftest(char *ref_so_file, long img_size, int port);
 /* trace */
 void display_iringbuf();
+/* SoC */
+extern "C" void flash_read(int32_t addr, int32_t *data) { assert(0); }
 
 char *elf_file = NULL;
 char *so_file = NULL;
@@ -83,7 +85,7 @@ static void welcome(){
 void initialize(int argc, char** argv){
     parse_args(argc, argv);
 
-    cpu_init("npc.vcd");
+    cpu_init("ysyxSoCFull.vcd");
 
     img_size = load_img();
 
@@ -120,6 +122,8 @@ void display_error_msg(){
 }
 
 int main(int argc, char** argv){
+
+    Verilated::commandArgs(argc, argv);
 
     initialize(argc, argv);
 

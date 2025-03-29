@@ -9,7 +9,7 @@ module IFU(
     output validF,
     input readyD,
 
-    axi4_lite_interface.master sram
+    axi4_interface.master sram
 
 );
 
@@ -48,6 +48,15 @@ module IFU(
     assign sram.wstrb = 4'b0;
     assign sram.wvalid = 1'b0;
     assign sram.bready = 1'b1;
+    assign sram.arid = 0;
+    assign sram.awlen = 0;
+    assign sram.awsize = 0;
+    assign sram.awburst = 0;
+    assign sram.wlast = 1;
+    assign sram.arid = 0;
+    assign sram.arlen = 0;
+    assign sram.arsize = 2;
+    assign sram.arburst = 0;
 
     
     // SRAM u_SRAM(

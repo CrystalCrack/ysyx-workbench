@@ -17,8 +17,10 @@ module LSU(
     output [31:0] mdataM,
 
     // SRAM
-    axi4_lite_interface.master sram
+    axi4_interface.master sram
 );
+
+    wire accessing_sram;
 
     wire arready, rvalid, awready, wready;
 
@@ -39,6 +41,19 @@ module LSU(
     assign wready = sram.wready;
     
     assign sram.bready = 1'b1;
+
+    assign sram.awid = 0;
+    assign sram.awlen = 0;
+    assign sram.awsize = {3{mwmaskX==4'b1111}} & 3'b010 |
+                         {3{mwmaskX==4'b0011}} & 3'b001;
+    assign sram.awburst = 0;
+    assign sram.wlast = 1;
+    assign sram.arid = 0;
+    assign sram.arlen = 0;
+    assign sram.arsize = (mrtypeX==3'd0 || mrtypeX == 3'd3) ? 3'b000 :
+                         (mrtypeX==3'd1 || mrtypeX == 3'd4) ? 3'b001 : 3'b010;
+    assign sram.arburst = 0;
+
     
     wire valid;
     reg valid_reg;

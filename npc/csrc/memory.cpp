@@ -6,6 +6,7 @@
 char *img_file = NULL;
 extern CPU_state state;
 
+
 uint8_t pmem[MSIZE] = {
   // 0x00500093 (addi x1, x0, 5)
   0x93, 0x00, 0x50, 0x00,
@@ -156,4 +157,8 @@ uint32_t vaddr_read(uint32_t addr, int len){
 
 uint8_t *guest_to_host(uint32_t addr) {
   return pmem + addr - MBASE;
+}
+
+extern "C" void mrom_read(int32_t addr, int32_t *data) { 
+  *data = pmem_read(addr);
 }

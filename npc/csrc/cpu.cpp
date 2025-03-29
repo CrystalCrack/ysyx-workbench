@@ -3,7 +3,7 @@
 #include <sdb.h>
 
 int sim_time;
-Vnpc *dut;
+VysyxSoCFull *dut;
 CPU_state state;
 VerilatedVcdC *m_trace;
 int halt_ret;
@@ -23,7 +23,7 @@ void difftest_step(vaddr_t pc);
 uint64_t get_time_internal();
 
 void cpu_init(const char* Vcd_file){
-  dut = new Vnpc;
+  dut = new VysyxSoCFull;
   m_trace = new VerilatedVcdC;
   sim_time = 0;
   state = RUNNING;
@@ -42,8 +42,8 @@ void cpu_deinit() {
 }
 
 void single_cycle() {
-  dut->clk = 0; dut->eval(); if(sim_time<MAX_TRACE) m_trace->dump(sim_time); sim_time++;
-  dut->clk = 1; dut->eval(); if(sim_time<MAX_TRACE) m_trace->dump(sim_time); sim_time++;
+  dut->clock = 0; dut->eval(); if(sim_time<MAX_TRACE) m_trace->dump(sim_time); sim_time++;
+  dut->clock = 1; dut->eval(); if(sim_time<MAX_TRACE) m_trace->dump(sim_time); sim_time++;
 }
 
 void stop(int code, uint32_t pc) {
@@ -53,26 +53,35 @@ void stop(int code, uint32_t pc) {
 }
 
 void Cget_reg(int addr, int* ret_code){
-  svSetScope(svGetScopeFromName("TOP.npc.u_RegisterFile"));
+  const svScope scope = svGetScopeFromName("TOP.soc.asic.cpu.cpu.u_RegisterFile");
+  assert(scope);  
+  svSetScope(scope);
   get_reg(addr, ret_code);
 }
 
 void Cget_CSR(int* mtvec_rdata, int* mcause_rdata, int* mepc_rdata, int* mstatus_rdata){
-  svSetScope(svGetScopeFromName("TOP.npc"));
+  const svScope scope = svGetScopeFromName("TOP.soc.asic.cpu.cpu");
+  assert(scope);  
+  svSetScope(scope);
   get_CSR(mtvec_rdata, mcause_rdata, mepc_rdata, mstatus_rdata);
 }
 
 void Cget_pc_inst(uint32_t* pc, uint32_t* inst){
-  svSetScope(svGetScopeFromName("TOP.npc"));
+  const svScope scope = svGetScopeFromName("TOP.soc.asic.cpu.cpu");
+  assert(scope);  
+  svSetScope(scope);
   int pc_temp, inst_temp;
   int* pc_ptr = pc==NULL ? &pc_temp : (int*)pc;
   int* inst_ptr = inst==NULL ? &inst_temp : (int*)inst;
   get_pc_inst(pc_ptr, inst_ptr);
+  // printf("get pc: " FMT_WORD "\n", *pc_ptr);
 }
 
 int Cis_inst_done(){
   int done;
-  svSetScope(svGetScopeFromName("TOP.npc"));
+  const svScope scope = svGetScopeFromName("TOP.soc.asic.cpu.cpu");
+  assert(scope);  
+  svSetScope(scope);
   is_inst_done(&done);
   return done;
 }
@@ -88,8 +97,6 @@ static void exec_once() {
     single_cycle();
     g_nr_cycles++;
   }while(!Cis_inst_done());
-
-
 
   /* ftrace */
   ftrace(pc, instru);
@@ -145,12 +152,12 @@ static void execute(uint64_t n) {
 }
 
 void reset(int n) {
-  dut->rst = 1;
+  dut->reset = 1;
   while (n > 0) {
     single_cycle();
     n--;
   }
-  dut->rst = 0;
+  dut->reset = 0;
 }
 
 void reg_display(){
@@ -232,6 +239,7 @@ void cpu_exec(uint64_t n){
           halt_pc);
       if(halt_ret != 0) {
         display_error_msg();
+        state = ABORT;
       }
       // fall through
     case QUIT: 

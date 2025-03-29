@@ -2,9 +2,9 @@
 #define MEMORY_H
 #include <common.h>
 
-#define MSIZE 0x08000000 // 128MB 
-#define RESET_VECTOR 0x80000000
-#define MBASE 0x80000000
+#define MSIZE 0x00000fff // 4K
+#define RESET_VECTOR 0x20000000
+#define MBASE 0x20000000
 
 long load_img();
 uint8_t pmem_read(uint32_t addr);

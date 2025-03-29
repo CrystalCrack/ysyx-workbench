@@ -1,8 +1,8 @@
-module axi4_lite_clint(
+module axi4_clint(
     input clk,
     input rst,
 
-    axi4_lite_interface.slave clint
+    axi4_interface.slave clint
 );
     reg [63:0] mtime;
     always @(posedge clk) begin
@@ -29,10 +29,10 @@ module axi4_lite_clint(
                         state <= READ;
                         clint.rvalid <= 1;
                         clint.arready <= 0;
-                        if(clint.araddr == 32'ha0000048) begin
+                        if(clint.araddr == 32'h02000000) begin
                             clint.rdata <= mtime[31:0];
                         end
-                        else if(clint.araddr == 32'ha000004c) begin
+                        else if(clint.araddr == 32'h02000004) begin
                             clint.rdata <= mtime[63:32];
                         end
                         else begin
@@ -55,5 +55,8 @@ module axi4_lite_clint(
     assign clint.wready = 1;
     assign clint.bvalid = 1;
     assign clint.bresp = 0;
+    assign clint.bid = 0;
+    assign clint.rlast = 1;
+    assign clint.rid = 0;
 
 endmodule

@@ -2,35 +2,34 @@ module xbar(
     input         clk,
     input         rst,
     
-    axi4_lite_interface.slave master,
-    axi4_lite_interface.master mem,
-    axi4_lite_interface.master uart,
-    axi4_lite_interface.master clint
+    axi4_interface.slave master,
+    axi4_interface.master soc,
+    axi4_interface.master clint
 );
 
-    // mem address bound: 0x8000_0000 ~ 0x8800_0000
-    // uart address bound: 0xa000_03f8
-    typedef enum logic [1:0] {IDLE, MEM, UART, CLINT} slave_t;
+    // clint: 0x0200_0000~0x0200_ffff
+    // sram: 0x0f00_0000~0x0f00_01ff -- REQUIRE 4-BIT ALIGNMENT
+    typedef enum logic [1:0] {IDLE, CLINT, SRAM, SOC} slave_t;
     slave_t read_slave, write_slave;
     slave_t read_slave_reg, write_slave_reg;
 
     always @(*) begin
-        if (master.awvalid && master.awaddr >= 32'h8000_0000 && master.awaddr < 32'h8800_0000) begin
-            write_slave = MEM;
-        end else if (master.awvalid && master.awaddr == 32'hA000_03F8) begin
-            write_slave = UART;
-        end else if (master.awvalid && master.awaddr >= 32'ha000_0048 && master.awaddr <= 32'ha000_004c) begin
+        if (master.awvalid && master.awaddr >= 32'h0200_0000 && master.awaddr <= 32'h0200_ffff) begin
             write_slave = CLINT;
+        end else if (master.awvalid && master.awaddr >= 32'h0f00_0000 && master.awaddr <= 32'h0f00_01ff) begin
+            write_slave = SRAM;
+        end else if (master.awvalid) begin
+            write_slave = SOC;
         end else begin
             write_slave = IDLE;
         end
 
-        if (master.arvalid && master.araddr >= 32'h8000_0000 && master.araddr < 32'h8800_0000) begin
-            read_slave = MEM;
-        end else if (master.arvalid && master.araddr == 32'hA000_03F8) begin
-            read_slave = UART;
-        end else if (master.arvalid && master.araddr >= 32'ha000_0048 && master.araddr <= 32'ha000_004c) begin
+        if (master.arvalid && master.araddr >= 32'h0200_0000 && master.araddr <= 32'h0200_ffff) begin
             read_slave = CLINT;
+        end else if (master.arvalid && master.araddr >= 32'h0f00_0000 && master.araddr <= 32'h0f00_01ff) begin
+            read_slave = SRAM;
+        end else if (master.arvalid) begin
+            read_slave = SOC;
         end else begin
             read_slave = IDLE;
         end
@@ -60,33 +59,43 @@ module xbar(
         end
     end
 
-    wire write_sel_mem, write_sel_uart, read_sel_mem, read_sel_uart, read_sel_clint, write_sel_clint;
-    assign write_sel_mem = write_slave == MEM || write_slave_reg == MEM;
-    assign write_sel_uart = write_slave == UART || write_slave_reg == UART;
-    assign read_sel_mem = read_slave == MEM || read_slave_reg == MEM;
-    assign read_sel_uart = read_slave == UART || read_slave_reg == UART;
+    wire write_sel_soc, read_sel_soc, read_sel_clint, write_sel_clint, read_sel_sram, write_sel_sram;
+    assign write_sel_soc = write_slave == SOC || write_slave_reg == SOC;
+    assign read_sel_soc = read_slave == SOC || read_slave_reg == SOC;
     assign read_sel_clint = read_slave == CLINT || read_slave_reg == CLINT;
     assign write_sel_clint = write_slave == CLINT || write_slave_reg == CLINT;
+    assign read_sel_sram = read_slave == SRAM || read_slave_reg == SRAM;
+    assign write_sel_sram = write_slave == SRAM || write_slave_reg == SRAM;
 
-    assign mem.awaddr = {32{write_sel_mem}} & master.awaddr;
-    assign mem.awvalid = write_sel_mem & master.awvalid;
-    assign mem.wdata = master.wdata;
-    assign mem.wstrb = master.wstrb;
-    assign mem.wvalid = write_sel_mem & master.wvalid;
-    assign mem.bready = master.bready;
-    assign mem.araddr = {32{read_sel_mem}} & master.araddr;
-    assign mem.arvalid = read_sel_mem & master.arvalid;
-    assign mem.rready = master.rready;
+    wire [1:0] write_shift_bits, read_shift_bits;
+    wire [31:0] aligned_read_data, aligned_write_data, aligned_araddr, aligned_awaddr;
+    wire [3:0] aligned_wstrb;
+    assign write_shift_bits = master.awaddr[1:0];
+    assign read_shift_bits = master.araddr[1:0];
+    assign aligned_read_data = soc.rdata >> (8*read_shift_bits);
+    assign aligned_write_data = master.wdata << (8*write_shift_bits);
+    assign aligned_araddr = {master.araddr[31:2], 2'b0};
+    assign aligned_awaddr = {master.awaddr[31:2], 2'b0};
+    assign aligned_wstrb = master.wstrb << write_shift_bits;
 
-    assign uart.awaddr = {32{write_sel_uart}} & master.awaddr;
-    assign uart.awvalid = write_sel_uart & master.awvalid;
-    assign uart.wdata = master.wdata;
-    assign uart.wstrb = master.wstrb;
-    assign uart.wvalid = write_sel_uart & master.wvalid;
-    assign uart.bready = master.bready;
-    assign uart.araddr = {32{read_sel_uart}} & master.araddr;
-    assign uart.arvalid = read_sel_uart & master.arvalid;
-    assign uart.rready = master.rready;
+    assign soc.awaddr = ({32{write_slave == SOC}} & master.awaddr) | ({32{write_slave == SRAM}} & aligned_awaddr);
+    assign soc.awvalid = write_slave == SOC && master.awvalid;
+    assign soc.wdata = ({32{write_slave == SOC}} & master.wdata) | ({32{write_slave == SRAM}} & aligned_write_data);
+    assign soc.wstrb = ({4{write_slave == SOC}} & master.wstrb) | ({4{write_slave == SRAM}} & aligned_wstrb);
+    assign soc.wvalid = write_slave == SOC && master.wvalid;
+    assign soc.bready = master.bready;
+    assign soc.araddr = ({32{read_slave == SOC}} & master.araddr) | ({32{read_slave == SRAM}} & aligned_araddr);
+    assign soc.arvalid = read_slave == SOC && master.arvalid;
+    assign soc.rready = master.rready;
+    assign soc.awid = master.awid;
+    assign soc.awlen = master.awlen;
+    assign soc.awsize = master.awsize;
+    assign soc.awburst = master.awburst;
+    assign soc.wlast = master.wlast;
+    assign soc.arid = master.arid;
+    assign soc.arlen = master.arlen;
+    assign soc.arsize = master.arsize;
+    assign soc.arburst = master.arburst;
 
     assign clint.awaddr = {32{write_slave == CLINT}} & master.awaddr;
     assign clint.awvalid = write_slave == CLINT && master.awvalid;
@@ -97,14 +106,26 @@ module xbar(
     assign clint.araddr = {32{read_slave == CLINT}} & master.araddr;
     assign clint.arvalid = read_slave == CLINT && master.arvalid;
     assign clint.rready = master.rready;
+    assign clint.awid = master.awid;
+    assign clint.awlen = master.awlen;
+    assign clint.awsize = master.awsize;
+    assign clint.awburst = master.awburst;
+    assign clint.wlast = master.wlast;
+    assign clint.arid = master.arid;
+    assign clint.arlen = master.arlen;
+    assign clint.arsize = master.arsize;
+    assign clint.arburst = master.arburst;
 
-    assign master.arready = (read_sel_mem & mem.arready) | (read_sel_uart & uart.arready) | (read_sel_clint & clint.arready);
-    assign master.rdata = ({32{read_sel_mem}} & mem.rdata) | ({32{read_sel_uart}} & uart.rdata) | ({32{read_sel_clint}} & clint.rdata);
-    assign master.rresp = ({2{read_sel_mem}} & mem.rresp) | ({2{read_sel_uart}} & uart.rresp) | ({2{read_sel_clint}} & clint.rresp);
-    assign master.rvalid = (read_sel_mem & mem.rvalid) | (read_sel_uart & uart.rvalid) | (read_sel_clint & clint.rvalid);
-    assign master.awready = (write_sel_mem & mem.awready) | (write_sel_uart & uart.awready) | (write_sel_clint & clint.awready);
-    assign master.wready = (write_sel_mem & mem.wready) | (write_sel_uart & uart.wready) | (write_sel_clint & clint.wready);
-    assign master.bresp = ({2{write_sel_mem}} & mem.bresp) | ({2{write_sel_uart}} & uart.bresp) | ({2{write_sel_clint}} & clint.bresp);
-    assign master.bvalid = (write_sel_mem & mem.bvalid) | (write_sel_uart & uart.bvalid) | (write_sel_clint & clint.bvalid);
+    assign master.arready = ((read_sel_soc | read_sel_sram) & soc.arready) | (read_sel_clint & clint.arready);
+    assign master.rdata = ({32{read_sel_soc}} & soc.rdata) | ({32{read_sel_clint}} & clint.rdata) | ({32{read_sel_sram}} & aligned_read_data);
+    assign master.rresp = ({2{(read_sel_soc | read_sel_sram)}} & soc.rresp) | ({2{read_sel_clint}} & clint.rresp);
+    assign master.rvalid = ((read_sel_soc | read_sel_sram) & soc.rvalid) | (read_sel_clint & clint.rvalid);
+    assign master.awready = (write_sel_soc & soc.awready) | (write_sel_clint & clint.awready);
+    assign master.wready = (write_sel_soc & soc.wready) | (write_sel_clint & clint.wready);
+    assign master.bresp = ({2{write_sel_soc}} & soc.bresp) | ({2{write_sel_clint}} & clint.bresp);
+    assign master.bvalid = (write_sel_soc & soc.bvalid) | (write_sel_clint & clint.bvalid);
+    assign master.bid = ({4{write_sel_soc}} & soc.awid) | ({4{write_sel_clint}} & clint.awid);
+    assign master.rlast = ((read_sel_soc | read_sel_sram) & soc.rlast) | (read_sel_clint & clint.rlast);
+    assign master.rid = ({4{(read_sel_soc | read_sel_sram)}} & soc.arid) | ({4{read_sel_clint}} & clint.arid);
 
 endmodule

@@ -39,6 +39,22 @@ uint8_t pmem[MSIZE] = {
   0x73, 0x00, 0x10, 0x00
 };
 
+uint8_t flash_mem[FLASH_SIZE] = {
+  // initialize with string "Hello, Flash!\n"
+  // 0x48, 0x65, 0x6c, 0x6c,
+  // 0x6f, 0x2c, 0x20, 0x46,
+  // 0x6c, 0x61, 0x73, 0x68,
+  // 0x21, 0x0a
+  0x10, 0x00, 0x05, 0x37, // lui a0, 0x10000
+  0x04, 0x10, 0x05, 0x93, // addi a1, zero, 0x41
+  0x00, 0xb5, 0x00, 0x23, // sb a1, 0(a0)
+  0x00, 0xa0, 0x05, 0x93, // addi a1, zero, 0x0a
+  0x00, 0xb5, 0x00, 0x23, // sb a1, 0(a0)
+  0x00, 0x00, 0x00, 0x6f // j .
+};
+
+uint8_t psram_mem[PSRAM_SIZE];
+
 long load_img() {
   if (img_file == NULL) {
     std::cout<<"No image is given. Use the default build-in image."<<std::endl;
@@ -54,16 +70,17 @@ long load_img() {
   printf("The image is %s, size = %ld\n", img_file, size);
 
   fseek(fp, 0, SEEK_SET);
-  int ret = fread(pmem, size, 1, fp);
+  int ret = fread(flash_mem, size, 1, fp);
   assert(ret == 1);
 
   fclose(fp);
   return size;
 }
 
-bool memory_out_of_bound(uint32_t addr) {
+bool memory_out_of_bound(uint32_t addr, int verbose) {
   if (addr < MBASE || addr >= MBASE + MSIZE) {
-    printf("Memory access out of bound: addr = 0x%08x\n", addr);
+    if(verbose)
+      printf("Memory access out of bound: addr = 0x%08x\n", addr);
     return true;
   }
   return false;
@@ -81,7 +98,7 @@ extern "C" int pmem_read(int raddr) {
   }
   #endif
 
-  if(memory_out_of_bound(addr)){
+  if(memory_out_of_bound(addr, 1)){
     printf(ANSI_BOLD ANSI_COLOR_RED "read address out of bound\n" ANSI_COLOR_RESET );
     state = ABORT;
     return 0;
@@ -117,7 +134,7 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask) {
   }
   #endif
 
-  if(memory_out_of_bound(addr)){
+  if(memory_out_of_bound(addr, 1)){
     printf(ANSI_BOLD ANSI_COLOR_RED "write address out of bound\n" ANSI_COLOR_RESET );
     state = ABORT;
     return;
@@ -140,6 +157,11 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask) {
 }
 
 uint8_t pmem_read(uint32_t addr){
+  if(memory_out_of_bound(addr,  0)){
+    // printf(ANSI_BOLD ANSI_COLOR_RED "write address out of bound\n" ANSI_COLOR_RESET );
+    // state = ABORT;
+    return 0;
+  }
   return *(pmem + addr - MBASE);
 }
 
@@ -156,9 +178,34 @@ uint32_t vaddr_read(uint32_t addr, int len){
 }
 
 uint8_t *guest_to_host(uint32_t addr) {
-  return pmem + addr - MBASE;
+  if(addr >= FLASH_BASE && addr < FLASH_BASE + FLASH_SIZE) {
+    return flash_mem + addr - FLASH_BASE;
+  }else if (addr >= PSRAM_BASE && addr < PSRAM_BASE + PSRAM_SIZE) {
+    return psram_mem + addr - PSRAM_BASE;
+  } else return pmem + addr - MBASE;
 }
 
 extern "C" void mrom_read(int32_t addr, int32_t *data) { 
   *data = pmem_read(addr);
+}
+
+extern "C" void flash_read(int32_t addr, int32_t *data) { 
+  *data = *((uint32_t *)flash_mem + (addr / sizeof(uint32_t)));
+  #if defined(CONFIG_MTRACE)
+  // printf("flash read addr = 0x%08x, data = 0x%08x\n", addr, *((uint32_t *)flash_mem + (addr / sizeof(uint32_t))));
+  #endif
+}
+
+extern "C" void psram_read(int32_t addr, char *data) { 
+  *data = *(psram_mem + addr);
+  #if defined(CONFIG_MTRACE)
+  printf("psram read addr = 0x%08x, data = 0x%08x\n", addr, *((uint32_t *)psram_mem + (addr / sizeof(uint32_t))));
+  #endif
+}
+
+extern "C" void psram_write(int32_t addr, char data) { 
+  *(psram_mem + addr) = data;
+  #if defined(CONFIG_MTRACE)
+  // printf("psram write addr = 0x%08x, data = 0x%08x\n", addr, data);
+  #endif
 }

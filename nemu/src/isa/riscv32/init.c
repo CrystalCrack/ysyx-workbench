@@ -33,6 +33,8 @@ static void restart() {
   cpu.gpr[0] = 0;
 
   cpu.csrs.mstatus = 0x1800;
+  cpu.csrs.mvendorid = 0x79737978;
+  cpu.csrs.marchid = 0x017dc699;
 
 }
 

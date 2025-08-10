@@ -2,10 +2,8 @@
 #include <memory.h>
 #include <sdb.h>
 
-int sim_time;
-VysyxSoCFull *dut;
+Vdut *dut;
 CPU_state state;
-VerilatedVcdC *m_trace;
 int halt_ret;
 uint32_t halt_pc;
 uint64_t g_nr_guest_inst = 0;
@@ -13,40 +11,38 @@ uint64_t g_nr_cycles = 0;
 static uint64_t g_timer = 0; // unit: us
 static bool g_print_step = false;
 char logbuf[128];
+extern int cur_wave_idx;
 
 /* trace */
 void write_iringbuf(vaddr_t pc, uint32_t inst);
 void ftrace(vaddr_t pc, uint32_t inst);
+void EvalAndWaveTrace(Vdut *dut );
+void DeinitWaveTrace();
 /* difftest */
 void difftest_step(vaddr_t pc);
+void difftest_skip_ref();
 /* timer */
 uint64_t get_time_internal();
 
-void cpu_init(const char* Vcd_file){
-  dut = new VysyxSoCFull;
-  m_trace = new VerilatedVcdC;
-  sim_time = 0;
+void cpu_init(){
+  dut = new Vdut;
   state = RUNNING;
-
   Verilated::traceEverOn(true);
-  dut->trace(m_trace, 10);
-  m_trace->open(Vcd_file);
-  reset(5);
-
+  reset(10);
 }
 
 void cpu_deinit() {
-  m_trace->close();
-  delete m_trace;
+  DeinitWaveTrace();
   delete dut;
 }
 
 void single_cycle() {
-  dut->clock = 0; dut->eval(); if(sim_time<MAX_TRACE) m_trace->dump(sim_time); sim_time++;
-  dut->clock = 1; dut->eval(); if(sim_time<MAX_TRACE) m_trace->dump(sim_time); sim_time++;
+  dut->clock = 0; EvalAndWaveTrace(dut);
+  dut->clock = 1; EvalAndWaveTrace(dut);
 }
 
 void stop(int code, uint32_t pc) {
+  difftest_skip_ref();
   state = END;
   halt_pc = pc;
   halt_ret = code;
@@ -86,18 +82,23 @@ int Cis_inst_done(){
   return done;
 }
 
+extern "C" void LStrigger(int32_t addr) {
+  if (addr >= 0x10000000 && addr < 0x10000fff){//uart
+    difftest_skip_ref();
+  }
+}
+
 static void exec_once() {
-  /* itrace */
-  uint32_t pc, instru;
-  Cget_pc_inst(&pc, NULL);
-  instru = paddr_read(pc, 4);
-  
+
   /* run a cycle */
   do{
     single_cycle();
     g_nr_cycles++;
   }while(!Cis_inst_done());
 
+  /* itrace */
+  uint32_t pc, instru;
+  Cget_pc_inst(&pc, &instru);
   /* ftrace */
   ftrace(pc, instru);
 
@@ -159,21 +160,44 @@ void reset(int n) {
   }
   dut->reset = 0;
 }
-
-void reg_display(){
-  int reg_data;
-  for(int i = 0; i < 32; i++){
-    Cget_reg(i, &reg_data);
-    printf("x%d: " FMT_WORD "\n", i, reg_data);
-  }
-}
-
 const char *regs[] = {
   "$0", "ra", "sp", "gp", "tp", "t0", "t1", "t2",
   "s0", "s1", "a0", "a1", "a2", "a3", "a4", "a5",
   "a6", "a7", "s2", "s3", "s4", "s5", "s6", "s7",
   "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6"
 };
+
+void reg_display(){
+  printf("\n======================== NPC Register Display ========================\n");
+  printf("%-4s %-10s  %-4s %-10s  %-4s %-10s  %-4s %-10s\n", 
+         "Reg", "Value", "Reg", "Value", "Reg", "Value", "Reg", "Value");
+  printf("---- ----------  ---- ----------  ---- ----------  ---- ----------\n");
+  
+  int reg_data;
+  for(int i = 0; i < 32; i += 4) {
+    for(int j = 0; j < 4 && (i + j) < 32; j++) {
+      int idx = i + j;
+      Cget_reg(idx, &reg_data);
+      printf("%-4s " FMT_WORD, regs[idx], reg_data);
+      if(j < 3 && (i + j + 1) < 32) printf("  ");
+    }
+    printf("\n");
+  }
+  
+  // Display PC separately
+  uint32_t pc;
+  int32_t mtvec, mcause, mepc, mstatus;
+  Cget_pc_inst(&pc, NULL);
+  Cget_CSR(&mtvec, &mcause, &mepc, &mstatus);
+  printf("\nPC:  " FMT_WORD "\n", pc);
+  printf("mtvec: " FMT_WORD "\n", mtvec);
+  printf("mcause: " FMT_WORD "\n", mcause);
+  printf("mepc: " FMT_WORD "\n", mepc);
+  printf("mstatus: " FMT_WORD "\n", mstatus);
+  printf("======================================================================\n\n");
+}
+
+
 
 uint32_t reg_str2val(const char *s) {
   int i;
@@ -206,6 +230,7 @@ static void statistic() {
   Log("host time spent = %lu us", g_timer);
   Log("total guest instructions = %lu", g_nr_guest_inst);
   Log("total cycles = %lu", g_nr_cycles);
+  Log("currrent wave file index: %d", cur_wave_idx);
   if (g_timer > 0) Log("simulation frequency = %lu inst/s", g_nr_guest_inst * 1000000 / g_timer);
   else Log("Finish running in less than 1 us and can not calculate the simulation frequency");
 }
@@ -228,23 +253,15 @@ void cpu_exec(uint64_t n){
 
   switch (state) {
     case RUNNING: state = STOP; break;
-
-    case ABORT:
-      display_error_msg();
-    case END: 
+    case ABORT: case END: 
     Log("NPC: %s " ANSI_COLOR_BLUE "at pc = " FMT_WORD,
           (state == ABORT ? ANSI_FMT("ABORT", ANSI_COLOR_RED) :
           (halt_ret == 0 ? ANSI_FMT("HIT GOOD TRAP", ANSI_COLOR_GREEN) :
           ANSI_FMT("HIT BAD TRAP", ANSI_COLOR_RED))),
           halt_pc);
-      if(halt_ret != 0) {
-        display_error_msg();
-        state = ABORT;
-      }
       // fall through
     case QUIT: 
       statistic();
-      printf("Execution terminated\n");
       break;
   }
 }

@@ -36,6 +36,9 @@
 #define FMT_WORD "0x%08x"
 #define ANSI_FMT(fmt, color) ANSI_BOLD color fmt ANSI_COLOR_RESET
 
+#define concat_temp(x, y) x ## y
+#define concat(x, y) concat_temp(x, y)
+
 #define BITMASK(bits) ((1ull << (bits)) - 1)
 #define BITS(x, hi, lo) (((x) >> (lo)) & BITMASK((hi) - (lo) + 1)) // similar to x[hi:lo] in verilog
 #define SEXT(x, len) ((uint64_t)((int64_t)((x) << (64 - (len))) >> (64 - (len))))
@@ -67,5 +70,8 @@ void display_error_msg();
   do { \
     Assert(0, format, __VA_ARGS__); \
   } while (0)
+
+#define VDUT_NAME ysyxSoCFull
+typedef concat(V, VDUT_NAME) Vdut;
 
 #endif

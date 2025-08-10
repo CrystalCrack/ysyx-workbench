@@ -16,7 +16,7 @@ module psram_top_apb (
   output qspi_ce_n,
   inout  [3:0] qspi_dio
 );
-
+  
   wire [3:0] din, dout, douten;
   wire ack;
   EF_PSRAM_CTRL_wb u0 (

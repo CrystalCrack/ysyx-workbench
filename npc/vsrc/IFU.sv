@@ -16,6 +16,7 @@ module IFU(
     reg rst_d, start_reg;
     wire start, ifetch_en;
 
+
     always @(posedge clk) begin
         rst_d <= rst;
     end
@@ -32,13 +33,20 @@ module IFU(
     end
     assign ifetch_en = ~rst & (validW | start | start_reg);
 
-
+    reg [31:0] instr;
+    always @(posedge clk or posedge rst) begin
+        if (rst) begin
+            instr <= 32'b0;
+        end else if (sram.rvalid) begin
+            instr <= sram.rdata;
+        end
+    end
     // axi slave connect
     assign sram.arvalid = ifetch_en;
     assign sram.araddr = pcF;
     assign readyF = sram.arready;
 
-    assign instF = sram.rdata;
+    assign instF = sram.rvalid ? sram.rdata : instr;
     assign validF = sram.rvalid;
     assign sram.rready = readyD;
 

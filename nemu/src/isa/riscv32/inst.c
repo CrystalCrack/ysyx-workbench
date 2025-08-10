@@ -31,7 +31,9 @@ static word_t* get_csr(int csr) {
     case 0x300: return &cpu.csrs.mstatus;
     case 0x341: return &cpu.csrs.mepc;
     case 0x342: return &cpu.csrs.mcause;
-    default: panic("undefined csr = %x", csr);
+    case 0x7c0: return &cpu.csrs.mvendorid;
+    case 0x7c1: return &cpu.csrs.marchid;
+    default: panic("undefined csr = 0x%3x", csr);
   }
 }
 

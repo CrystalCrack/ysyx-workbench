@@ -20,7 +20,7 @@ typedef struct {
     word_t mepc;
 } CPU_reg;
 
-void cpu_init(const char* Vcd_file);
+void cpu_init();
 void cpu_deinit();
 void single_cycle();
 void stop(int code, uint32_t pc);

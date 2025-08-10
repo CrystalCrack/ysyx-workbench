@@ -3,8 +3,13 @@
 #include <common.h>
 
 #define MSIZE 0x00000fff // 4K
-#define RESET_VECTOR 0x20000000
+#define RESET_VECTOR 0x30000000
 #define MBASE 0x20000000
+
+#define FLASH_BASE 0x30000000
+#define PSRAM_BASE 0x80000000
+#define FLASH_SIZE 0x10000000
+#define PSRAM_SIZE 0x00400000 
 
 long load_img();
 uint8_t pmem_read(uint32_t addr);

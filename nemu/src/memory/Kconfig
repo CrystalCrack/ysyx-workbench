@@ -31,4 +31,48 @@ config MEM_RANDOM
   help
     This may help to find undefined behaviors.
 
+config SOC_MEM
+  bool "Configure the memory in ysyxSoC"
+  default n
+
+config MROM_BASE
+  depends on SOC_MEM
+  hex "MROM base address"
+  default 0x20000000
+
+config SRAM_BASE
+  depends on SOC_MEM
+  hex "SRAM base address"
+  default 0x0f000000
+
+config FLASH_BASE
+  depends on SOC_MEM
+  hex "FLASH base address"
+  default 0x30000000 
+
+config PSRAM_BASE
+  depends on SOC_MEM
+  hex "PSRAM base address"
+  default 0x80000000
+
+config MROM_SIZE
+  depends on SOC_MEM
+  hex "MROM size"
+  default 0x1000 
+
+config SRAM_SIZE
+  depends on SOC_MEM
+  hex "SRAM size"
+  default 0x2000
+
+config FLASH_SIZE
+  depends on SOC_MEM
+  hex "FLASH size"
+  default 0x10000000
+
+config PSRAM_SIZE
+  depends on SOC_MEM
+  hex "PSRAM size"
+  default 0x01000000
+
 endmenu #MEMORY

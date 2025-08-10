@@ -172,8 +172,8 @@ static void format_integer(char **buf, size_t *size, size_t *count, FormatSpec *
 
     switch (spec->specifier) {
         case 'o': base = 8; break;
-        case 'x': break;
-        case 'X': digits = "0123456789ABCDEF"; break;
+        case 'x': base = 16; break;
+        case 'X': base = 16; digits = "0123456789ABCDEF"; break;
         case 'u': break;
         default: base = 10; break;
     }
@@ -323,7 +323,6 @@ int vsnprintf(char *buf, size_t size, const char *fmt, va_list ap) {
             case '%':
                 append_char(&dest, &remaining, &count, '%');
                 break;
-            // 其他转换类型可在此扩展
             default:
                 break;
         }

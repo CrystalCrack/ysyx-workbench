@@ -25,8 +25,6 @@ void init_disasm();
 void init_difftest(char *ref_so_file, long img_size, int port);
 /* trace */
 void display_iringbuf();
-/* SoC */
-extern "C" void flash_read(int32_t addr, int32_t *data) { assert(0); }
 
 char *elf_file = NULL;
 char *so_file = NULL;
@@ -85,7 +83,7 @@ static void welcome(){
 void initialize(int argc, char** argv){
     parse_args(argc, argv);
 
-    cpu_init("ysyxSoCFull.vcd");
+    cpu_init();
 
     img_size = load_img();
 
@@ -115,8 +113,7 @@ void deinitialize(){
 }
 
 void display_error_msg(){
-    display_iringbuf();
-    reg_display();
+    // display_iringbuf();
     cpu_deinit();
     is_deinit = 1;
 }

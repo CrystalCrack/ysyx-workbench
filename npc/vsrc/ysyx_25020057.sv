@@ -131,7 +131,7 @@ module ysyx_25020057(
     wire [31:0] immD;
     // csr
     wire [11:0] csraddrD;
-    wire [31:0] mtvec_data, mcause_data, mepc_data, mstatus_data, csr_rdata, csrD;
+    wire [31:0] mtvec_data, mcause_data, mepc_data, mstatus_data, mvendorid_data, marchid_data, csr_rdata, csrD;
     wire [31:0] mtvec_wdata, mcause_wdata, mepc_wdata, mstatus_wdata;
     wire mtvec_wen, mcause_wen, mepc_wen, mstatus_wen;
     // forward
@@ -259,8 +259,24 @@ module ysyx_25020057(
     );
     assign mstatus_wen = csraddrW==12'h300;
     assign mstatus_wdata = ALU_resultW;
+    Reg #(.WIDTH(32), .RESET_VAL(32'h7973_7978))
+        mvendorid (
+        .clk  	(clock   ),
+        .rst  	(reset   ),
+        .din  	(0),
+        .dout 	(mvendorid_data),  
+        .wen  	(0)   
+    );
+    Reg #(.WIDTH(32), .RESET_VAL(32'h017d_c699))
+        marchid (
+        .clk  	(clock   ),
+        .rst  	(reset   ),
+        .din  	(0),
+        .dout 	(marchid_data),  
+        .wen  	(0)   
+    );
     MuxKeyWithDefault #(
-        .NR_KEY(4),
+        .NR_KEY(6),
         .KEY_LEN(12),
         .DATA_LEN(32)
     )sel_csr_read(
@@ -270,7 +286,9 @@ module ysyx_25020057(
         .lut         	({12'h300, mstatus_data,
                          12'h341, mepc_data,
                          12'h342, mcause_data,
-                         12'h305, mtvec_data})
+                         12'h305, mtvec_data,
+                         12'h7C0, mvendorid_data,
+                         12'h7C1, marchid_data})
     );
     assign csraddrD = write_csr ? funct12 : 12'h000;
     assign csrD = ecallD ? mtvec_data :
@@ -622,7 +640,7 @@ module ysyx_25020057(
         .master_arsize  	(io_master_arsize   ),
         .master_arburst 	(io_master_arburst  ),
         .master_rready  	(io_master_rready   ),
-        .master_rvalid 	(io_master_rvalid  ),
+        .master_rvalid 	    (io_master_rvalid   ),
         .master_rresp   	(io_master_rresp    ),
         .master_rdata   	(io_master_rdata    ),
         .master_rlast   	(io_master_rlast    ),
@@ -660,7 +678,16 @@ module ysyx_25020057(
         .slave          	(npc_if.master           )
     );
     
-    
+    import "DPI-C" function void LStrigger(input int addr);
+    always @ (*) begin
+        if(arbiter_if.master.awvalid) begin
+            LStrigger(arbiter_if.master.awaddr);
+        end
+        if(arbiter_if.master.arvalid) begin
+            LStrigger(arbiter_if.master.araddr);
+        end
+    end
+
 
     export "DPI-C" function get_pc_inst;
     function void get_pc_inst();

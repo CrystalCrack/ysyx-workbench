@@ -92,14 +92,31 @@ bool difftest_checkregs(CPU_reg *ref_r, vaddr_t pc) {
 
 void display_ref_dut_regs(CPU_reg *ref_r){
   CPU_reg this_r = get_cpu_state();
-  for (int i = 0; i < 32; i ++) {
-    Log("reg[%d]: ref = " FMT_WORD ", dut = " FMT_WORD, i, ref_r->gpr[i], this_r.gpr[i]);
+  
+  // RISC-V register names for better readability
+  const char *reg_names[32] = {
+    "$0", "ra", "sp", "gp", "tp", "t0", "t1", "t2",
+    "s0", "s1", "a0", "a1", "a2", "a3", "a4", "a5",
+    "a6", "a7", "s2", "s3", "s4", "s5", "s6", "s7",
+    "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6"
+  };
+  
+  Log("=== Register Comparison (REF vs DUT) ===");
+  
+  // Display general purpose registers in groups of 4 for better readability
+  for (int i = 0; i < 32; i += 2) {
+    Log("x%-2d(%-3s): " FMT_WORD " | " FMT_WORD "  x%-2d(%-3s): " FMT_WORD " | " FMT_WORD ,
+        i, reg_names[i], ref_r->gpr[i], this_r.gpr[i],
+        i+1, reg_names[i+1], ref_r->gpr[i+1], this_r.gpr[i+1]);
   }
-  Log("PC: ref = " FMT_WORD ", dut = " FMT_WORD, ref_r->pc, this_r.pc);
-  Log("mtvec: ref = " FMT_WORD ", dut = " FMT_WORD, ref_r->mtvec, this_r.mtvec);
-  Log("mstatus: ref = " FMT_WORD ", dut = " FMT_WORD, ref_r->mstatus, this_r.mstatus);
-  Log("mcause: ref = " FMT_WORD ", dut = " FMT_WORD, ref_r->mcause, this_r.mcause);
-  Log("mepc: ref = " FMT_WORD ", dut = " FMT_WORD, ref_r->mepc, this_r.mepc);
+  
+  Log("=== Control and Status Registers ===");
+  Log("PC     : " FMT_WORD " | " FMT_WORD, ref_r->pc, this_r.pc);
+  Log("mtvec  : " FMT_WORD " | " FMT_WORD, ref_r->mtvec, this_r.mtvec);
+  Log("mstatus: " FMT_WORD " | " FMT_WORD, ref_r->mstatus, this_r.mstatus);
+  Log("mcause : " FMT_WORD " | " FMT_WORD, ref_r->mcause, this_r.mcause);
+  Log("mepc   : " FMT_WORD " | " FMT_WORD, ref_r->mepc, this_r.mepc);
+  Log("========================================");
 }
 
 static void checkregs(CPU_reg *ref, vaddr_t pc) {
@@ -130,5 +147,8 @@ void difftest_step(vaddr_t pc) {
   checkregs(&ref_r, pc);
 }
 #else
-void init_difftest(char *ref_so_file, long img_size, int port) { }
+void init_difftest(char *ref_so_file, long img_size, int port) {
+  Log("Differential testing: %s", ANSI_FMT("OFF", ANSI_COLOR_RED));
+  Log("To enable differential testing, please define CONFIG_DIFFTEST in config.h");
+}
 #endif
